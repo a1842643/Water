@@ -1,0 +1,389 @@
+﻿@model WaterCaseTracking.Models.ViewModels.SigningProcess.SearchItemViewModel
+@{
+    ViewBag.Title = "Application";
+}
+<style>
+    tr {
+        line-height: 24px;
+    }
+</style>
+<script>
+    $(function () {
+        //sso會存在season給我,id & 上司id...
+        Authority(); //權限判斷,預設不同css
+    });
+     //權限判斷,預設不同css
+    function Authority() {
+        var Status = '@Model.Status'; //直接呼叫.NET的方法
+        if (Status == 2) {
+            //覆核樣式修改
+            //禁用
+            $('#tbMsgSupervisor').attr("disabled", true);
+            //$('#tbMsgUser').attr("disabled", true);
+
+            $("#tbMsgSupervisor").css("background-color", "#cccccc");
+            //$("#tbMsgUser").css("background-color", "#cccccc");
+        }
+        else if (Status == 1) {
+            //簽核樣式修改
+            //禁用
+            //$('#tbMsgUser').attr("disabled", true);
+            $('#tbMsgReviewSupervisor').attr("disabled", true);
+
+            //$("#tbMsgUser").css("background-color", "#cccccc");
+            $("#tbMsgReviewSupervisor").css("background-color", "#cccccc");
+        } else if (Status == 3) {
+            ////結案樣式修改
+            ////禁用
+            $('#tbOne').attr("disabled", true);
+            $('#tbTwo').attr("disabled", true);
+            $('#ddlProject').attr("disabled", true);
+            //$('#tbMsgUser').attr("disabled", true);
+            $('#tbMsgSupervisor').attr("disabled", true);
+            $('#tbMsgReviewSupervisor').attr("disabled", true);
+            $('#divbox').attr("disabled", true);
+
+            //灰色底
+            $("#tbOne").css("background-color", "#cccccc");
+            $("#tbTwo").css("background-color", "#cccccc");
+            $("#ddlProject").css("background-color", "#cccccc");
+            //$("#tbMsgUser").css("background-color", "#cccccc");
+            $("#tbMsgSupervisor").css("background-color", "#cccccc");
+            $("#tbMsgReviewSupervisor").css("background-color", "#cccccc");
+            $("#divbox").css("background-color", "#cccccc");
+        }else {
+            //User樣式修改
+            //禁用
+            $('#tbMsgSupervisor').attr("disabled", true);
+            $('#tbMsgReviewSupervisor').attr("disabled", true);
+
+            $("#tbMsgSupervisor").css("background-color", "#cccccc");
+            $("#tbMsgReviewSupervisor").css("background-color", "#cccccc");
+        }
+    }
+    // 申請單-申請 (暫時用不到了,來源已經改成各上傳按鈕申請)
+    @*function InsertItems() {
+        //取得網頁上的數據...暫存到變數內
+        var _PID = $("#ddlProject").find("option:selected").val();
+        var _PName = $("#ddlProject").find("option:selected").text();
+        var _UserID = $('#lbUserID').text();
+        var _UserName = $('#lbUserName').text();
+        var _SupervisorID = $('#lbSupervisorID').text();
+        var _SupervisorName = $('#lbSupervisorName').text();
+        //var _MsgUser = $('#tbMsgUser').val();
+        //var _Status = $('#lbStatus').text();
+        //將變數寫入Model集合內
+        var SigningInsertItemsViewModel = {
+            PID: _PID,
+            PName: _PName,
+            UserID: _UserID,
+            UserName: _UserName,
+            SupervisorID: _SupervisorID,
+            SupervisorName: _SupervisorName,
+            //MsgUser: _MsgUser
+        };
+
+        //初始化
+        $.ajax({
+            type: 'POST',
+            //將集合放入ajax空投後端的裝置內
+            data: SigningInsertItemsViewModel,
+            //async: false, //啟用同步請求
+            url: '@Url.Action("InsertItems", "SigningProcess")',
+            contenType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (data) {
+                //失敗的處理
+                if (data.data <= 0) {
+                    alert('申請寫入失敗!!');
+                    return;
+                }
+                alert('申請成功!!');
+                location.href = '@Url.Action("Maintain", "SigningProcess")';
+                //alert("新增成功筆數: " + data.data);
+
+            }, fail: function () {
+                alert('申請寫入失敗!!');
+            }
+        })
+    }*@
+    //申請單-簽核 & 覆核通過
+    function ApplicationUpdate() {
+        //取得網頁上的數據...暫存到變數內
+        var _ProID = $('#lbProID').text();
+        var _PID = $('#hidPID').val();
+        var _YM = $('#hidYM').val();
+        var Status = '@Model.Status';
+        var _SupervisorID = $('#lbSupervisorID').text();
+        var _SupervisorName = $('#lbSupervisorName').text();
+        var _ReviewSupervisorID = $('#lbReviewSupervisorID').text();
+        var _ReviewSupervisorName = $('#lbReviewSupervisorName').text();
+        var _tbMsgSupervisor = $('#tbMsgSupervisor').val();
+        var _tbMsgReviewSupervisor = $('#tbMsgReviewSupervisor').val();
+
+        var SigningUpdateItemsViewModel = {
+            ProID: _ProID,
+            PID: _PID,
+            Status: Status,
+            SupervisorID: _SupervisorID,
+            SupervisorName: _SupervisorName,
+            ReviewSupervisorID: _ReviewSupervisorID,
+            ReviewSupervisorName: _ReviewSupervisorName,
+            MsgSupervisor: _tbMsgSupervisor,
+            MsgReviewSupervisor: _tbMsgReviewSupervisor,
+            YM: _YM
+        };
+
+        //初始化
+        $.ajax({
+            type: 'POST',
+            //將集合放入ajax空投後端的裝置內
+            data: SigningUpdateItemsViewModel,
+            //async: false, //啟用同步請求
+            url: '@Url.Action("ApplicationUpdate", "SigningProcess")',
+            contenType: "application/json; charset=utf-8",
+            dataType: "json",
+            async: false,
+            success: function (data) {
+                alert(data);
+                if(@Model.Status == 2)
+                    location.href = '@Url.Action("ReviewProcess", "SigningProcess")';
+                else
+                    location.href = '@Url.Action("SigningProcess", "SigningProcess")';
+
+            }, fail: function () {
+                alert('寫入失敗!!');
+            }
+        })
+
+    }
+    //上呈
+    function GiveIn() {
+        var SigningUpdateItemsViewModel =
+            {
+                ProID: $('#lbProID').text(),
+                MsgSupervisor: $('#tbMsgSupervisor').val(),
+            };
+        //初始化
+        $.ajax({
+            type: 'POST',
+            //將集合放入ajax空投後端的裝置內
+            data: SigningUpdateItemsViewModel,
+            //async: false, //啟用同步請求
+            url: '@Url.Action("GiveIn", "SigningProcess")',
+            contenType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (data) {
+                //失敗的處理
+                if (data.data <= 0) {
+                    alert('上呈失敗!!');
+                    return;
+                }
+                alert('上呈成功!!');
+
+                location.href = '@Url.Action("SigningProcess", "SigningProcess")';
+
+            }, fail: function () {
+                alert('上呈失敗!!');
+            }
+        })
+    }
+    //駁回申請單
+    function DeleteItems(Action) {
+
+        //將變數寫入Model集合內
+        var SigningDeleteItemsViewModel = {
+            ProID: $('#lbProID').text(),
+            MsgSupervisor: $('#tbMsgSupervisor').val(),
+            MsgReviewSupervisor: $('#tbMsgReviewSupervisor').val(),
+            Status: @Model.Status,
+            SupervisorID: $('#lbSupervisorID').text(),
+            SupervisorName: $('#lbSupervisorName').text()
+        };
+
+        //初始化
+        $.ajax({
+            type: 'POST',
+            //將集合放入ajax空投後端的裝置內
+            data: SigningDeleteItemsViewModel,
+            //async: false, //啟用同步請求
+            url: '@Url.Action("DeleteItems", "SigningProcess")',
+            contenType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (data) {
+                @*//失敗的處理
+                if (data.data <= 0) {
+                    alert('駁回失敗!!');
+                    return;
+                }
+                var Status = '@Model.Status'; //直接呼叫.NET的方法
+                alert('駁回成功!!');*@
+                if (Action == 2)
+                    location.href = '@Url.Action("ReviewProcess", "SigningProcess")';
+                else
+                    location.href = '@Url.Action("SigningProcess", "SigningProcess")';
+
+            }, fail: function () {
+                alert('駁回失敗!!');
+            }
+        })
+    }
+     //重置
+    function Reset() {
+        //$('input').val("");
+        //$('#tbMsgUser').val("");
+        //$('#ddlProject')[0].selectedIndex = 0;
+    }
+</script>
+<section class="content-header">
+    <h1>
+        簽核流程
+            @if (@Model.Status == 2) {
+                <small> 覆核單</small>
+            }
+            else if (@Model.Status == 1) {
+                <small>簽核單</small>
+            }
+            else if (@Model.Status == 3) {
+                <small>完結單</small>
+            }
+            else {
+                <small>申請單</small>
+            }
+    </h1>
+</section>
+<section class="content">
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="box">
+                <div id="divbox" class="box-header">
+                    <table id="tbOne">
+                        <tr>
+                            <td>申請單編號:</td>
+                            <td>
+                                &nbsp;
+                                <label id="lbProID" name="lbProID" maxlength="10">@Html.DisplayFor(model => model.ProID)</label>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>申請項目:</td>
+                                <td><label id="lbPName" name="lbPName"  maxlength="10" >@Html.DisplayFor(model => model.PName)</label></td>
+                        </tr>
+                        <tr>
+                            <td >使用者編號 / 名稱:</td>
+                            <td >
+                                &nbsp;
+                                <label id="lbUserID" name="lbUserID"  maxlength="10" >@Html.DisplayFor(model => model.UserID)</label>
+                                <label> / </label>
+                                <label id="lbUserName" name="lbUserName"  maxlength="10" >@Html.DisplayFor(model => model.UserName)</label>
+                            </td>
+                        </tr>
+                        <tr  >
+                            <td >簽核主管編號 / 名稱:</td>
+                            <td >
+                                &nbsp;
+                                <label id="lbSupervisorID" name="lbSupervisorID" maxlength="10">@Html.DisplayFor(model => model.SupervisorID)</label>
+                                <label> / </label>
+                                <label id="lbSupervisorName" name="lbSupervisorName" maxlength="10">@Html.DisplayFor(model => model.SupervisorName)</label>
+                            </td>
+                        </tr>
+                       @if (@Model.Status == 3) {
+                        <tr  >
+                            <td >覆核主管編號 / 名稱:</td>
+                            <td >
+                                &nbsp;
+                                <label id="lbReviewSupervisorID" name="lbReviewSupervisorID" maxlength="10">@Html.DisplayFor(model => model.ReviewSupervisorID)</label>
+                                <label> / </label>
+                                <label id="lbReviewSupervisorName" name="lbReviewSupervisorName" maxlength="10">@Html.DisplayFor(model => model.ReviewSupervisorName)</label>
+                            </td>
+                        </tr>
+                       }
+                        @*<tr>
+                            <td>作業區間:</td>
+                            <td>
+                                @if(@Model.Status == 1){
+                                <label id="ddlWorkTimeStart" name="ddlWorkTimeStart" maxlength="10">@Html.DisplayFor(model => model.WorkTimeStart)</label>
+                                <label> ~ </label>
+                                <label id="ddlWorkTimeEnd" name="ddlWorkTimeEnd" maxlength="10">@Html.DisplayFor(model => model.WorkTimeEnd)</label>
+                                }
+                                else{
+                                    <input class=" datepicker" id="ddlWorkTimeStart" name="ddlWorkTimeStart" value="@Html.DisplayFor(model => model.WorkTimeStart)" />
+                                    <label> ~ </label>
+                                    <input class=" datepicker" id="ddlWorkTimeEnd" name="ddlWorkTimeEnd" value="@Html.DisplayFor(model => model.WorkTimeEnd)" />
+                                }
+                            </td>
+                        </tr>*@
+                        
+                        <tr  >
+                            <td>簽核狀態:</td>
+                            <td>
+                                @if (@Model.Status == 1) {
+                                    <label id="lbStatus" name="lbStatus" maxlength="10">待簽核</label>
+                                }
+                                else if (@Model.Status == 2) {
+                                    <label id="lbStatus" name="lbStatus" maxlength="10">已簽核，待覆核</label>
+                                }
+                                else if (@Model.Status == 3) {
+                                    <label id="lbStatus" name="lbStatus" maxlength="10">通過</label>
+                                }
+                                else if (@Model.Status == 4) {
+                                    <label id="lbStatus" name="lbStatus" maxlength="10">駁回</label>
+                                }
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label id="" name="" maxlength="10">申請上傳檔案: </label>
+                                <a download href="@Url.Content("~/DataFile/SigningProcessFile/")@Html.DisplayFor(model => model.UploadPath)"> @Html.DisplayFor(model => model.UploadName)</a>
+                            </td>
+                        </tr>
+                    </table>
+ 
+                    <table id="tbTwo">
+                        <tr>
+                            <td>註記:(限制字數70字)</td>
+                        </tr>
+                        <tr>
+                            @*<td>備註欄(使用者)</td>*@
+                            <td>註記(簽核主管)</td>
+                            <td>註記(覆核主管)</td>
+                        </tr>
+                        <tr>
+                           @* <td><textarea id="tbMsgUser" name="tbMsgUser" rows="6" cols="30" maxlength="70" placeholder="備註欄(使用者)" style="resize: none; ">@Html.DisplayFor(model => model.MsgUser)</textarea></td>*@
+                            <td><textarea id="tbMsgSupervisor" name="tbMsgSupervisor" rows="6" cols="30" maxlength="70" placeholder="註記(簽核主管)" style="resize: none; ">@Html.DisplayFor(model => model.MsgSupervisor)</textarea></td>
+                            <td><textarea id="tbMsgReviewSupervisor" name="tbMsgReviewSupervisor" rows="6" cols="30" maxlength="70" placeholder="註記(覆核主管)" style="resize: none; ">@Html.DisplayFor(model => model.MsgReviewSupervisor)</textarea></td>
+                        </tr>
+                    </table>
+                    <div class="row vertical-align">
+                        @if (@Model.Status == 1) {
+                            <div class="col-xs-auto "><button type="button" class="btn btn-primary btn-space" onclick="ApplicationUpdate();">簽核</button></div>
+                            <div class="col-xs-auto "><button type="button" class="btn btn-primary btn-space" onclick="GiveIn();">上呈</button></div>
+                            <div class="col-xs-auto "><button type="button" class="btn btn-danger" onclick="DeleteItems(1)">駁回</button></div>
+                            @Html.ActionLink("返回", "SigningProcess", null, new { @class = "btn btn-primary" })
+                        }
+                        else if (@Model.Status == 2) {
+                            <div class="col-xs-auto "><button type="button" class="btn btn-primary btn-space" onclick="ApplicationUpdate();">覆核</button></div>
+                            <div class="col-xs-auto "><button type="button" class="btn btn-danger" onclick="DeleteItems(2)">駁回</button></div>
+                            @Html.ActionLink("返回", "ReviewProcess", null, new { @class = "btn btn-primary" })
+                        }
+              
+                    </div>
+
+                </div>
+                <!-- /.box-header -->
+                <div class="box-body">
+                    <table id="tbResult" class="table table-bordered table-hover">
+                        <thead>
+                        </thead>
+                    </table>
+                </div>
+                <!-- /.box-body -->
+            </div>
+
+        </div>
+        <!-- /.col -->
+    </div>
+    <input type="hidden" value="@Html.DisplayFor(model => model.PID)" id="hidPID" />
+    <input type="hidden" value="@Html.DisplayFor(model => model.YM)" id="hidYM" />
+    <!-- /.row -->
+</section>

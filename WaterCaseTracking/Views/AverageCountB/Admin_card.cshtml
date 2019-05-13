@@ -1,0 +1,571 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<script>
+    $(document).ready(function () {
+        $.ajax({
+            type: 'POST',
+            data: '{}',
+            //async: false, //啟用同步請求
+            url: '@Url.Action("searchInit", "AverageCountB")',
+            contenType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (result) {
+                //失敗的處理
+                if (result.db_Result) {
+                    alert(result.db_Result);
+                    return;
+                }
+                var ddlYMHtml = "<option value=''>請選擇</option>";
+                $.each(result.ddlYM.DropDownListLT, function (i, ddl) {
+                    ddlYMHtml += '<option value="' + ddl.Values + '">' + ddl.Text + '</option>';
+                });
+                $('#ddlYM').html(ddlYMHtml);
+
+                //區域下拉選單
+                var ddlAreaHtml = "<option value=''>請選擇</option>";
+                $.each(result.ddlArea.DropDownListLT, function (i, ddl) {
+                    ddlAreaHtml += '<option value="' + ddl.Values + '">' + ddl.Text + '</option>';
+                });
+                $('#ddlArea').html(ddlAreaHtml);
+                //分行下拉選單
+                var ddlUntilHtml = "<option value=''>請選擇</option>";
+                $.each(result.ddlUntil.DropDownListLT, function (i, ddl) {
+                    ddlUntilHtml += '<option value="' + ddl.Values + '">' + ddl.Text + '</option>';
+                });
+                $('#ddlUntil').html(ddlUntilHtml);
+                //考核組別下拉選單
+                var ddlAssessmentGroupHtml = "<option value=''>請選擇</option>";
+                $.each(result.ddlAssessmentGroup.DropDownListLT, function (i, ddl) {
+                    ddlAssessmentGroupHtml += '<option value="' + ddl.Values + '">' + ddl.Text + '</option>';
+                });
+                $('#ddlAssessmentGroup').html(ddlAssessmentGroupHtml);
+                //區域中心
+                var ddlAreacenterNameHtml = "<option value=''>請選擇</option>";
+                $.each(result.ddlAreacenterName.DropDownListLT, function (i, ddl) {
+                    ddlAreacenterNameHtml += '<option value="' + ddl.Values + '">' + ddl.Text + '</option>';
+                });
+                $('#ddlAreacenterName').html(ddlAreacenterNameHtml);
+                //副總轄管區
+                var ddlGen_JurisNameHtml = "<option value=''>請選擇</option>";
+                $.each(result.ddlGen_JurisName.DropDownListLT, function (i, ddl) {
+                    ddlGen_JurisNameHtml += '<option value="' + ddl.Values + '">' + ddl.Text + '</option>';
+                });
+                $('#ddlGen_JurisName').html(ddlGen_JurisNameHtml);
+            }, fail: function () {
+                alert('系統錯誤!!');
+            }
+        })
+
+        $('#QueryPage').empty();
+    });
+</script>
+<section class="content-header">
+    <h1>
+        經營管理紀錄卡(群組)
+
+    </h1>
+  
+</section>
+<section class="content">
+    <div class="row">
+        <div class="col-xs-10">
+            <div class="box">
+                <div class="box-header">
+                    <div class="row vertical-align">
+                        <div class="col-xs-auto">年月:</div>
+                        <div class="col-xs-2">
+                            <select name="ddlYM" id="ddlYM" class="form-control"></select>
+                        </div>
+
+                        <div class="col-xs-auto">地區別:</div>
+                        <div class="col-xs-2">
+                            <select name="ddlArea" id="ddlArea" class="form-control"></select>
+                        </div>
+                                               
+                        <div class="col-xs-auto">分行:</div>
+                      
+
+                            <div cclass="col-xs-2 ">
+                                <select name="ddlUntil" id="ddlUntil" class="form-control"></select>
+                            </div>
+                        </div>
+                    <div class="row vertical-align">
+                        <div class="col-xs-auto">考核組別:</div>
+                        <div class="col-xs-2">
+                            <select name="ddlAssessmentGroup" id="ddlAssessmentGroup" @*onchange="click();"*@ class="form-control"></select>
+                        </div>
+
+
+                        <div class="col-xs-auto">區域中心:</div>
+                        <div class="col-xs-2">
+                            <select name="ddlAreacenterName" id="ddlAreacenterName" @*onchange="click();"*@ class="form-control"></select>
+                        </div>
+                        <div class="col-xs-auto">副總轄管區:</div>
+                        <div class="col-xs-2">
+                            <select name="ddlGen_JurisName" id="ddlGen_JurisName" @*onchange="click();"*@ class="form-control"></select>
+                        </div>
+                    </div>
+
+                    <div class="row vertical-align">
+                        <div class="col-xs-2">
+                            <button name="btnAverageB" id="btnAverageB" onclick="AverageB();" type="button" class="btn btn-primary">月平均查詢</button>
+                        </div>
+                        <div class="col-xs-2">
+                            <button name="btnAverageCountB" id="btnAverageCountB" onclick="AveragecountB();" type="button" class="btn btn-primary">累計平均查詢</button>
+                        </div>
+                        <div class="col-xs-2">
+                            <button name="btnAverageB_Excel" id="btnAverageB_Excel" type="button" onclick="AverageB_Export();" class="btn btn-primary">月平均匯出EXCEL</button>
+                        </div>
+                    </div>
+                    <div class="row vertical-align">
+                       
+                        <div class="col-xs-2">
+                            <button name="btnAverageCountB_Excel" id="btnAverageCountB_Excel" onclick="AverageCountB_Export();" type="button" class="btn btn-primary">累計平均查詢匯出EXCEL</button>
+                        </div>
+                        <div class="col-xs-2">
+                            <button name="btnAverageB_ODS" id="btnAverageB_ODS" type="button" onclick="AverageB_ODF();" class="btn btn-primary">月平均匯出ODF</button>
+                        </div>
+                        <div class="col-xs-2">
+                            <button name="btnAverageCountB_ODS" id="btnAverageCountB_ODF" onclick="AverageCountB_ODF();" type="button" class="btn btn-primary">累計平均查詢匯出ODF</button>
+                        </div>
+                    </div>
+                </div>
+                <div id="QueryPage" class="box-body" style="height: auto; overflow: auto;">
+
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<script>
+ 
+    function AverageB() {
+        $('#QueryPage').empty();
+        if ($('#ddlYM').val() == "" || $('#ddlYM').val()== null)
+        {
+            alert("年月檔位不可空值");
+            return;
+        }
+        if ($('#ddlArea').val() == "" && $('#ddlAssessmentGroup').val() == "" && $('#ddlGen_JurisName').val() == "" && $('#ddlAreacenterName').val() == "") {
+            alert("地區、考核組別、 區域中心 、 副總轄管區不可同時空值");
+            return;
+        }
+        var ExportViewModel = {
+            ddlYM: $('#ddlYM').val(),
+            ddlArea: $('#ddlArea').val(),
+            ddlUntil: $('#ddlUntil').val(),
+            Ass_GroupName: $('#ddlAssessmentGroup').val(),
+            AreacenterName: $('#ddlAreacenterName').val(),
+            Gen_JurisName: $('#ddlGen_JurisName').val(), 
+        };
+
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("AverageResult", "AverageCountB")',
+            data: ExportViewModel,
+            contenType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (result) {
+                console.log(result);
+                $('#QueryPage').append(result);
+            }
+            , fail: function () {
+                alert("匯入失敗");
+            }
+            , done: function (result) {
+                    if (result == "") {
+                        alert("無查詢匯出結果");
+                    }
+
+                    window.open(result, null);
+                }
+            });
+    }
+    function AveragecountB() {
+        if ($('#ddlYM').val() == "" || $('#ddlYM').val() == null) {
+            alert("年月檔位不可空值");
+            return;
+        }
+        if ($('#ddlArea').val() == "" && $('#ddlAssessmentGroup').val() == "" && $('#ddlGen_JurisName').val() == "" && $('#ddlAreacenterName').val() == "") {
+            alert("地區、考核組別、 區域中心 、 副總轄管區不可同時空值");
+            return;
+        }
+        $('#QueryPage').empty();
+       
+        var ExportViewModel = {
+            ddlYM: $('#ddlYM').val(),
+            ddlArea: $('#ddlArea').val(),
+            ddlUntil: $('#ddlUntil').val(),
+            Ass_GroupName: $('#ddlAssessmentGroup').val(),
+            AreacenterName: $('#ddlAreacenterName').val(),
+            Gen_JurisName: $('#ddlGen_JurisName').val(), 
+        };
+
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("AveragecountResult", "AverageCountB")',
+            data: ExportViewModel,
+            contenType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (result) {
+                console.log(result);
+                $('#QueryPage').append(result);
+            }
+            , fail: function () {
+                alert("匯入失敗");
+            }
+            , done: function (result) {
+                    if (result == "") {
+                        alert("無查詢匯出結果");
+                    }
+
+                    window.open(result, null);
+                }
+         });
+
+             @*//匯出
+         function AverageB_Export() {
+        var ExportViewModel = {
+            ddlYM: $('#ddlYM').val(),
+            ddlArea: $('#ddlArea').val(),
+            ddlUntil: $('#ddlUntil').val(),
+            Ass_GroupName: $('#ddlAssessmentGroup').val(), 
+            AreacenterName: $('#ddlAreacenterName').val(), 
+            Gen_JurisName: $('#ddlGen_JurisName').val(), 
+        };
+
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("Export", "KPI_ManageQuery")',
+            data: ExportViewModel,
+            contenType: "application/json; charset=utf-8",
+        })
+    .done(function (result) {
+        if (result == "")
+        {
+            alert("無查詢匯出結果");
+        }
+        window.open(result, null);
+    })
+    .fail(function () {
+        alert("匯入失敗");
+    })
+    }*@
+    }
+    function AverageB_Export() {
+        if ($('#ddlYM').val() == "" || $('#ddlYM').val() == null) {
+            alert("年月檔位不可空值");
+            return;
+        }
+        if ($('#ddlArea').val() == "" && $('#ddlAssessmentGroup').val() == "" && $('#ddlGen_JurisName').val() == "" && $('#ddlAreacenterName').val() == "") {
+            alert("地區、考核組別、 區域中心 、 副總轄管區不可同時空值");
+            return;
+        }
+       
+        var ExportViewModel = {
+            ddlYM: $('#ddlYM').val(),
+            ddlArea: $('#ddlArea').val(),
+            ddlUntil: $('#ddlUntil').val(),
+            Ass_GroupName: $('#ddlAssessmentGroup').val(),
+            AreacenterName: $('#ddlAreacenterName').val(),
+            Gen_JurisName: $('#ddlGen_JurisName').val(), 
+        };
+
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("AverageResult_Export", "AverageCountB")',
+            data: ExportViewModel,
+            contenType: "application/json; charset=utf-8",
+            //dataType: "json",
+            success: function (result) {
+                window.open(result, null);
+
+            }
+            , fail: function () {
+                console.log(result);
+                alert("匯入失敗");
+            }
+        })
+            .done(function (result) {
+                if (result == "") {
+                    alert("無查詢匯出結果");
+                }
+            });
+
+             
+    }
+    function AverageB_ODF() {
+        if ($('#ddlYM').val() == "" || $('#ddlYM').val() == null) {
+            alert("年月檔位不可空值");
+            return;
+        }
+        if ($('#ddlArea').val() == "" && $('#ddlAssessmentGroup').val() == "" && $('#ddlGen_JurisName').val() == "" && $('#ddlAreacenterName').val() == "") {
+            alert("地區、考核組別、 區域中心 、 副總轄管區不可同時空值");
+            return;
+        }
+       
+        var ExportViewModel = {
+            ddlYM: $('#ddlYM').val(),
+            ddlArea: $('#ddlArea').val(),
+            ddlUntil: $('#ddlUntil').val(),
+            Ass_GroupName: $('#ddlAssessmentGroup').val(),
+            AreacenterName: $('#ddlAreacenterName').val(),
+            Gen_JurisName: $('#ddlGen_JurisName').val(), 
+        };
+
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("AverageResult_ODF", "AverageCountB")',
+            data: ExportViewModel,
+            contenType: "application/json; charset=utf-8",
+            //dataType: "json",
+            success: function (result) {
+                window.open(result, null);
+
+            }
+            , fail: function () {
+                console.log(result);
+                alert("匯入失敗");
+            }
+        })
+            .done(function (result) {
+                if (result == "") {
+                    alert("無查詢匯出結果");
+                }
+            });
+
+             
+    }
+    function AverageCountB_Export() {
+        if ($('#ddlYM').val() == "" || $('#ddlYM').val() == null) {
+            alert("年月檔位不可空值");
+            return;
+        }
+        if ($('#ddlArea').val() == "" && $('#ddlAssessmentGroup').val() == "" && $('#ddlGen_JurisName').val() == "" && $('#ddlAreacenterName').val() == "") {
+            alert("地區、考核組別、 區域中心 、 副總轄管區不可同時空值");
+            return;
+        }
+        var ExportViewModel = {
+            ddlYM: $('#ddlYM').val(),
+            ddlArea: $('#ddlArea').val(),
+            ddlUntil: $('#ddlUntil').val(),
+            Ass_GroupName: $('#ddlAssessmentGroup').val(),
+            AreacenterName: $('#ddlAreacenterName').val(),
+            Gen_JurisName: $('#ddlGen_JurisName').val(), 
+        };
+
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("AveragecountResult_Export", "AverageCountB")',
+            data: ExportViewModel,
+            contenType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (result) {
+                console.log(result);
+                
+            }
+            , fail: function () {
+                alert("匯入失敗");
+            }
+        })
+            .done(function (result) {
+                if (result == "") {
+                    alert("無查詢匯出結果");
+                }
+                window.open(result, null);
+            });
+
+             
+    }
+    function AverageCountB_ODF() {
+        if ($('#ddlYM').val() == "" || $('#ddlYM').val() == null) {
+            alert("年月檔位不可空值");
+            return;
+        }
+        if ($('#ddlArea').val() == "" && $('#ddlAssessmentGroup').val() == "" && $('#ddlGen_JurisName').val() == "" && $('#ddlAreacenterName').val() == "") {
+            alert("地區、考核組別、 區域中心 、 副總轄管區不可同時空值");
+            return;
+        }
+       
+        var ExportViewModel = {
+            ddlYM: $('#ddlYM').val(),
+            ddlArea: $('#ddlArea').val(),
+            ddlUntil: $('#ddlUntil').val(),
+            Ass_GroupName: $('#ddlAssessmentGroup').val(),
+            AreacenterName: $('#ddlAreacenterName').val(),
+            Gen_JurisName: $('#ddlGen_JurisName').val(), 
+        };
+
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("AveragecountResult_ODF", "AverageCountB")',
+            data: ExportViewModel,
+            contenType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (result) {
+                console.log(result);
+                
+            }
+            , fail: function () {
+                alert("匯入失敗");
+            }
+        })
+            .done(function (result) {
+                if (result == "") {
+                    alert("無查詢匯出結果");
+                }
+                window.open(result, null);
+            });
+
+             
+    }
+    $('#ddlArea').on('change', function () {
+        
+     var ExportViewModel = {
+
+            Area: $('#ddlArea').val(),
+          
+
+        };
+        $.ajax({
+            type: 'POST',
+            data: ExportViewModel,
+            //async: false, //啟用同步請求
+            url: '@Url.Action("AreaClick", "OperationalOverview")',
+            contenType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (result) {
+                //失敗的處理
+                if (result.db_Result) {
+                    alert(result.db_Result);
+                    return;
+                }
+                
+                //分行下拉選單
+                var ddlBranch_NoHtml = "<option value=''>請選擇</option>";
+                $.each(result.ddlUntil.DropDownListLT, function (i, ddl) {
+                    ddlBranch_NoHtml += '<option value="' + ddl.Values + '">' + ddl.Text + '</option>';
+                });
+                $('#ddlUntil').html(ddlBranch_NoHtml);
+               
+
+            }, fail: function () {
+                alert('匯入失敗!!');
+            }
+        })
+  
+    });
+    @*$('#ddlAssessmentGroup').on('click', function () {
+      
+     var ExportViewModel = {
+
+         Ass_GroupName: $('#ddlAssessmentGroup').val(),
+          
+
+        };
+        $.ajax({
+            type: 'POST',
+            data: ExportViewModel,
+            //async: false, //啟用同步請求
+            url: '@Url.Action("AssessmentGroupClick", "OperationalOverview")',
+            contenType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (result) {
+                //失敗的處理
+                if (result.db_Result) {
+                    alert(result.db_Result);
+                    return;
+                }
+                
+                //分行下拉選單
+                var ddlBranch_NoHtml = "<option value=''>請選擇</option>";
+                $.each(result.ddlUntil.DropDownListLT, function (i, ddl) {
+                    ddlBranch_NoHtml += '<option value="' + ddl.Values + '">' + ddl.Text + '</option>';
+                });
+                $('#ddlUntil').html(ddlBranch_NoHtml);
+               
+
+            }, fail: function () {
+                alert('匯入失敗!!');
+            }
+        })
+  
+    });
+    $('#ddlAreacenterName').on('click', function () {
+      
+     var ExportViewModel = {
+
+         AreacenterName: $('#ddlAreacenterName').val(),
+          
+
+        };
+        $.ajax({
+            type: 'POST',
+            data: ExportViewModel,
+            //async: false, //啟用同步請求
+            url: '@Url.Action("AreacenterNameClick", "OperationalOverview")',
+            contenType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (result) {
+                //失敗的處理
+                if (result.db_Result) {
+                    alert(result.db_Result);
+                    return;
+                }
+                
+                //分行下拉選單
+                var ddlBranch_NoHtml = "<option value=''>請選擇</option>";
+                $.each(result.ddlUntil.DropDownListLT, function (i, ddl) {
+                    ddlBranch_NoHtml += '<option value="' + ddl.Values + '">' + ddl.Text + '</option>';
+                });
+                $('#ddlUntil').html(ddlBranch_NoHtml);
+               
+
+            }, fail: function () {
+                alert('匯入失敗!!');
+            }
+        })
+  
+    });
+    $('#ddlGen_JurisName').on('click', function () {
+      
+     var ExportViewModel = {
+
+         Gen_JurisName: $('#ddlGen_JurisName').val(),
+          
+
+        };
+        $.ajax({
+            type: 'POST',
+            data: ExportViewModel,
+            //async: false, //啟用同步請求
+            url: '@Url.Action("lGen_JurisNameClick", "OperationalOverview")',
+            contenType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (result) {
+                //失敗的處理
+                if (result.db_Result) {
+                    alert(result.db_Result);
+                    return;
+                }
+                
+                //分行下拉選單
+                var ddlBranch_NoHtml = "<option value=''>請選擇</option>";
+                $.each(result.ddlUntil.DropDownListLT, function (i, ddl) {
+                    ddlBranch_NoHtml += '<option value="' + ddl.Values + '">' + ddl.Text + '</option>';
+                });
+                $('#ddlUntil').html(ddlBranch_NoHtml);
+               
+
+            }, fail: function () {
+                alert('匯入失敗!!');
+            }
+        })
+  
+    });*@
+</script>

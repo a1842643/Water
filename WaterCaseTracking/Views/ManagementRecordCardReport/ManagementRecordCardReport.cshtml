@@ -1,0 +1,180 @@
+﻿
+@{
+    ViewBag.Title = "ManagementRecordCardReport";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<script>
+    $(document).ready(function () {
+        $.ajax({
+            type: 'POST',
+            data: '{}',
+            //async: false, //啟用同步請求
+            url: '@Url.Action("searchInit", "ManagementRecordCardReport")',
+            contenType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (result) {
+                //失敗的處理
+                if (result.db_Result) {
+                    alert(result.db_Result);
+                    return;
+                }
+
+                //區域下拉選單
+                var ddlAreaHtml = "<option value=''>全部</option>";
+                $.each(result.ddlArea.DropDownListLT, function (i, ddl) {
+                    ddlAreaHtml += '<option value="' + ddl.Values + '">' + ddl.Text + '</option>';
+                });
+                $('#ddlArea').html(ddlAreaHtml);
+
+                //考核組別下拉選單
+                var ddlAssessmentGroupHtml = "<option value=''>全部</option>";
+                $.each(result.ddlAssessmentGroup.DropDownListLT, function (i, ddl) {
+                    ddlAssessmentGroupHtml += '<option value="' + ddl.Values + '">' + ddl.Text + '</option>';
+                });
+                $('#ddlAssessmentGroup').html(ddlAssessmentGroupHtml);
+
+                //區域中心
+                var ddlAreacenterNameHtml = "<option value=''>全部</option>";
+                $.each(result.ddlAreacenterName.DropDownListLT, function (i, ddl) {
+                    ddlAreacenterNameHtml += '<option value="' + ddl.Values + '">' + ddl.Text + '</option>';
+                });
+                $('#ddlAreacenterName').html(ddlAreacenterNameHtml);
+
+                //副總轄管區
+                var ddlGen_JurisNameHtml = "<option value=''>全部</option>";
+                $.each(result.ddlGen_JurisName.DropDownListLT, function (i, ddl) {
+                    ddlGen_JurisNameHtml += '<option value="' + ddl.Values + '">' + ddl.Text + '</option>';
+                });
+                $('#ddlGen_JurisName').html(ddlGen_JurisNameHtml);
+
+                //年月下拉選單
+                var ddlYeartMonthHtml = "<option value=''>全部</option>";
+                $.each(result.ddlYeartMonth.DropDownListLT, function (i, ddl) {
+                    ddlYeartMonthHtml += '<option value="' + ddl.Values + '">' + ddl.Text + '</option>';
+                });
+                $('#ddlYeartMonth').html(ddlYeartMonthHtml);
+
+            }, fail: function () {
+                alert('匯入失敗!!');
+            }
+        });
+
+        //$('#Until').hide();
+    });
+</script>
+
+<section class="content-header">
+    <h1>
+        匯出經營管理記錄卡
+    </h1>
+</section>
+<section class="content">
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="box">
+                <div class="box-header">
+                    <div class="box-header">
+                        <div class="row vertical-align">
+                            <div class="col-xs-auto">報表列別:</div>
+                            <div class="col-xs-4">
+                                <select name="ddlReport" id="ddlReport" class="form-control">
+                                    <option value="0">---請選擇---</option>
+                                    <option value="Month">月平均</option>
+                                    <option value="Accumulative">累計平均</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="box-header">
+                        <div class="row vertical-align">
+                            <div class="col-xs-auto">地區別:</div>
+                            <div class="col-xs-2">
+                                <select name="ddlArea" id="ddlArea" class="form-control"></select>
+                            </div>
+                            <div class="col-xs-auto">考核組別:</div>
+                            <div class="col-xs-2">
+                                <select name="ddlAssessmentGroup" id="ddlAssessmentGroup" class="form-control"></select>
+                            </div>
+                            <div class="col-xs-auto">區域中心:</div>
+                            <div class="col-xs-2">
+                                <select name="ddlAreacenterName" id="ddlAreacenterName" class="form-control"></select>
+                            </div>
+                            <div class="col-xs-auto">副總轄管區:</div>
+                            <div class="col-xs-2">
+                                <select name="ddlGen_JurisName" id="ddlGen_JurisName" class="form-control"></select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="box-header">
+                        <div class="row vertical-align">
+                            <div class="col-xs-auto">年月:</div>
+                            <div class="col-xs-6">
+                                <select name="ddlYeartMonth" id="ddlYeartMonth" class="form-control"></select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="box-header">
+                    <div class="row vertical-align">
+                        <div class="col-xs-1">
+                            <button name="btnQuery" id="btnQuery" type="button" class="btn btn-primary">查詢</button>
+                        </div>
+                        <div class="col-xs-1">
+                            <button name="btnReportExcel" id="btnReportExcel" type="button" class="btn btn-primary">匯出Excel</button>
+                        </div>
+                    </div>
+                </div>
+                @*<div class="box-header">
+                    <div id="Until" class="row vertical-align">
+                        <div class="col-xs-auto">分行:</div>
+                        <div class="col-xs-8">
+                            <select name="ddlUntil" id="ddlUntil" class="form-control"></select>
+                        </div>
+                    </div>
+                </div>*@
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+    @*$('#btnQuery').on('click', function () {
+        $('#Until').show();
+        $('#ddlUntil').empty();
+
+        var data = {
+            ddlArea: $('#ddlArea option:selected').val(),
+            ddlAssessmentGroup: $('#ddlAssessmentGroup option:selected').val(),
+            ddlAreacenterName: $('#ddlAreacenterName option:selected').val(),
+            ddlGen_JurisName: $('#ddlGen_JurisName option:selected').val()
+        };
+        console.log(data);
+        $.ajax({
+            type: 'POST',
+            data: data,
+            //async: false, //啟用同步請求
+            url: '@Url.Action("searchInitUnitl", "ManagementRecordCardReport")',
+            contenType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (result) {
+                //失敗的處理
+                if (result.db_Result) {
+                    alert(result.db_Result);
+                    return;
+                }
+                console.log(result);
+                //區域下拉選單
+                var ddlUntilHtml = "<option value=''>全部</option>";
+                $.each(result.ddlUntil.DropDownListLT, function (i, ddl) {
+                    ddlUntilHtml += '<option value="' + ddl.Values + '">' + ddl.Text + '</option>';
+                });
+                $('#ddlUntil').html(ddlUntilHtml);
+                alert("分行查詢完成");
+
+            }, fail: function () {
+                alert('匯入失敗!!');
+            }
+        });
+    });*@
+</script>

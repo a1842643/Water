@@ -1,0 +1,238 @@
+﻿
+@{
+    ViewBag.Title = "SigningProcess";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<script>
+    var oTable;
+    //初始設定
+    $(function () {
+        var SigningInfoItemsViewModel = { ddlStatus:1};
+        //初始化
+        $.ajax({
+            type: 'POST',
+            data: SigningInfoItemsViewModel,
+            //async: false, //啟用同步請求
+            url: '@Url.Action("searchInit", "SigningProcess")',
+            contenType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (data) {
+                //失敗的處理
+                if (data.db_Result) {
+                    alert(data.db_Result);
+                    return;
+                }
+                var _StrHtml = '';
+                _StrHtml += '<thead><tr><td>申請單編號</td><td>申請項目名稱</td><td>申請者名稱</td><td>簽核主管姓名</td><td>覆核主管姓名</td><td>簽核狀態</td></tr></thead>';
+                _StrHtml += '<tbody>';
+                $.each(data.data, function (i, ddl) {
+                    var _ProID = ddl.ProID.trim();
+                    var _UrlStr = '@Url.Action("Application", "SigningProcess")?ProID=' + _ProID;
+                    _StrHtml += '<tr >';
+                    _StrHtml += '<td><a href="' + _UrlStr + '"><i class="fa fa-caret-right"></i>' + ddl.ProID + '</a></td>'; //申請單編號(yyyyMMddHHmmss + 員編id)
+                    _StrHtml += '<td>' + ddl.PName + '</td>'; //申請項目Name
+                    _StrHtml += '<td>' + ddl.UserName + '</td>'; //申請者名稱
+                    _StrHtml += '<td>' + ddl.SupervisorName + '</td>'; //簽核主管姓名
+                    _StrHtml += '<td>' + ddl.ReviewSupervisorName + '</td>'; //覆核主管姓名
+                    _StrHtml += '<td>' + ddl.StatusText + '</td>'; //簽核狀態
+                    _StrHtml += '</tr >';
+                });
+                _StrHtml += '</tbody > ';
+                $('#tbResult').html(_StrHtml);
+
+            }, fail: function () {
+                alert('匯入失敗!!');
+            }
+        })
+        @*$.ajax({
+            type: 'POST',
+            data: '{}',
+            //async: false, //啟用同步請求
+            url: '@Url.Action("searchInit", "MinuteLog")',
+            contenType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (result) {
+                //失敗的處理
+                if (result.db_Result) {
+                    alert(result.db_Result);
+                    return;
+                }
+                //操作人員下拉選單
+                var ddlUserNameHtml = "<option value=''>請選擇</option>";
+                $.each(result.ddlUserName.DropDownListLT, function (i, ddl) {
+                    ddlUserNameHtml += '<option value="' + ddl.Values + '">' + ddl.Text + '</option>';
+                });
+                $('#ddlUserName').html(ddlUserNameHtml);
+                //功能下拉選單
+                var ddlFuncNameHtml = "<option value=''>請選擇</option>";
+                $.each(result.ddlFuncName.DropDownListLT, function (i, ddl) {
+                    ddlFuncNameHtml += '<option value="' + ddl.Values + '">' + ddl.Text + '</option>';
+                });
+                $('#ddlFuncName').html(ddlFuncNameHtml);
+                //狀態下拉選單
+                var ddlStatusHtml = "<option value=''>請選擇</option>";
+                $.each(result.ddlStatus.DropDownListLT, function (i, ddl) {
+                    ddlStatusHtml += '<option value="' + ddl.Values + '">' + ddl.Text + '</option>';
+                });
+                $('#ddlStatus').html(ddlStatusHtml);
+
+            }, fail: function () {
+                alert('匯入失敗!!');
+            }
+        })*@
+        //載入Table
+        //oTableSetting();
+    });
+
+    //查詢
+    function QueryTable() {
+        //判斷有無設定過
+        if (oTable)
+        { oTable.destroy(); }
+        $('#tbResult').empty();
+        oTableSetting();
+        //重新查詢
+        oTable.ajax.reload(null, false);
+        //把查詢值暫存起來
+        $('#hidUserName').val($('#ddlUserName').val());
+        $('#hidFuncName').val($('#ddlFuncName').val());
+        $('#hidStatus').val($('#ddlStatus').val());
+        $('#hidloggedStart').val($('#ddlloggedStart').val());
+        $('#hidloggedEnd').val($('#ddlloggedEnd').val());
+    }
+
+    //重置查詢條件
+    function Reset() {
+        $('#files').val('');
+        $('#ddlUserName').val('');
+        $('#ddlFuncName').val('');
+        $('#ddlStatus').val('');
+        $('#ddlloggedStart').val('');
+        $('#ddlloggedEnd').val('');
+    }
+
+    //匯出
+    function Export() {
+        //判斷是否有查詢
+        if (!oTable || oTable.data().count() == 0)
+        {
+            alert('匯出前請先查出資料');
+            return;
+        }
+
+        //var ExportViewModel = {
+        //    ddlUserName: $('#hidUserName').val(),
+        //    ddlFuncName: $('#hidFuncName').val(),
+        //    ddlStatus: $('#hidStatus').val(),
+        //    ddlloggedStart: $('#hidloggedStart').val(),
+        //    ddlloggedEnd: $('#hidloggedEnd').val(),
+        //    fileExtension: $('#ddlFileExtension').val()
+        //};
+        var fileExtension = $('#ddlFileExtension').val()
+
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("Export", "MinuteLog")',
+            data: fileExtension,
+            contenType: "application/json; charset=utf-8",
+        })
+    .done(function (result) {
+        window.open(result, null);
+    })
+    .fail(function () {
+        alert("匯入失敗");
+    })
+    }
+
+    //查詢Table設定
+    function oTableSetting() {
+
+
+        $('#Maintain').addClass('active');
+        $('#Maintain').closest('ul').closest('li').addClass('active');
+
+
+        var TableOptions = {
+            "destroy": true,
+            "oLanguage": {
+                "sUrl": "../Content/datatables.net/tw.txt"
+            },
+            "bLengthChange": true,
+            "dom": "<'row'<'col-sm-12'tr>>" +
+            "<'row'<'col-sm-3'i><'col-sm-7'p><'col-sm-2'l>>",
+            "ordering": true,
+            "searching": false,
+            "iDisplayLength": 10,
+            "bStateSave": false,
+            "bPaginate": true,
+            "scrollY": ($(window).height() - 290),
+            "scrollX": true,
+            "bProcessing": true,
+            "bServerSide": true,
+            "sAjaxSource": "GetoTable",
+            "deferLoading": 0,
+            "fnServerParams": function (aoData) {
+                //aoData.push({ "name": "ddlUserName", "value": $('#ddlUserName').val() });
+                //aoData.push({ "name": "ddlFuncName", "value": $('#ddlFuncName').val() });
+                //aoData.push({ "name": "ddlStatus", "value": $('#ddlStatus').val() });
+                //aoData.push({ "name": "ddlloggedStart", "value": $('#ddlloggedStart').val() });
+                //aoData.push({ "name": "ddlloggedEnd", "value": $('#ddlloggedEnd').val() });
+            },
+            "columns": [
+                { "title": "使用者ID", "data": "UserID" },
+                { "title": "使用者名稱", "data": "UserName" },
+                { "title": "功能名稱", "data": "FuncName" },
+                { "title": "狀態", "data": "Status" },
+                { "title": "訊息", "data": "Message" },
+                { "title": "紀錄時間", "data": "logged" }
+            ],
+            "fnServerData": function (sSource, aoData, fnCallback) {
+                $.ajax({
+                    "dataType": 'json',
+                    "contentType": "application/json; charset=utf-8",
+                    "type": "GET",
+                    "url": sSource,
+                    "data": aoData,
+                    "success":
+                        function (msg) {
+                            fnCallback(msg);
+                        }
+                });
+            }
+        }
+        oTable = $('#tbResult').DataTable(TableOptions);
+    }
+</script>
+<section class="content-header">
+    <h1>
+        簽核處理
+    </h1>
+</section>
+<section class="content">
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="box">
+                <div class="box-header">
+                    <!-- /.box-header -->
+                    <div class="box-body">
+                        <table id="tbResult" class="table table-bordered table-hover">
+                            <thead>
+                            </thead>
+                        </table>
+                    </div>
+                    <!-- /.box-body -->
+                </div>
+
+            </div>
+            <!-- /.col -->
+        </div>
+        <input type="hidden" id="hidUserName" />
+        <input type="hidden" id="hidFuncName" />
+        <input type="hidden" id="hidStatus" />
+        <input type="hidden" id="hidloggedStart" />
+        <input type="hidden" id="hidloggedEnd" />
+        <!-- /.row -->
+</section>
+
+
+

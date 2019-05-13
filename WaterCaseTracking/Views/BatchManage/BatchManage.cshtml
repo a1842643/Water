@@ -1,0 +1,223 @@
+﻿
+@{
+    ViewBag.Title = "BatchManage";
+}
+
+<script>
+
+    var oTable;
+    //初始設定
+    $(function () {
+        //FuncAction();
+        QueryTable();
+    }); 
+
+    function LogView(YM, JobID, FuncN) {
+        document.location.replace('@Url.Action("BatchLogger", "BatchLogger")' + '?YM=' + YM + '&JobID=' + JobID + '&FuncN=' + FuncN);
+    }
+    function Execute() {
+        /*1080402  拿掉所有條件欄位，留執行按鈕； 直接取得今日的上月資料(last YYMM)
+        直接執行上月轉檔==>產出報表
+        if ($('#ddlLog_JobName').val() == "") {
+            alert("請選擇執行項目");
+            return false;
+        }
+        if ($('#ddlLog_FuncName').val() == "") {
+            alert("請選擇執行作業項目");
+            return false;
+        }
+        */
+        $.ajax({
+            type: 'POST',
+            //async: false, //啟用同步請求
+            url: '@Url.Action("Execute", "BatchManage")',
+            //data: { YM: $("#txtLog_YM").val(), JobID: $('#ddlLog_JobName').val(), JobName: $('#ddlLog_JobName option:selected').text(), FuncN: $('#ddlLog_FuncName').val(), exRate: $("#exchangeRate").val(), Description: $('#ddlLog_FuncName option:selected').text() },
+            data: {},
+            contenType: "application/json; charset=utf-8",
+            dataType: "json"
+            })
+        .done(function (result) {
+            alert(result);
+            oTable.ajax.reload(null, false);//重新查詢
+        })
+        .fail(function () {
+            alert("執行失敗");
+        });
+    }
+
+    //查詢
+    function QueryTable() {
+        //判斷有無設定過
+        if (oTable)
+        { oTable.destroy(); }
+        $('#tbResult').empty();
+        oTableSetting();
+        //重新查詢
+        oTable.ajax.reload(null, false);
+    }
+    //查詢Table設定
+    function oTableSetting() {
+        $('#BatchManage').addClass('active');
+        $('#BatchManage').closest('ul').closest('li').addClass('active');
+
+
+        var TableOptions = {
+            "destroy": true,
+            "oLanguage": {
+                "sUrl": "../Content/datatables.net/tw.txt"
+            },
+            "bLengthChange": false,
+            "bInfo" : false,
+            "ordering": true,
+            "searching": false,
+            "iDisplayLength": 0,
+            "bStateSave": true,
+            "bPaginate": false,
+            "scrollY": false,
+            "scrollX": false,
+            "bProcessing": false,
+            "bServerSide": true,
+            "sAjaxSource": "QueryTable",
+            "deferLoading": 0,
+            columnDefs: [
+            { width: 40, targets: 0 },
+            { width: 1, targets: 1 },
+            { width: 60, targets: 2 },
+            { width: 250, targets: 3 },
+            { width: 110, targets: 4 },
+            { width: 60, targets: 5 },
+            { width: 40, targets: 6 },
+            { width: 180, targets: 7 }
+            ],
+            fixedColumns: true,
+            "fnServerParams": function (aoData) {
+                aoData.push({ "name": "txtLog_YM", "value": $('#txtLog_YM').val() });
+                aoData.push({ "name": "ddlLog_JobID", "value": $('#ddlLog_JobName').val() });
+                aoData.push({ "name": "ddlLog_FuncName", "value": $('#ddlLog_FuncName').val() });
+            },
+            "columns": [
+                { "title": "年月", "data": "Log_YM" },
+                { "title": "排程作業類別id", "data": "Log_JobID", 'visible': false },
+                { "title": "排程作業類別", "data": "Log_JobName" },
+                { "title": "作業項目", "data": "Log_Description" },
+                { "title": "作業開始時間", "data": "Log_StartTime" },
+                { "title": "操作人員", "data": "Log_UserID" },
+                { "title": "執行狀態", "data": "Log_StatusName" },
+                { "title": "執行狀態", "data": "Log_Status", 'visible': false },
+                {
+                    "title": "操作", "orderable": false, render: function (data, type, row) {
+                        return '<button type="button" class="btn btn-primary btn-space" onclick="LogView(\'' + row.Log_YM + '\',\'' + row.Log_JobID + '\',\'' + row.Log_FuncName + '\')">Log</button>';
+                    }
+                }
+            ],
+            "fnServerData": function (sSource, aoData, fnCallback) {
+                $.ajax({
+                    "dataType": 'json',
+                    "contentType": "application/json; charset=utf-8",
+                    "type": "GET",
+                    "url": sSource,
+                    "data": aoData,
+                    "success":
+                        function (msg) {
+                            fnCallback(msg);
+
+                        }
+                });
+            }
+        }
+        oTable = $('#tbResult').DataTable(TableOptions);
+    }
+
+    function FuncAction()
+    {
+        if ($('#ddlLog_JobName').val() == "") {
+            $('#ddlLog_FuncName option').remove();
+            return;
+        }
+        //初始化
+        $.ajax({
+            type: 'POST',
+            data: { JobID: $('#ddlLog_JobName').val() },
+            url: '@Url.Action("InitBatchManage", "BatchManage")',
+            contenType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (result) {
+                //失敗的處理
+                if (result.db_Result) {
+                    alert(result.db_Result);
+                    return;
+                }
+                //批次產出報表下拉選單
+                var ddlFuncHtml;
+                //轉檔只有一項，不使用【請選擇】
+                if ($('#ddlLog_JobName').val()!="T")
+                    ddlFuncHtml ="<option value=''>請選擇</option>";
+                $.each(result.ddlLog_FuncName.DropDownListLT, function (i, ddl) {
+                    ddlFuncHtml += '<option value="' + ddl.Values + '">' + ddl.Text + '</option>';
+                });
+                $('#ddlLog_FuncName').html(ddlFuncHtml);
+                QueryTable();
+            }, fail: function () {
+                alert('匯入失敗!!');
+            }
+        })
+    }
+     
+</script>
+
+
+<section class="content-header">
+    <h1>
+        批次作業管理
+    </h1>
+</section>
+<section class="content">
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="box">
+                <div class="box-header">
+                    <div class="row vertical-align" style="display:none">
+                        <div class="col-xs-auto">項目:</div>
+                        <div class="col-xs-2">
+                            <select name="ddlLog_JobName" id="ddlLog_JobName" class="form-control" onchange="FuncAction();">
+                                <option value="">請選擇</option>
+                                <option value="T" onchange="ddlLog_FuncName_Default();">轉檔</option>
+                                <option value="R">報表</option>
+                            </select>
+                        </div>
+
+                        <div class="col-xs-2" style="width:70%"> 
+
+                            <select name="ddlLog_FuncName" id="ddlLog_FuncName" class="form-control">
+                            </select></div>
+                        </div>
+
+                    <div class="row vertical-align"  style="display:none">
+
+                        <div class="col-xs-auto">
+                            年月：
+                            <input id="txtLog_YM" type="text" value="" style="width:90px" />
+                            匯率：
+                            <input id="exchangeRate" type="text" value="" style="width:90px" />
+                        </div>
+                        <div class="row vertical-align">
+                            <div class="col-xs-auto "><button type="button" class="btn btn-primary btn-space" onclick="QueryTable();">查 詢</button></div> 
+                        </div>
+                    </div>
+                    <div class="col-xs-auto"><button type="button" class="btn btn-primary btn-space" onclick="Execute();">申請</button></div>
+                    <!-- /.box-header -->
+                    <div class="box-body">
+                        <table id="tbResult" class="table table-bordered table-hover">
+                            <thead>
+                            </thead>
+                        </table>
+                    </div>
+                    <!-- /.box-body -->
+                </div>
+
+            </div>
+            <!-- /.col -->
+        </div>
+        <!-- /.row -->
+    </div>
+</section>

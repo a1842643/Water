@@ -1,0 +1,32 @@
+﻿@model WaterCaseTracking.Models.ViewModels.BatchManage.BatchLoggerModel
+@{
+    ViewBag.Title = "BatchLogger";
+}
+
+@using (Html.BeginForm())
+{
+<section class="content-header">
+    <h1>
+        批次作業管理
+    </h1>
+</section>
+<section class="content">
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="box">
+                <div class="box-body">
+                @Html.TextArea("Log_Text", new { @readonly = true, style = "width: 100%; max-width: 100%;", @cols = "100", @rows = "16" })
+                    <div class="form-group">
+                        <div class="col-md-offset-2 col-md-10">
+                            @Html.ActionLink("返回", "../BatchManage/BatchManage", null, new { @class = "btn btn-primary btn-space" })
+                        </div>
+                    </div>
+                </div>
+                <!-- /.box-body -->
+            </div>
+        <!-- /.col -->
+    </div>
+    <!-- /.row -->
+  </div>
+</section>
+}

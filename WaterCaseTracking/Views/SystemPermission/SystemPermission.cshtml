@@ -1,0 +1,716 @@
+﻿
+@{
+    ViewBag.Title = "SystemPermission";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#PermissionItem').hide();
+        $('#EditPermissionView').hide();
+        $('#PermissionList').hide();
+        $('#Permission').empty();
+        SetChkOperating();
+
+        $('input[type="checkbox"][name="checkbox"]').each(function () {
+            $(this).prop('checked', false);
+        });
+
+        $('#PermissionExampleTbady').empty();
+    });
+    function SetChkOperating() {
+        $('#Permission').empty();
+        $.ajax({
+            url: "@Url.Action("GetPermissionList", "SystemPermission")",
+            //data: data,
+            type: "GET",
+            dataType: "json",
+            error: function (result) {
+                console.log("失敗", result);
+            },
+            success: function (result) {
+                console.log("成功", result);
+                $('#Permission').append('<option value="0">請選擇</option>');
+
+                for (var i = 0; i < result.length; i++) {
+                    $('#Permission').append("<option value=" + result[i]["PID"] + ">" + result[i]["NAME"] + "</option>");
+                }
+            }
+        });
+    }
+</script>
+<section class="content-header">
+    <h1>
+        系統權限功能維護
+    </h1>
+</section>
+<section class="content">
+    <div>
+        <div class="row">
+            <div class="col-xs-12">
+                <div class="box">
+                    <div id="PermissionUI" class="box-header">
+                        <div class="col-xs-12 vertical-align">
+                            <div class="col-xs-auto">
+                                <select name="Permission" id="Permission" class="form-control" style="width: 400px"></select>
+                            </div>
+                            <div class="col-xs-2">
+                                <button id="SearchInfoPermission" type="button" class="btn btn-primary btn-space">查 詢</button>
+                            </div>
+                            <div class="col-xs-auto">
+                                <button id="EditPermission" type="button" class="btn btn-primary btn-space">編輯角色</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="PermissionItem" class="box-body">
+                        <div class="col-xs-12">
+                            <div class="box">
+                                <div class="box-body">
+                                    <table id="chkOperating" width="300" border="1" align="center">
+                                        <tr>
+                                            <td>
+                                                <label>
+                                                    <input name="checkbox" id="Chk_A" type="checkbox" style="display:none" />
+                                                    營業單位資料管理
+                                                </label>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <ol>
+                                                    <li>
+                                                        <label>
+                                                            <input name="checkboxA" id="Chk_A01" type="checkbox" onclick="ChkOperating('A')" />
+                                                            資料維護
+                                                        </label>
+                                                    </li>
+                                                    <li>
+                                                        <label>
+                                                            <input name="checkboxA" id="Chk_A02" type="checkbox" onclick="ChkOperating('A')" />
+                                                            資料查詢
+                                                        </label>
+                                                    </li>
+                                                </ol>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <label>
+                                                    <input name="checkbox" id="Chk_B" type="checkbox" style="display:none" />
+                                                    經營績效考核
+                                                </label>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <ol>
+                                                    <li>
+                                                        <label>
+                                                            <input name="checkboxB" id="Chk_B01" type="checkbox" onclick="ChkOperating('B')" />
+                                                            經營績效配比設定
+                                                        </label>
+                                                    </li>
+                                                    <li>
+                                                        <label>
+                                                            <input name="checkboxB" id="Chk_B02" type="checkbox" onclick="ChkOperating('B')" />
+                                                            管理績效考核作業
+                                                        </label>
+                                                    </li>
+                                                    <li>
+                                                        <label>
+                                                            <input name="checkboxB" id="Chk_B03" type="checkbox" onclick="ChkOperating('B')" />
+                                                            業務績效考核作業
+                                                        </label>
+                                                    </li>
+                                                    <li>
+                                                        <label>
+                                                            <input name="checkboxB" id="Chk_B04" type="checkbox" onclick="ChkOperating('B')" />
+                                                            業績考核成績查詢
+                                                        </label>
+                                                    </li>
+                                                    <li>
+                                                        <label>
+                                                            <input name="checkboxB" id="Chk_B05" type="checkbox" onclick="ChkOperating('B')" />
+                                                            管理績效成績查詢
+                                                        </label>
+                                                    </li>
+                                                    <li>
+                                                        <label>
+                                                            <input name="checkboxB" id="Chk_B06" type="checkbox" onclick="ChkOperating('B')" />
+                                                            經營績效成績查詢
+                                                        </label>
+                                                    </li>
+                                                </ol>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <label>
+                                                    <input name="checkbox" id="Chk_C" type="checkbox" style="display:none" />
+                                                    報表查詢
+                                                </label>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <ol>
+                                                    <li>
+                                                        <label>
+                                                            <input name="checkboxC" id="Chk_C01" type="checkbox" onclick="ChkOperating('C')" />
+                                                            營運概況表(個別分行)
+                                                        </label>
+                                                    </li>
+                                                    <li>
+                                                        <label>
+                                                            <input name="checkboxC" id="Chk_C02" type="checkbox" onclick="ChkOperating('C')" />
+                                                            經營管理紀錄卡(個別分行)
+                                                        </label>
+                                                    </li>
+                                                    <li>
+                                                        <label>
+                                                            <input name="checkboxC" id="Chk_C03" type="checkbox" onclick="ChkOperating('C')" />
+                                                            經營管理紀錄卡(群組)
+                                                        </label>
+                                                    </li>
+                                                    <li>
+                                                        <label>
+                                                            <input name="checkboxC" id="Chk_C04" type="checkbox" onclick="ChkOperating('C')" />
+                                                            自定義報表
+                                                        </label>
+                                                    </li>
+                                                    <li>
+                                                        <label>
+                                                            <input name="checkboxC" id="Chk_C05" type="checkbox" onclick="ChkOperating('C')" />
+                                                            趨勢圖表
+                                                        </label>
+                                                    </li>
+                                                    <li>
+                                                        <label>
+                                                            <input name="checkboxC" id="Chk_C06" type="checkbox" onclick="ChkOperating('C')" />
+                                                            自定義報表查詢(年月)
+                                                        </label>
+                                                    </li>
+                                                </ol>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <label>
+                                                    檔案總管
+                                                </label>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <ol>
+                                                    <li>
+                                                        <label>
+                                                            <input name="checkbox" id="Chk_D" type="checkbox" />
+                                                            檔案總管
+                                                        </label>
+                                                    </li>
+                                                </ol>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <label>
+                                                    <input name="checkbox" id="Chk_E" type="checkbox" style="display:none" />
+                                                    報表上傳簽核作業
+                                                </label>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <ol>
+                                                    <li>
+                                                        <label>
+                                                            <input name="checkboxE" id="Chk_E01" type="checkbox" onclick="ChkOperating('F')" />
+                                                            上傳作業
+                                                        </label>
+                                                    </li>
+                                                    <li>
+                                                        <label>
+                                                            <input name="checkboxE" id="Chk_E02" type="checkbox" onclick="ChkOperating('F')" />
+                                                            簽核處理
+                                                        </label>
+                                                    </li>
+                                                    <li>
+                                                        <label>
+                                                            <input name="checkboxE" id="Chk_E03" type="checkbox" onclick="ChkOperating('F')" />
+                                                            覆核處理
+                                                        </label>
+                                                    </li>
+                                                    <li>
+                                                        <label>
+                                                            <input name="checkboxE" id="Chk_E04" type="checkbox" onclick="ChkOperating('F')" />
+                                                            工作進度追蹤
+                                                        </label>
+                                                    </li>
+                                                </ol>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <label>
+                                                    <input name="checkbox" id="Chk_F" type="checkbox" style="display:none" />
+                                                    批次作業管理
+                                                </label>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <ol>
+                                                    <li>
+                                                        <label>
+                                                            <input name="checkboxF" id="Chk_F01" type="checkbox" onclick="ChkOperating('F')" />
+                                                            批次作業管理
+                                                        </label>
+                                                    </li>
+                                                    <li>
+                                                        <label>
+                                                            <input name="checkboxF" id="Chk_F02" type="checkbox" onclick="ChkOperating('F')" />
+                                                            工作提醒設定
+                                                        </label>
+                                                    </li>
+                                                    <li>
+                                                        <label>
+                                                            <input name="checkboxF" id="Chk_F03" type="checkbox" onclick="ChkOperating('F')" />
+                                                            工作提醒查詢
+                                                        </label>
+                                                    </li>
+                                                </ol>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <label>
+                                                    <input name="checkbox" id="Chk_G" type="checkbox" style="display:none" />
+                                                    系統管理
+                                                </label>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <ol>
+                                                    <li>
+                                                        <label>
+                                                            <input name="checkboxG" id="Chk_G01" type="checkbox" onclick="ChkOperating('G')" />
+                                                            系統參數設定
+                                                        </label>
+                                                    </li>
+                                                    <li>
+                                                        <label>
+                                                            <input name="checkboxG" id="Chk_G02" type="checkbox" onclick="ChkOperating('G')" />
+                                                            系統權限功能維護
+                                                        </label>
+                                                    </li>
+                                                    <li>
+                                                        <label>
+                                                            <input name="checkboxG" id="Chk_G03" type="checkbox" onclick="ChkOperating('G')" />
+                                                            操作紀錄查詢
+                                                        </label>
+                                                    </li>
+                                                </ol>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>
+                                <!-- /.box-body -->
+                            </div>
+                        </div>
+                        <div class="col-xs-12" align="center">
+                            <button id="CheckAll" type="button" class="btn btn-primary">全選</button>
+                            <button id="CancelAllCheck" type="button" class="btn btn-primary">取消全選</button>
+                            <button id="Save" type="button" class="btn btn-success">儲存</button>
+                            <button id="Cancel" type="button" class="btn btn-danger">取消</button>
+                        </div>
+                    </div>
+                    <div class="box-body" id="PermissionList">
+                        <div class="col-xs-12 vertical-align" style="padding-bottom:20px;">
+                            <button id="NewPermission" type="button" class="btn btn-primary btn-space">新增</button>
+                        </div>
+                        <div class="box-body">
+                            <div class="col-xs-12" id="EditPermissionView">
+                                <div class="col-xs-12 vertical-align" style="padding-bottom:20px;">
+                                    <div class="col-xs-4">
+                                        <label>角色代號 : </label>
+                                        <input id="pid" type="text" value="" width="40px" />
+                                        <input id="sid" type="text" value="" style="display:none" readonly="readonly" />
+                                    </div>
+                                    <div class="col-xs-4">
+                                        <label>角色 : </label>
+                                        <input id="name" type="text" value="" width="40px" />
+                                    </div>
+                                    <div class="col-xs-4">
+                                        <label>Mail : </label>
+                                        <input id="mail" type="text" value="" width="40px" />
+                                    </div>
+                                    <div class="col-xs-2">
+                                        <button id="SevePermission" type="button" class="btn btn-primary btn-space">儲存</button>
+                                        <button id="CancelPermission" type="button" class="btn btn-primary btn-space">取消</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xs-12">
+                                <table id="PermissionExample" class="table table-bordered table-hover" style="width:100%">
+                                    <thead>
+                                        <tr>
+                                            <th width="10px">編號</th>
+                                            <th width="10%">角色代號</th>
+                                            <th width="20%">角色</th>
+                                            <th width="auto">Mail</th>
+                                            <th width="80px">操作</th>
+                                            <th style="display:none">ID</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="PermissionExampleTbady"></tbody>
+                                </table>
+                                <div class="col-xs-12 vertical-align" style="padding-top:20px;">
+                                    <button id="returnPage" type="button" class="btn btn-primary btn-space">返回</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<script>
+    $('#SystemPermission').addClass('active');
+    $('#SystemPermission').closest('ul').closest('li').addClass('active');
+
+    //if (year == time) {
+    //    ////反固定死 & 灰色
+    //    $("#PermissionUI").css("pointer-events", "visible");
+    //    $("#PermissionUI").css("background-color", "#ffffff");
+    //} else {
+    //    ////固定死 & 灰色
+    //    $("#PermissionUI").css("pointer-events", "none");
+    //    $("#PermissionUI").css("background-color", "#cccccc");
+    //}
+
+    //新增角色
+    $('#NewPermission').on('click', function () {
+        $('#pid').val("");
+        $('#name').val("");
+        $('#sid').val("");
+        $('#EditPermissionView').show();
+    });
+
+    //取消新增角色
+    $('#CancelPermission').on('click', function () {
+        Clear();
+        $('#EditPermissionView').hide();
+    });
+
+    //編輯角色權限
+    $('#EditPermission').on('click', function () {
+        $('#PermissionExampleTbady').empty();
+        $.ajax({
+            url: "@Url.Action("GetPermissionList", "SystemPermission")",
+            //data: data,
+            type: "POST",
+            dataType: "json",
+            error: function (result) {
+                console.log("失敗", result);
+                alert("角色列表查詢失敗");
+            },
+            success: function (result) {
+                console.log("成功", result);
+
+                $('#PermissionItem').hide();
+                $('#PermissionList').show();
+                $('#EditPermissionView').hide();
+                ////固定死 & 灰色
+                $("#PermissionUI").css("pointer-events", "none");
+                $("#PermissionUI").css("background-color", "#cccccc");
+
+                if (result.length > 0) {
+                    setTable(result);
+                } else {
+                    $('#PermissionExampleTbady').append('<tr><td colspan=4>無角色列表資料</td></tr>');
+                }
+            }
+        });
+    });
+
+    //查詢角色權限
+    $('#SearchInfoPermission').on('click', function () {
+        $('input[type="checkbox"][name="checkbox"]').each(function () {
+            $(this).prop('checked', false);
+        });
+
+        if ($('#Permission').val() != 0) {
+            var data = {
+                //Programs: $("#Permission :selected").text()
+                PID: $("#Permission :selected").val()
+            };
+
+            $.ajax({
+                url: "@Url.Action("GetPrograms", "SystemPermission")",
+                data: data,
+                async: false, //非同步
+                type: "POST",
+                dataType: "json",
+                error: function (result) {
+                    console.log("失敗", result);
+                    alert("查詢失敗");
+                },
+                success: function (result) {
+                    $('#PermissionItem').show();
+                    $('#PermissionList').hide();
+                    ////固定死 & 灰色
+                    $("#PermissionUI").css("pointer-events", "none");
+                    $("#PermissionUI").css("background-color", "#cccccc");
+                    console.log("成功", result);
+                    if (result[0]["PROID"] != null) {
+                        var ProidStr = result[0]["PROID"].split(",");
+                        $(ProidStr).each(function (index) {
+                            //console.log(ProidStr[index]);
+                            $('#Chk_' + ProidStr[index]).prop('checked', true);
+                        });
+                    }
+                }
+            });
+        } else {
+            alert("請選擇角色");
+        }
+    });
+
+    //儲存權限設定
+    $('#Save').on('click', function () {
+        var TchkId = "";
+
+        //$('input[type="checkbox"][name="checkbox"]').each(function (index, domEle) {
+        //    //console.log($(this).attr("id"), $(this).prop("checked"));
+        //    if ($(this).prop("checked")) {
+        //        //console.log($(this).attr("id"));
+        //        Gid = $(this).attr("id").split("_");
+        //        TchkId += "," + Gid[1];
+        //    }
+        //});
+        $($('input[type=checkbox]')).each(function (index, domEle) {
+            //console.log($(this).attr("id"), $(this).prop("checked"));
+            if ($(this).prop("checked")) {
+                //console.log($(this).attr("id"));
+                Gid = $(this).attr("id").split("_");
+                TchkId += "," + Gid[1];
+            }
+        });
+
+        //console.log(TchkId, TchkId.substr(1));
+
+        if ($("#Permission").val() != 0 && TchkId.length > 0) {
+            var data = {
+                ID: $("#Permission :selected").val(),
+                PROID: TchkId.substr(1)
+            };
+
+            $.ajax({
+                url: "@Url.Action("SetPrograms", "SystemPermission")",
+                data: data,
+                type: "POST",
+                dataType: "json",
+                error: function (result) {
+                    console.log("失敗", result);
+                },
+                success: function (result) {
+                    console.log("成功", result);
+                    alert("儲存成功");
+                    window.location.reload();
+                }
+            });
+        } else {
+            alert("請選擇權限功能");
+        }
+    });
+
+    //全選
+    $('#CheckAll').on('click', function () {
+        $('input[type="checkbox"]').each(function () {
+            $(this).prop('checked', true);
+        });
+    });
+
+    //取消全選
+    $('#CancelAllCheck').on('click', function () {
+        $('input[type="checkbox"]').each(function () {
+            $(this).prop('checked', false);
+        });
+    });
+
+    //取消設定
+    $('#Cancel').on('click', function () {
+        if (confirm("確定取消設定?")) {
+            $("#Permission").val(0);
+            $('#EditPermissionView').hide();
+            $('#PermissionItem').hide();
+            $('#PermissionList').hide();
+            ////反固定死 & 灰色
+            $("#PermissionUI").css("pointer-events", "visible");
+            $("#PermissionUI").css("background-color", "#ffffff");
+
+            $('input[type="checkbox"][name="checkbox"]').each(function () {
+                $(this).attr('checked', false);
+            });
+        }
+    });
+
+    //返回
+    $('#returnPage').on('click', function () {
+        $("#Permission").val(0);
+        $('#PermissionItem').hide();
+        $('#EditPermissionView').hide();
+        $('#PermissionList').hide();
+        $('#PermissionExampleTbady').empty();
+
+        ////反固定死 & 灰色
+        $("#PermissionUI").css("pointer-events", "visible");
+        $("#PermissionUI").css("background-color", "#ffffff");
+        SetChkOperating();
+    });
+
+    //設定表格
+    function setTable(result) {
+
+        for (var i = 0; i < result.length; i++) {
+            $('#PermissionExampleTbady').append(
+                '<tr>' +
+                '<td>' + (i + 1) + '</td>' +
+                '<td name = "Programs" id = "number' + (i + 1) + '">' + result[i]["PID"] + '</td>' +
+                '<td id = "role' + (i + 1) + '">' + result[i]["NAME"] + '</td>' +
+                '<td id = "MailAddress' + (i + 1) +'">' + result[i]["MailAddress"] + '</td>' +
+                '<td>' +
+                '<button type="button" class="btn btn-primary btn-space" onclick="EditPermission(' +
+                (i + 1) + ')">編輯</button>' +
+                '<button type="button" class="btn btn-primary btn-space" onclick="DelPermission(' +
+                (i + 1) + ')">删除</button>' +
+                '</td>' +
+                '<td id = "SID' + (i + 1) + '" style="display:none">' + result[i]["SID"] + '</td>' +
+                '</tr>'
+            );
+        }
+    };
+
+    $('#SevePermission').on('click', function () {
+        var chk = false;
+        var PID = $('#pid').val();
+        var NAME = $('#name').val();
+        var ID = $('#sid').val();
+        var MAIL = $('#mail').val();
+        
+        var data = {
+            ID: ID,
+            PID: PID,
+            NAME: NAME,
+            MAIL: MAIL
+        };
+        $('td[name="Programs"]').each(function () {
+            if (PID == $(this).text()) {
+                chk = true;
+                return false;
+            }
+        });
+        if (ID != "" || ID != null) { chk = false; }
+
+        if (!chk) {
+            $.ajax({
+                url: "@Url.Action("EditPrograms", "SystemPermission")",
+                data: data,
+                type: "POST",
+                dataType: "json",
+                error: function (result) {
+                    console.log("失敗", result);
+                    alert("儲存失敗");
+                },
+                success: function (result) {
+                    console.log("成功", result);
+                    alert("儲存成功");
+                    $('#PermissionExampleTbady').empty();
+                    setTable(result);
+                    $('#EditPermissionView').hide();
+                }
+            });
+        } else {
+            alert("角色代號已存在")
+        }
+        Clear();
+    });
+
+    //勾選分類
+    function ChkOperating(id) {
+        var ChkId = id.substr(0, 1);
+        console.log($('#Chk_' + ChkId).prop('checked'));
+        if (id.length = 1) {
+            for (var i; i < 10; i++) {
+                if ($('#Chk_' + ChkId).prop('checked'));
+            }
+        }
+        if (!$('#Chk_' + ChkId).prop('checked')) {
+            $('#Chk_' + ChkId).prop('checked', true);
+        }
+        
+    };
+
+    //清除資料
+    function Clear() {
+        $('#pid').val("");
+        $('#name').val("");
+        $('#sid').val("");
+        $('#mail').val("");
+    };
+
+    //編輯角色資訊
+    function EditPermission(ID) {
+        var pid = $('#number' + ID).text();
+        var name = $('#role' + ID).text();
+        var sid = $('#SID' + ID).text();
+        var mail = $('#MailAddress' + ID).text();
+        $('#EditPermissionView').show();
+        $('#pid').val(pid);
+        $('#name').val(name);
+        $('#sid').val(sid);
+        $('#mail').val(mail);
+    }
+
+    //刪除角色
+    function DelPermission(ID) {
+        var PID = $('#number' + ID).text();
+        $.ajax({
+            url: "@Url.Action("DelPrograms", "SystemPermission")",
+            data: { Programs: PID },
+            type: "POST",
+            dataType: "json",
+            error: function (result) {
+                console.log("失敗", result);
+                alert("刪除失敗");
+            },
+            success: function (result) {
+                console.log("成功", result);
+                alert("刪除成功");
+                $('#PermissionExampleTbady').empty();
+                setTable(result);
+            }
+        });
+    };
+
+    //父子關聯
+    function ChkOperating(id) {
+        var count = 0;
+
+        $('input[type="checkbox"][name="checkbox' + id + '"]').each(function (index, domEle) {
+            if ($(this).prop("checked")) {
+                count++;
+            }
+        });
+
+        if (count > 0) {
+            $('#Chk_' + id).prop('checked', true);
+        } else {
+            $('#Chk_' + id).prop('checked', false);
+        }
+    }
+</script>
+

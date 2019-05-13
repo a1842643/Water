@@ -1,0 +1,729 @@
+﻿
+@{
+    ViewBag.Title = "KPI_Performance";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<script src="~/Scripts/jstree.js"></script>
+<script src="~/Scripts/jstree.min.js"></script>
+<script>
+    var oTable;
+</script>
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+
+        $.ajax({
+            type: 'POST',
+            data: '{}',
+            //async: false, //啟用同步請求
+            url: '@Url.Action("searchInit", "KPI_Performance")',
+            contenType: "application/json; charset=utf-8",
+            dataType: "json",
+            async: false,
+            success: function (result) {
+                //失敗的處理
+                if (result.db_Result) {
+                    alert(result.db_Result);
+                    return;
+                }
+                if (result.LOCKED) {
+                    $('#btnLock').text('解除鎖定');
+                    $('#hidLock').text('1');
+                    $('#div_tree').html('');
+                    //業績績效項目下拉選單
+                    var ddlKPIPerHtml = "";
+                    $.each(result.ddlKPIPer.DropDownListLT, function (i, ddl) {
+                        ddlKPIPerHtml += '<option value="' + ddl.Values + '">' + ddl.Text + '</option>';
+                    });
+                    $('#ddlKPIPer').html(ddlKPIPerHtml);
+                }
+                else {
+                    $('#btnLock').text('鎖　　定');
+                    $('#hidLock').text('0');
+
+                    $('#divLocked').html('');
+                    $('#MainItem').hide();
+                    $('#newItem').hide();
+                    $('#SecondaryItemSave').hide();
+                    $('#jstreeItem').hide();
+                    $('#SecondaryItemID').hide();
+                    $('#SecondryItemIndex').hide();
+                    $('#jstreeParent').hide();
+
+                    var dt = new Date();
+                    var y = dt.getFullYear() - 1911;
+                    $('#CmbYearType').empty();
+                    for (var i = y - 2; i <= y; i++) {
+                        $('#CmbYearType').append("<option value=" + i + ">" + i + "</option>");
+                    }
+                    $('#CmbYearType').val(y);
+                }
+            }, fail: function () {
+                alert('系統錯誤!!');
+            }
+        })
+    });
+
+    function ImportLastYear() {
+        if (!confirm("是否匯入去年資料?")) {
+            return;
+        }
+
+        $.ajax({
+            type: 'POST',
+            data: '{}',
+            async: false, //啟用同步請求
+            url: '@Url.Action("ImportLastYear", "KPI_Performance")',
+            contenType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (result) {
+                alert("成功匯入去年資料");
+                $('#SearchInfoYear').click();
+            },
+            error: function () {
+                alert("匯入失敗");
+            }
+
+        })
+    }
+
+    function ToLock() {
+        if (!confirm("確定" + $('#btnLock').text() + "?")) {
+            return;
+        }
+
+        $.ajax({
+            type: 'POST',
+            data: { 'isLocked': $('#hidLock').text() },
+            //async: false, //啟用同步請求
+            url: '@Url.Action("ToLock", "KPI_Performance")',
+            contenType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (result) {
+                alert($('#btnLock').text() + "完成");
+                document.location.replace('@Url.Action("Maintain", "KPI_Performance")');
+            },
+            error: function () {
+                alert('系統發生錯誤');
+            }
+
+        })
+    }
+
+    function Export() {
+        $.ajax({
+            type: 'POST',
+            data: { 'ddlKPIPerVal': $('#ddlKPIPer').val(), 'ddlKPIPerText': $('#ddlKPIPer option:selected').text() },
+            //async: false, //啟用同步請求
+            url: '@Url.Action("Export", "KPI_Performance")',
+            contenType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (result) {
+                window.open(result, null);
+            },
+            error: function () {
+                alert("匯出錯誤");
+            }
+
+        })
+    }
+
+    //上傳簽核
+    function UpLoadApply() {
+        //## 宣告一個FormData
+        var data = new FormData();
+        //## 將檔案append FormData
+        var files = $("#files").get(0).files;
+        if (files.length > 0) {
+            data.append("UploadedFile", files[0]);
+            data.append("ddlKPIPerVal", $('#ddlKPIPer').val());
+        }
+        else {
+            alert('請選擇匯入檔案');
+            return;
+        }
+
+        //## 透過ajax方式Post 至Action
+        var ajaxRequest = $.ajax({
+            type: "POST",
+            url: "@Url.Action("UpLoadApply", "KPI_Performance")",
+            contentType: false,         // 告诉jQuery不要去這置Content-Type
+            processData: false,         // 告诉jQuery不要去處理發送的數據
+        dataType: "json",
+        data: data
+    })
+    .done(function (result) {
+        alert(result);
+    })
+    .fail(function () {
+        alert("匯入失敗");
+    });
+    }
+
+    //上傳檔案
+    function UpLoad() {
+        //## 宣告一個FormData
+        var data = new FormData();
+        //## 將檔案append FormData
+        var files = $("#files").get(0).files;
+        if (files.length > 0) {
+            data.append("UploadedFile", files[0]);
+            data.append("ddlKPIPerVal", $('#ddlKPIPer').val());
+        }
+        else {
+            alert('請選擇匯入檔案');
+            return;
+        }
+
+        //## 透過ajax方式Post 至Action
+        var ajaxRequest = $.ajax({
+            type: "POST",
+            url: "@Url.Action("Upload", "KPI_Performance")",
+            contentType: false,         // 告诉jQuery不要去這置Content-Type
+            processData: false,         // 告诉jQuery不要去處理發送的數據
+            dataType: "json",
+            data: data
+        })
+    .done(function (result) {
+        alert(result);
+    })
+    .fail(function () {
+        alert("匯入失敗");
+    });
+    }
+</script>
+<section class="content-header">
+    <h1>
+        業務績效考核作業
+    </h1>
+</section>
+<section class="content">
+    <button id="btnLock" type="button" class="btn btn-primary btn-space" onclick="ToLock();">鎖　　定</button>
+    <input type="hidden" id="hidLock" value="0" />
+    <div id="divLocked">
+        <div class="row vertical-align">
+            <div class="col-xs-auto">業績績效項目:</div>
+            <div class="col-xs-2">
+                <select name="ddlKPIPer" id="ddlKPIPer" class="form-control"></select>
+            </div>
+        </div>
+        <div class="row vertical-align">
+            <label id="lblUploadNewFile" for="file">檔案路徑:</label>
+            <input type="file" name="files" id="files" style="display:inline;width:60%;" multiple />
+            @*<div class="col-xs-auto"><button type="button" class="btn btn-warning" onclick="UpLoad();">匯入資料</button></div>*@
+            <div class="col-xs-auto"><button type="button" class="btn btn-warning" onclick="UpLoadApply();">申請上傳</button></div>
+            <div class="col-xs-auto"><button type="button" class="btn btn-primary btn-space" onclick="Export();">下載匯入管理績效格式</button></div>
+        </div>
+    </div>
+    <div id="div_tree">
+        <div class="row" id="treeview">
+            <div class="col-xs-12">
+                <div class="box">
+                    <div class="box-header">
+                        <div class="row">
+                            <div class="col-xs-12">
+                                <h2>業績考核設定</h2>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-12">
+                                <button id="btnImportLastYear" type="button" class="btn btn-primary btn-space" onclick="ImportLastYear();">匯入去年資料</button>
+                            </div>
+                        </div>
+                        <div class="row vertical-align">
+                            <div class="col-xs-2">
+                                <h3>年度</h3>
+                            </div>
+                            <div class="col-xs-4">
+                                <select name="CmbYearType" id="CmbYearType" class="form-control"></select>
+                            </div>
+                            <div class="col-xs-2">
+                                <button id="SearchInfoYear" type="button" class="btn btn-primary btn-space">查 詢</button>
+                                <button id="Expand" type="button" class="btn btn-primary btn-space" onclick="jstreeToggleState()">開關Tree</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="divJstreeBody" class="box-body">
+                        <div id="evts" class="row"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row" id="MainItem">
+            <div class="col-xs-12">
+                <div class="box">
+                    <div class="box-header">
+                        <div>
+                            <label>主項設定配分</label>
+                        </div>
+                    </div>
+                    <div class="box-body">
+                        <input id="jstreeItem" type="text" value="" readonly="readonly" />
+                        <input id="jstreeParent" type="text" value="" readonly="readonly" />
+                        主項項目名稱：
+                        <input id="MainItemName" type="text" value="" readonly="readonly" />
+                        配分：
+                        <input id="MainItemDisbution_edit" type="text" maxlength="20" readonly="readonly" />
+                        <br /><br />
+                        <button id="btnAddNewRecord" type="button" class="btn btn-primary btn-space">編輯次項</button>
+                        <button id="btn_Return" type="button" class="btn btn-primary btn-space">回上一頁</button>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xs-12" id="newItem">
+                <div class="col-xs-12">
+                    <div class="box">
+                        <div class="box-header">
+                            <div>
+                                <label>次項設定配分</label>
+                            </div>
+                        </div>
+                        <div class="box-body">
+                            <div>
+                                <input id="SecondryItemIndex" type="text" value="" readonly="readonly" style="display:none;" /> @*style="display:none;"*@
+                                <input id="SecondaryItemID" type="text" value="" readonly="readonly" style="display:none;" /> @*style="display:none;"*@ 
+                                次項項目名稱：
+                                <input name="SecondaryItem" type="text" maxlength="20" id="SecondaryItem" placeholder="請輸入項目名稱">
+                                配分：
+                                <input name="SecondaryItemDisbution_edit" type="number" maxlength="20" id="SecondaryItemDisbution_edit" min="0" onkeyup="value=value.replace(/[^\d{1,}\.\d{1,}|\d{1,}]/g,'')" placeholder="請輸入配分設定">
+                            </div>
+                            <br /><br />
+                            <div>
+                                <button id="SecondaryItemSave" class="btn btn-primary btn-space">儲存</button>
+                                <button id="SecondaryItemAdd" class="btn btn-primary btn-space">新增</button>
+                                <button id="SecondaryItemSuccess" class="btn btn-success btn-space" onclick="">檢核</button>
+                                <button id="cancel" class="btn btn-primary btn-space">取消</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-xs-12">
+                    <!-- /.box-header -->
+                    <div class="box" id="SecondaryItemBox">
+                        <div class="box-body">
+                            <table id="example2" class="table table-bordered table-hover" style="width:100%">
+                                <thead>
+                                    <tr>
+                                        <th width="10px">編號</th>
+                                        <th width="200px">項目名稱</th>
+                                        <th width="100px">配分</th>
+                                        <th width="150px">操作</th>
+                                        <th width="auto">項目序號</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="Example2Tbady"></tbody>
+                            </table>
+                        </div>
+                        <!-- /.box-body -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+    $('#KPI_Performance').addClass('active');
+    $('#KPI_Performance').closest('ul').closest('li').addClass('active');
+</script>
+
+<script>
+    //項目樹狀圖
+    $(function () {
+        $('#evts')
+            //Tree生成
+            .jstree({
+                'plugins': ["wholerow"],
+                'core': {
+                    'multiple': false,
+                    //{ "text": "", "id": "", "parent": "" }
+                }
+            })//changed.jstree select_node.jstree
+            .on("select_node.jstree", function (e, data) {
+                //商業邏輯
+                var dt = new Date();
+                var y = dt.getFullYear() - 1911;
+                var CYt = $('#CmbYearType').val();
+                if (CYt == y) {
+                    var text = data.instance.get_node(data.selected[0]).text;
+                    var id = data.instance.get_node(data.selected[0]).id;
+                    var parent = data.instance.get_node(data.selected[0]).parent;
+
+                    $("#MainItemName").val(text);
+                    $("#jstreeItem").val(id);
+                    $("#jstreeParent").val(parent);
+
+                    var data = {
+                        UUID: id,
+                        Subject: text
+                    };
+                    $.ajax({
+                        url: "@Url.Action("getitem", "KPI_Performance")",
+                        data: data,
+                        type: "GET",
+                        dataType: "json",
+                        error: function (result) {
+                            console.log("失敗");
+                        },
+                        success: function (result) {
+                            $('#MainItemDisbution_edit').val(result[0]["Distribution"]);
+                            //console.log(result[0]["Distribution"]);
+                            console.log("成功", result);
+                        }
+                    });
+                    $("#Example2Tbady").empty();
+
+                    $("#treeview").hide();
+                    $("#MainItem").show();
+                    $("#SecondaryItemSave").hide();
+                    $("#SecondaryItemAdd").show();
+                    $("#SecondaryItemSuccess").show();
+                    $("#cancel").show();
+                } else {
+                    alert('非今年可設定項目');
+                }
+            })
+        $('#evts').jstree().open_all();
+    });
+</script>
+
+<script>
+    var number;
+
+    //查詢項目
+    $('#SearchInfoYear').on('click', function () {
+        var year = $('#CmbYearType').val();
+        var dt = new Date();
+        var time = dt.getFullYear() - 1911;
+        var data = {
+            year: year,
+            groups: '業績績效'
+        };
+        $.ajax({
+            url: "@Url.Action("QueryTreeList", "KPI_Performance")",
+            data: data,
+            type: "GET",
+            dataType: "json",
+            success: function (result) {
+                console.log(result);
+                $("#evts").jstree(true).deselect_all();
+                $('#evts').jstree(true).settings.core.data = result;
+                $('#evts').jstree(true).refresh();
+            }
+        });
+        $('#evts').jstree().open_all();
+        if (year == time) {
+            ////反固定死 & 灰色
+            $("#divJstreeBody").css("pointer-events", "visible");
+            $("#divJstreeBody").css("background-color", "#ffffff");
+        } else {
+            ////固定死 & 灰色
+            $("#divJstreeBody").css("pointer-events", "none");
+            $("#divJstreeBody").css("background-color", "#cccccc");
+        }
+    });
+
+    ////展開項目
+    //$('#Expand').on('click', function () {
+    //    $('#evts').jstree().open_all();
+    //});
+
+    //預設判斷Tree是關閉的
+    var isTreeOpen = false;
+    //開關樹
+    function jstreeToggleState() {
+
+        if (isTreeOpen) {
+            $("#evts").jstree('close_all');
+        } else {
+            $("#evts").jstree('open_all');
+        }
+        isTreeOpen = !isTreeOpen;
+    }
+
+
+    //回上頁
+    $("#btn_Return").on('click', function () {
+        $("#Example2Tbady").empty();
+        Clear();
+        $('#MainItemDisbution_edit').val("");
+        $('#jstreeItem').val("");
+        $('#MainItemName').val("");
+
+        $("#MainItem").hide();
+        $("#treeview").show();
+        $('#newItem').hide();
+    });
+
+    //編輯子項目
+    $('#btnAddNewRecord').on('click', function () {
+        $('#newItem').show();
+        $("#Example2Tbady").empty();
+        AjaxReload();
+    });
+
+    //檢核&儲存資料
+    $('#SecondaryItemSuccess').on('click', function () {
+        var Dis = 0;
+        var MainDis = $('#MainItemDisbution_edit').val();
+        var jstreeParent = $("#jstreeParent").val();
+        var Std = $('td[name="Subject"]');
+        var Dtd = $('td[name="Distribution"]');
+        var UUtd = $('td[name="UUID"]');
+        var len = Std.length;
+
+        for (var i = 0; i < len; i++) {
+            Dis = Dis + parseFloat(Dtd[i].textContent);
+        }
+
+        if (MainDis <= Dis || jstreeParent == "#") {
+
+            for (var i = 0; i < len; i++) {
+                var tabledata = {
+                    UUID: UUtd[i].textContent,
+                    UpID: $('#jstreeItem').val(),
+                    Subject: Std[i].textContent,
+                    Distribution: Dtd[i].textContent,
+                };
+                $.ajax({
+                    url: "@Url.Action("SetItem", "KPI_Performance")",
+                    async: false, //啟用同步請求
+                    data: tabledata,
+                    type: "POST",
+                    dataType: "json",
+                    error: function (result) {
+                        console.log(result);
+                    },
+                    success: function (result) {
+                        console.log(result);
+                    }
+                });
+            }
+
+            $("#SecondaryItemAdd").show();
+            $("#SecondaryItemSuccess").show();
+            $("#cancel").show();
+
+            Clear();
+
+            alert("檢核完畢，配分設定完成。");
+            window.location.reload();
+
+        } else if (jstreeParent == "#" && MainDis == 0) {
+            alert("經營績效考核權重未設定，請先設定")
+        } else {
+            alert("下層配分的總和需大於等於上層配分");
+        }
+    });
+
+    //取消
+    $('#cancel').on('click', function () {
+        $('#SecondaryItemAdd').show();
+        $('#SecondaryItemSave').hide();
+        $("#SecondaryItemSuccess").show();
+        Clear();
+    });
+
+    //新增項目
+    $('#SecondaryItemAdd').on('click', function () {
+        if ($('#SecondaryItem').val() != "" && $('#SecondaryItemDisbution_edit').val() != "") {
+            var SItem = $('#SecondaryItem').val();
+            var SIDisbution = $('#SecondaryItemDisbution_edit').val();
+            //var UUID = $('#SecondaryItemID').val();
+            Clear();
+
+            if (!isNaN(SIDisbution)) {
+                var additem = true;
+
+                var ttd = $('td[name="Subject"]');
+                //console.log(ttd);
+                $(ttd).each(function () {
+                    if (SItem == $(this).text()) {
+                        additem = false;
+                    }
+                });
+
+                if (additem) {
+                    $('#Example2Tbady').append(
+                        '<tr id = "TrId' + number + '">' +
+                        '<td name = "number" id="number' + number + '">' + number + '</td>' +
+                        '<td name = "Subject" id="Subject' + number + '">' + SItem + '</td>' +
+                        '<td name = "Distribution" id="Distribution' + number + '">' + SIDisbution + '</td>' +
+                        '<td>' +
+                        '<button type="button" class="btn btn-primary btn-space" onclick="SecondaryItemEdit(' +
+                        number +
+                        ')">修改</button>' +
+                        '<button type="button" class="btn btn-primary btn-space" onclick="SecondaryItemDel(' +
+                        number +
+                        ')">删除</button>' +
+                        '</td>' +
+                        '<td name = "UUID" id = "UUID' + number+'"></td>' +
+                        '</tr>'
+                    );
+                    number++;
+                    alert("項目新增完成!");
+
+                    $("#SecondaryItemSave").hide();
+                    $("#SecondaryItemAdd").show();
+                    $("#SecondaryItemSuccess").show();
+                    $("#cancel").show();
+                } else {
+                    alert("項目已存在!");
+                }
+            } else {
+                alert("配分請輸入數字");
+            }
+        } else if ($('#SecondaryItem').val() == "") {
+            alert("請輸入項目");
+        } else if ($('#SecondaryItem').val() != "" && $('#SecondaryItemDisbution_edit').val() == "") {
+            alert("請輸入分數");
+        } else {
+            alert("請輸入項目與分數");
+        }
+    });
+
+    //刪除
+    function SecondaryItemDel(num) {
+        if (confirm('確定刪除此筆資料?')) {
+            //$("#TrId1").children('td').eq(1).text() //取得TR元素
+            var UUID = $('#TrId' + num).children('td').eq(4).text();
+            console.log($('#TrId' + num).children('td').eq(1).text(), UUID);
+
+            if (UUID != "") {
+                var Upid = $("#jstreeItem").val();
+                var tabledata = {
+                    UUID: UUID,
+                    UpID: Upid
+                }
+                console.log(tabledata);
+                $.ajax({
+                    url: "@Url.Action("DelItem", "KPI_Performance")",
+                    async: false, //啟用同步請求
+                    data: tabledata,
+                    type: "POST",
+                    dataType: "json",
+                    error: function (result) {
+                        console.log("失敗", result);
+                        alert("刪除失敗");
+                    },
+                    success: function (result) {
+                        console.log("成功", result);
+                        alert("刪除成功");
+                    }
+                });
+            }
+
+            $('#TrId' + num).remove();
+
+            $("#SecondaryItemSave").hide();
+            $("#SecondaryItemAdd").show();
+            $("#SecondaryItemSuccess").show();
+            $("#cancel").show();
+
+            Clear();
+        }
+    };
+    //修改項目
+    function SecondaryItemEdit(id) {
+        Clear();
+        var number = $('#number' + id).text();
+        var Std = $('#Subject' + id).text();
+        var Dtd = $('#Distribution' + id).text();
+        var UUtd = $('#UUID' + id).text();
+        $('#SecondryItemIndex').val(number);
+        $('#SecondaryItemID').val(UUtd);
+        $('#SecondaryItem').val(Std);
+        $('#SecondaryItemDisbution_edit').val(Dtd);
+        $('#SecondaryItemSave').show();
+        $('#SecondaryItemAdd').hide();
+    }
+
+    //儲存
+    $('#SecondaryItemSave').on('click', function () {
+        var EditItem = 0;
+        var number = $('#SecondryItemIndex').val();
+        var Std = $('#SecondaryItem').val();
+        var Dtd = $('#SecondaryItemDisbution_edit').val();
+        var UUtd = $('#SecondaryItemID').val();
+        var SNtd = $('td[name="Subject"]');
+
+        $(SNtd).each(function (n) {
+            if (Std == SNtd[n].textContent) {
+                EditItem++;
+            }
+        });
+        if (EditItem < 2) {
+            alert("儲存成功");
+            _trid = "#TrId" + number;
+            $(_trid).empty();
+            $(_trid).html(
+                '<td name = "number" id = "number' + number+'">' + number + '</td>' +
+                '<td name = "Subject" id = "Subject' + number +'">' + Std + '</td>' +
+                '<td name = "Distribution" id = "Distribution' + number +'">' + Dtd + '</td>' +
+                '<td>' +
+                '<button type="button" class="btn btn-primary btn-space" onclick="SecondaryItemEdit(' +
+                number +
+                ')">修改</button>' +
+                '<button type="button" class="btn btn-primary btn-space" onclick="SecondaryItemDel(' +
+                number +
+                ')">删除</button>' +
+                '</td>' +
+                '<td name = "UUID" id = "UUID' + number + '">' + UUtd + '</td>'
+            );
+            $('#SecondaryItemSave').hide();
+            $('#SecondaryItemAdd').show();
+        } else {
+            alert("項目重複");
+        }
+        Clear();
+    });
+
+    //清除資料
+    function Clear() {
+        $('#SecondaryItem').val("");
+        $('#SecondaryItemDisbution_edit').val("");
+        $('#SecondaryItemID').val("");
+        $('#SecondryItemIndex').val("");
+    }
+
+    //取得子項目列表
+    function AjaxReload() {
+        $.ajax({
+            url: "@Url.Action("SecondaryItemJson", "KPI_Performance")",
+            data: data = { CmbItemId: $("#jstreeItem").val() },
+            type: "GET",
+            dataType: "json",
+            error: function (result) {
+                console.log("失敗");
+            },
+            success: function (result) {
+                console.log(result["data"]);
+                number = 1;
+                $(result["data"]).each(function (index) {
+                    console.log(result["data"][index]);
+                    $('#Example2Tbady').append(
+                        '<tr id = "TrId' + number + '">' +
+                        '<td name = "number" id = "number' + number+'">' + number + '</td>' +
+                        '<td name = "Subject" id = "Subject' + number +'">' + result["data"][index]["Subject"] + '</td>' +
+                        '<td name = "Distribution" id = "Distribution' + number +'">' + result["data"][index]["Distribution"] + '</td>' +
+                        '<td>' +
+                        '<button type="button" class="btn btn-primary btn-space" onclick="SecondaryItemEdit(' +
+                        number +
+                        ')">修改</button>' +
+                        '<button type="button" class="btn btn-primary btn-space" onclick="SecondaryItemDel(' +
+                        number +
+                        ')">删除</button>' +
+                        '</td>' +
+                        '<td name = "UUID" id = "UUID' + number +'">' + result["data"][index]["UUID"] + '</td>' +
+                        '</tr>'
+                    );
+                    number++;
+                });
+            }
+        });
+    }
+</script>

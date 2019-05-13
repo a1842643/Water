@@ -1,0 +1,96 @@
+﻿@{
+    Layout = null;
+}
+<html>
+<head>
+    @*<meta http-equiv="x-ua-compatible" content="IE=edge">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">*@
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <title>土地銀行 - 營業單位營運資訊管理系統 | 登入</title>
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/js")
+</head>
+<body class="hold-transition login-page">
+    <div class="login-box">
+        <div class="login-box-body">
+            <p class="login-box-msg"><b>營業單位營運資訊管理系統</b></p>
+            <p class="login-box-msg"><b>角色選單</b></p>
+            <div class="form-group has-feedback">
+                <div class="col-xs-8">
+                    <select id="RoleList" name="RoleList" class="form-control" style="width: 100%;"></select>
+                </div>
+                <!-- /.col -->
+                <div class="col-xs-4">
+                    <button id="Role_login_btn" class="btn btn-primary btn-block btn-flat" onclick="Rolelogin();">確定登入</button>
+                </div>
+                <!-- /.col -->
+            </div>
+            <div class="row">
+            </div>
+        </div>
+        <!-- /.login-box-body -->
+    </div>
+    <!-- /.login-box -->
+</body>
+</html>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $.ajax({
+            url: "@Url.Action("roleList", "Home")",
+            type: "POST",
+            async: false,
+            dataType: "json",
+            error: function (result) {
+                console.log("失敗", result);
+            },
+            success: function (result) {
+                console.log("成功", result);
+                //角色
+                //var ddlDormRoleHtml = "<option value='0'>---請選擇---</option>";
+                var ddlDormRoleHtml = "";
+                $.each(result.ddlRole.DropDownListLT, function (i, ddl) {
+                    ddlDormRoleHtml += '<option value="' + ddl.Values + '">' + ddl.Text + '</option>';
+                });
+                $('#RoleList').html(ddlDormRoleHtml);
+            }
+        });
+    });
+</script>
+<script>
+    function Rolelogin() {
+        //if ($('#RoleList').val() != 0) {
+        if ($('#RoleList').val() != null) {
+            var data = {
+                Values: $('#RoleList :selected').val(),
+                Text: $('#RoleList :selected').text()
+            }
+            $.ajax({
+                url: "@Url.Action("rolelogin", "Home")",
+                data: data,
+                type: "POST",
+                async: false,
+                dataType: "json",
+                error: function (result) {
+                    console.log("失敗", result);
+                },
+                success: function (result) {
+                    console.log("成功", result);
+                    if (result) {//根据返回值进行跳转
+                        window.location.href = "@Url.Action("Index", "Home")";
+                        //window.location.href = result.url;
+                        //window.location.replace(result.url);
+                        @*window.location.replace("@Url.Content("~/Home/Index/")");*@
+                    }
+                }
+            });
+        } else {
+            alert("請指定角色");
+        }
+    }
+</script>

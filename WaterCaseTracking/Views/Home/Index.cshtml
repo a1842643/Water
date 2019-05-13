@@ -1,0 +1,604 @@
+﻿@{
+    ViewBag.Title = "首頁";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<script type="text/javascript">
+    var _Groups = '@Session["Groups"]';
+    var operating;
+
+    $(document).ready(function () {
+        $('#BulletinEdit').hide();
+        $('#BulletinBoard').show();
+        $('#FileList').hide();
+        $('#BulletinID').hide();
+        $('#Return').hide();
+
+        //SetChkOperating();
+
+        if (_Groups != "admin") {
+            operating = false
+            $('#QueryDiv').hide();
+        } else {
+            operating = true;
+            $('#QueryDiv').show();
+        }
+        QueryTable('start');
+    });
+</script>
+
+<div>
+    <div id="BulletinBoard">
+        @*<p class="lead">土地銀行 -</p>
+        <p>營業單位營運資訊管理系統</p>*@
+
+        <div>
+            <section class="content-header" style="white-space:nowrap">
+                <h1>
+                    系統公告
+                    <small>- Index</small>
+                </h1>
+            </section>
+            <section class="content">
+                <div class="row">
+                    <div class="col-xs-12">
+                        <input id="AddBulletin" class="btn btn-primary" type="button" value="新增公告" />
+                        <div class="box">
+                            <div class="box-header">
+                                <div id="QueryDiv" class="row vertical-align" style="display:none">
+                                    <div class="col-xs-auto">建立時間 : </div>
+                                    <div class="col-xs-2">
+                                        <input name="stratTime" class="form-control text-box datepicker" id="stratTime" value="" />
+                                    </div>
+                                    <div class="col-xs-auto"><i class="fa fa-exchange"></i></div>
+                                    <div class="col-xs-2">
+                                        <input name="stopTime" class="form-control text-box datepicker" id="stopTime" value="" />
+                                    </div>
+                                    <div class="col-xs-2">
+                                        <input name="search_btn" type="button" id="search_btn" class="btn btn-primary" value="查詢時間" onclick="QueryBtn('SearchTime')" />
+                                    </div>
+                                    <div class="col-xs-auto" style="display:none" >狀態:</div>
+                                    <div class="col-xs-2" style="display:none" >
+                                        <select name="ddlstatus" id="ddlstatus" class="form-control">
+                                            <option value="0">全選</option>
+                                            <option value="1">上架</option>
+                                            <option value="2">下架</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-xs-2" style="display:none">
+                                        <input name="search_btn" type="button" id="search_btn" class="btn btn-primary" value="查詢狀態" onclick="QueryBtn('SearchStatus')" />
+                                    </div>
+                                </div>
+                                </div>
+                            <!-- /.box-header -->
+                            <div class="box-body">
+                                <table id="example1" width="100%" class="table table-bordered table-hover">
+                                    <thead>
+                                    </thead>
+                                </table>
+                            </div>
+                            <!-- /.box-body -->
+                        </div>
+
+                    </div>
+                    <!-- /.col -->
+                </div>
+                <!-- /.row -->
+            </section>
+        </div>
+    </div>
+    <div id="BulletinEdit" style="display:none">
+        <section class="content">
+        <div class="row">
+            <div class="col-xs-12">
+                <div class="box">
+                    <div class="box-body">
+                        <div class="form-group">
+                            <input id="BulletinID" type="text" value="" readonly="readonly" />
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-2" for="Title">標題</label>
+                            <div class="col-md-10">
+                                <input name="Title" class="form-control text-box single-line" id="Title" type="text" value="" data-val-required="標題 欄位是必要項。" data-val-length-max="255" data-val-length="欄位 標題 必須是最大長度為 255 的字串。" data-val="true" />
+                                <span class="field-validation-valid text-danger" data-valmsg-replace="true" data-valmsg-for="Title"></span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-2" for="Published">公告時間</label>
+                            <div class="col-md-10">
+                                <input name="Published" class="form-control text-box datepicker" id="Published" value="" data-val="true" data-val-date="欄位 公告時間 必須是日期。" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-2" for="Deadline">截止時間</label>
+                            <div class="col-md-10">
+                                <input name="Deadline" class="form-control text-box datepicker" id="Deadline" value="" data-val-required="截止時間 欄位是必要項。" data-val="true" data-val-date="欄位 截止時間 必須是日期。" />
+                                <span class="field-validation-valid text-danger" data-valmsg-replace="true" data-valmsg-for="Deadline"></span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-2" for="Contents">公告內容</label>
+                            <div class="col-md-10">
+                                <textarea id="Contents" style="width:100%;height:300px;"></textarea>
+                            </div>
+                        </div>
+                        <div class="form-group" id="FileList">
+                            <label class="control-label col-md-2" for="FileName">上傳檔案</label>
+                            <div class="col-md-10" id="FileName">
+                            </div>
+                        </div>
+                        <div class="form-group" id="FileUpload">
+                            <label class="control-label col-md-2" for="File">附加檔案</label>
+                            <div class="col-md-10">
+                                <input name="File" class="col-sm-10 single-line" id="File" type="file" value="" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-offset-2 col-md-10">
+                                <input id="SaveBulletin" class="btn btn-primary" type="submit" value="儲存" />
+                                <input id="ReturnPage" class="btn btn-danger" type="button" value="返回" />
+                                <input id="Return" class="btn btn-primary" type="button" value="返回" />
+                            </div>
+                        </div>
+                    </div>
+                    <!-- /.box-body -->
+                </div>
+            </div>
+        </div>
+        </section>
+    </div>
+</div>
+<script>
+    //查詢公告按鈕
+    function QueryBtn(status) {
+        var qstatus = true;
+        var stime = new Date($('#stratTime').val());
+        var etime = new Date($('#stopTime').val());
+        if ($('#stratTime').val() != "" && $('#stopTime').val() != "") {
+            if (stime < etime) {
+                qstatus = true;
+            } else {
+                qstatus = false;
+            }
+        }
+
+        if (qstatus) {
+            QueryTable(status);
+        } else {
+            alert("起始時間不可小於結束時間")
+        }
+        
+    }
+
+    //oTable查詢
+    function QueryTable(status) {
+        //判斷有無設定過
+        if (oTable) { oTable.destroy(); }
+        $('#example1').empty();
+        oTableSetting(status);
+        //重新查詢
+        oTable.ajax.reload(null, false);
+    }
+
+    //公告表格套件
+    var oTable;
+    function oTableSetting(status) {
+        var TableOptions = {
+            "destroy": true,
+            "oLanguage": {
+                "sUrl": "../Content/datatables.net/tw.txt"
+            },
+            "bLengthChange": true,
+            "lengthMenu": [10, 25, 50, 75, 100],
+            "dom": "<'row'<'col-sm-12'tr>>" +
+                "<'row'<'col-sm-3'i><'col-sm-7'p><'col-sm-2'l>>",
+            "ordering": false,
+            "searching": false,
+            "iDisplayLength": 10,
+            "bStateSave": false,
+            "bPaginate": true,
+            //"scrollY": ($(window).height() - 290),
+            "scrollX": true,
+            "bProcessing": true,
+            "bServerSide": true,
+            "sAjaxSource": "@Url.Action("announcementJson", "Home")",
+            "fnServerParams": function (aoData) {
+                aoData.push({ "name": "startDate", "value": $('#stratTime').val() });
+                aoData.push({ "name": "endDate", "value": $('#stopTime').val() });
+                aoData.push({ "name": "Cmbddlstatus", "value": $('#ddlstatus  :selected').val() });
+                //aoData.push({ "name": "Cmbstatus", "value": $('#status').val() });
+                aoData.push({ "name": "user", "value": "@Session["Groups"]" });
+                aoData.push({ "name": "SearchMode", "value": status });
+            },
+            "columns": [
+                { "title": "編號", "data": "Seq", "width": "15px" },
+                { "title": "公告ID", "data": "ID", "width": "15px", "visible": false },
+                {
+                    "title": "標題", "data": "Title", "width": "100px",
+                    render: function (data, type, row) {
+                        return '<button type="button" class="btn btn-link btn-space" onclick="ViewBulletin(' + row.ID + ')">' + row.Title + '</button>';
+                    }
+                },
+                //{ "title": "公告內容", "data": "Contents" },
+                {
+                    "title": "下載", "data": "AttachedFile", "width": "auto",
+                    render: function (data, type, row) {
+                        if (row.AttachedFile != "" && row.AttachedFile != null) {
+                        @*return '<a download href="@Url.Content("~/DataFile/bulletin/")' + row.AttachedFile + '">' + row.AttachedFile + '</a>';*@
+                            return '<input type="button" class="btn-link" value="' + row.AttachedFile + '" onclick="FileDownload(\'' + row.AttachedFile + '\')" />';
+                        } else {
+                            return '';
+                        }
+                    }
+                },
+                { "title": "狀態", "data": "Stauts", "width": "100px" },
+                { "title": "建立時間", "data": "CreationDateStr", "width": "100px" },
+                { "title": "公告時間", "data": "ReleaseDateStr", "width": "100px" },
+                { "title": "截止時間", "data": "StopReleaseStr", "width": "100px" },
+                {
+                    "title": "操作", "width": "60px", "orderable": false, render: function (data, type, row) {
+                        return '<button type="button" class="btn btn-primary btn-space" onclick="EditBulletin(' + row.ID + ')">編輯</button>' +
+                            '<button type="button" class="btn btn-primary btn-space" onclick="DelBulletin(' + row.ID + ')">刪除</button>';
+                    }
+                }
+            ],
+            "columnDefs": [
+                { "visible": operating, "targets": 4 },
+                { "visible": operating, "targets": 8 }
+            ],
+        }
+        oTable = $('#example1').DataTable(TableOptions);
+    }
+</script>
+
+<script>
+    //儲存
+    $('#SaveBulletin').on('click', function () {
+
+        var Id = $('#BulletinID').val();
+        var Title = $('#Title').val();
+        var Contents = $('#Contents').val();
+        var Published = $('#Published').val();
+        var Deadline = $('#Deadline').val();
+        var File = $('#File').get(0).files;
+        var AttachedFile;
+        var error = false;
+        //Date.parse(Published).valueOf() > Date.parse(Deadline).valueOf()
+        if (Title != "") {
+            if (Published != "") {
+                if (Deadline != "") {
+                    var dt;
+                    if (Date.parse(Published).valueOf() >= Date.parse(Deadline).valueOf()) {
+                        alert("時間設定錯誤\n發布時間必須在截止時間之前");
+                    } else {
+                        //console.log(document.getElementById("File").value);
+                        if (document.getElementById("File").value != "") {
+                            AttachedFile = File.item(0).name;
+
+                            var formdata = new FormData();
+                            var filesLength = 0;
+
+                            for (var j = 0; j < File.length; j++) {
+                                {
+                                    filesLength += File[j].size;
+                                }
+                                if ((filesLength / 1024 / 1024) > 10) {
+                                    alert("檔案超過10MB限制!");
+                                    return;
+                                }
+                                for (var i in File) {
+                                    //新增上傳檔案，上傳後名稱為 ff 的陣列
+                                    formdata.append('ff[' + i + ']', File[i]);
+                                    filesLength + File[i].size;
+                                }
+                                formdata.append('UploadPath', $("#dropPath").val());//use node path
+                            }
+                            //console.log(formdata);
+
+                            $.ajax({
+                                type: 'POST',
+                                async: false, //啟用同步請求
+                                url: "@Url.Action("UpLoadFile","Home")",
+                                contentType: false,         // 告诉jQuery不要去這置Content-Type
+                                processData: false,         // 告诉jQuery不要去處理發送的數據
+                                dataType: "json",
+                                data: formdata,
+                                success: function (result) {
+                                    //alert('成功', result);
+                                    console.log('成功', result);
+                                    dt = result.dtime;
+                                    AttachedFile = dt + AttachedFile;
+                                    error = false;
+                                },
+                                error: function (jqXHR, exception) {
+                                    var msg = '';
+                                    if (jqXHR.status === 0) {
+                                        msg = 'Not connect.\n Verify Network.';
+                                    } else if (jqXHR.status == 404) {
+                                        msg = 'Requested page not found. [404]';
+                                    } else if (jqXHR.status == 500) {
+                                        msg = 'Internal Server Error [500].';
+                                    } else if (exception === 'parsererror') {
+                                        msg = 'Requested JSON parse failed.';
+                                    } else if (exception === 'timeout') {
+                                        msg = 'Time out error.';
+                                    } else if (exception === 'abort') {
+                                        msg = 'Ajax request aborted.';
+                                    } else {
+                                        msg = 'Uncaught Error.\n' + jqXHR.responseText;
+                                    }
+                                    alert('儲存錯誤\n', msg);
+                                    console.log(msg);
+                                    error = true;
+                                },
+                                fail: function (result) {
+                                    //alert('fail', result.responseText);
+                                    console.log('fail', result.responseText);
+                                }
+                            });
+                        } else {
+                            AttachedFile = "";
+                            error = false;
+                        };
+
+                        if (!error) {
+                            var data = {
+                                ID: Id,
+                                Title: Title,
+                                Contents: Contents,
+                                AttachedFile: AttachedFile,
+                                ReleaseDate: Published,
+                                StopRelease: Deadline,
+                            };
+                            console.log(data);
+
+                            $.ajax({
+                                url: "@Url.Action("PostBulletin", "Home")",
+                                data: data,
+                                type: "POST",
+                                dataType: "json",
+                                error: function (result) {
+                                    console.log(result.db_Result);
+                                    console.log("失敗");
+                                    alert("儲存失敗");
+                                },
+                                success: function (result) {
+                                    console.log("成功", result);
+                                    alert("儲存成功");
+
+                                    $('#BulletinEdit').hide();
+                                    $('#BulletinBoard').show();
+                                    oTable.ajax.reload();
+                                }
+                            });
+                        }
+                    }
+                } else {
+                    alert("請設定截止時間");
+                }
+            } else {
+                alert("請設定發布時間")
+            }
+        } else {
+            alert("請輸入公告標題");
+        }
+    });
+
+    //返回上一頁
+    $('#ReturnPage').on('click', function () {
+        if (confirm("返回會放棄尚未儲存的資料\n確定返回嗎?")) {
+            $('#BulletinEdit').hide();
+            $('#BulletinBoard').show();
+            cleardata();
+
+            oTable.ajax.reload();
+        };
+    });
+
+    //返回上一頁
+    $('#Return').on('click', function () {
+        $('#BulletinEdit').hide();
+        $('#BulletinBoard').show();
+        cleardata();
+
+        $('#Published').attr('readonly', false);
+        $('#Deadline').attr('readonly', false);
+        $('#BulletinID').attr('readonly', false);
+        $('#Title').attr('readonly', false);
+        $('#Contents').attr('readonly', false);
+        $('#SaveBulletin').show();
+        $('#ReturnPage').show();
+        $('#Return').show();
+
+        oTable.ajax.reload();
+    });
+
+    //查看公告
+    function ViewBulletin(Id) {
+        $('#BulletinEdit').show();
+        $('#BulletinBoard').hide();
+        cleardata();
+
+        $('#Published').attr('readonly', true);
+        $('#Deadline').attr('readonly', true);
+        $('#BulletinID').attr('readonly', true);
+        $('#Title').attr('readonly', true);
+        $('#Contents').attr('readonly', true);
+        $('#SaveBulletin').hide();
+        $('#ReturnPage').hide();
+        $('#Return').show();
+
+        $.ajax({
+            url: "@Url.Action("Getbulletin", "Home")",
+            data: { ID: Id },
+            type: "POST",
+            dataType: "json",
+            error: function (result) {
+                console.log(result.db_Result);
+                console.log("失敗");
+            },
+            success: function (result) {
+                console.log("成功", result);
+                $('#BulletinID').val(result.data[0].ID);
+                $('#Title').val(result.data[0].Title);
+                $('#Contents').val(result.data[0].Contents);
+                document.getElementById("Published").value = result.data[0].ReleaseDateStr;
+                document.getElementById("Deadline").value = result.data[0].StopReleaseStr;
+                if (result.data[0].AttachedFile != "" && result.data[0].AttachedFile != null) {
+                    $('#FileName').append('<a download href="@Url.Content("~/DataFile/bulletin/")' + result.data[0].AttachedFile + '">' +
+                        result.data[0].AttachedFile + '</a>');
+                    $('#FileList').show();
+                    $('#FileUpload').hide();
+                } else {
+                    $('#FileList').hide();
+                    $('#FileUpload').hide();
+                }
+            }
+        });
+    }
+
+    //新增公告
+    $('#AddBulletin').on('click', function () {
+        $('#BulletinEdit').show();
+        $('#BulletinBoard').hide();
+        $('#FileList').hide();
+        $('#FileUpload').show();
+
+        $('#SaveBulletin').show();
+        $('#ReturnPage').show();
+        $('#Return').hide();
+        cleardata();
+    });
+
+    //編輯公告
+    function EditBulletin(Id) {
+        $('#BulletinEdit').show();
+        $('#BulletinBoard').hide();
+        cleardata();
+
+        $('#SaveBulletin').show();
+        $('#ReturnPage').show();
+        $('#Return').hide();
+
+        var data = {
+            ID: Id
+        };
+
+        $.ajax({
+            url: "@Url.Action("Getbulletin", "Home")",
+            data: data,
+            type: "POST",
+            dataType: "json",
+            error: function (result) {
+                console.log(result.db_Result);
+                console.log("失敗");
+            },
+            success: function (result) {
+                console.log("成功", result);
+                $('#BulletinID').val(result.data[0].ID);
+                $('#Title').val(result.data[0].Title);
+                $('#Contents').val(result.data[0].Contents);
+                document.getElementById("Published").value = result.data[0].ReleaseDateStr;
+                document.getElementById("Deadline").value = result.data[0].StopReleaseStr;
+                if (result.data[0].AttachedFile != "" && result.data[0].AttachedFile != null) {
+                    $('#FileName').append('<a download href="@Url.Content("~/DataFile/bulletin/")' + result.data[0].AttachedFile + '">' +
+                        result.data[0].AttachedFile + '</a>');
+                    $('#FileList').show();
+                    $('#FileUpload').hide();
+                } else {
+                    $('#FileList').hide();
+                    $('#FileUpload').show();
+                }
+            }
+        });
+    }
+
+    //下載檔案
+    function FileDownload(file) {
+        var path = "@Url.Content("~/DataFile/bulletin/")";
+        var a = document.createElement('a');
+        a.setAttribute('href', path + file);
+        a.setAttribute('target', '_self');
+        a.setAttribute('download', path + file);
+        a.style.display = 'none';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+    }
+
+    //刪除公告
+    function DelBulletin(Id) {
+        if (confirm("確定刪除?")) {
+            var strB = "", strF = "";
+            var statusB = false, statusF = false;
+            var FileName;
+            var data = {};
+            oTable.data().each(function (d, i) {
+                if (d.ID == Id) {
+                    data = {
+                        ID: Id,
+                        AttachedFile: d.AttachedFile
+                    };
+                    FileName = d.AttachedFile;
+                }
+            });
+            console.log(data);
+
+            $.ajax({
+                url: "@Url.Action("DeleteBulletin", "Home")",
+                data: data,
+                type: "POST",
+                dataType: "json",
+                error: function (result) {
+                    //console.log("失敗", result.db_Result);
+                    statusB = false;
+                    strB += "公告刪除失敗"
+                },
+                success: function (result) {
+                    //console.log("成功", result);
+                    statusB = true;
+                    strB += "公告刪除成功";
+                }
+            });
+
+            $.ajax({
+                url: "@Url.Action("Delete_File", "Home")",
+                data: { deletePath: FileName },
+                type: "POST",
+                dataType: "json",
+                error: function (result) {
+                    //console.log("刪除失敗", result.db_Result);
+                    statusF = false;
+                    strF += "公告附件刪除失敗";
+                },
+                success: function (result) {
+                    //console.log("刪除成功", result);
+                    statusF = true;
+                    strF += "公告附件刪除成功";
+                }
+            });
+
+            if (!statusF) {
+                if (!statusB) {
+                    alert("公告刪除成功");
+                } else {
+                    alert(strB);
+                }
+            } else {
+                alert(strF);
+            }
+            oTable.ajax.reload();
+        }
+    }
+
+    //清除資料
+    function cleardata() {
+        $('#BulletinID').val("");
+        $('#Title').val("");
+        $('#Contents').val("");
+        $('#File').empty();
+        $('#FileName').empty();
+        document.getElementById("Published").value = "";
+        document.getElementById("Deadline").value = "";
+    }
+</script>
