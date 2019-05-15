@@ -20,13 +20,13 @@
                     alert(result.db_Result);
                     return;
                 }
-                //區域下拉選單
+                //地區下拉選單
                 var ddlAreaHtml = "<option value=''>全部</option>";
                 $.each(result.ddlArea.DropDownListLT, function (i, ddl) {
                     ddlAreaHtml += '<option value="' + ddl.Values + '">' + ddl.Text + '</option>';
                 });
                 $('#ddlArea').html(ddlAreaHtml);
-                //分行下拉選單
+                //科室下拉選單
                 var ddlOrganizer = "<option value=''>全部</option>";
                 $.each(result.ddlOrganizer.DropDownListLT, function (i, ddl) {
                     ddlOrganizer += '<option value="' + ddl.Values + '">' + ddl.Text + '</option>';
@@ -104,14 +104,14 @@
     }
 
     //新增或修改
-    function DoAction(ActionName, Branch_No) {
+    function DoAction(ActionName, IDX) {
         if (ActionName == 'Modify')
-            document.location.replace('@Url.Action("Edit", "MCAsk")' + '?Branch_No=' + Branch_No);
+            document.location.replace('@Url.Action("Edit0", "MCAsk")' + '?ID=' + IDX);
         if (ActionName == 'Create')
-            document.location.replace('@Url.Action("Create", "MCAsk")');
+            document.location.replace('@Url.Action("Create0", "MCAsk")');
         if (ActionName == 'Delete') {
             if (confirm('確認刪除'))
-                document.location.replace('@Url.Action("Delete", "MCAsk")' + '?Branch_No=' + Branch_No);
+                document.location.replace('@Url.Action("Delete", "MCAsk")' + '?ID=' + IDX);
         }
     }
 
@@ -190,11 +190,15 @@
                 { "title": "承辦單位", "data": "Organizer" },
                 { "title": "承辦人員", "data": "OrganizerMan" },
                 { "title": "狀態", "data": "sStatus" },
+                { "title": "新增人員", "data": "CreateUserName" },
+                { "title": "新增時間", "data": "CreateDate" },
+                { "title": "修改人員", "data": "UpdateUserName" },
+                { "title": "修改時間", "data": "UpdateDate" },
 
                 {
                     "title": "操作", "orderable": false, render: function (data, type, row) {
-                        return '<button type="button" class="btn btn-primary btn-space" onclick="DoAction(\'Modify\',\'' + row.Branch_No + '\')">修改</button>'
-                            + '<button type="button" class="btn btn-primary btn-space" onclick="DoAction(\'Delete\',\'' + row.Branch_No + '\')">刪除</button>';
+                        return '<button type="button" class="btn btn-primary btn-space" onclick="DoAction(\'Modify\',\'' + row.ID + '\')">修改</button>'
+                            + '<button type="button" class="btn btn-primary btn-space" onclick="DoAction(\'Delete\',\'' + row.ID + '\')">刪除</button>';
                     }
                 }
             ],

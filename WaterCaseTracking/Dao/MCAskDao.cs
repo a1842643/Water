@@ -7,6 +7,7 @@ using WaterCaseTracking.Models.ViewModels.MCAsk;
 using System.Data.SqlClient;
 using Dapper;
 using System.Data;
+using WaterCaseTracking.Models;
 
 namespace WaterCaseTracking.Dao
 {
@@ -39,6 +40,10 @@ namespace WaterCaseTracking.Dao
                                 ,Organizer                                            --承辦單位
                                 ,OrganizerMan                                         --承辦人員
                                 ,sStatus                                              --狀態
+                                ,CreateUserName                                       --新增人員 
+                                ,CreateDate                                           --新增時間
+                                ,UpdateUserName                                       --修改人員
+                                ,UpdateDate                                           --修改時間  
                                   FROM MCAsk                                          
                                 WHERE 1 = 1 ");
 
@@ -101,7 +106,11 @@ namespace WaterCaseTracking.Dao
             return result;
             #endregion
         }
+        
+
         #endregion 取得表單oTable資料-迄
+
+        #region 取得範例檔資料-起
         internal DataTable getExportData(ExportViewModel model)
         {
             //組立SQL字串並連接資料庫
@@ -175,5 +184,183 @@ namespace WaterCaseTracking.Dao
             return dt;
             #endregion
         }
+        #endregion 取得範例檔資料-迄
+
+        #region 單筆新增MCAskTable-起
+        internal void AddMCAskTable(MCAskModel model, string UserName)
+        {
+            //組立SQL字串並連接資料庫
+            StringBuilder _sqlStr = new StringBuilder();
+            _sqlStr.Append(@"Insert Into MCAsk ( 
+                                AskDate
+                                , MemberName
+                                , Area
+                                , Inquiry
+                                , HandlingSituation
+                                , Organizer
+                                , OrganizerMan
+                                , sStatus
+                                , Types
+                                , CreateUserName
+                                , CreateDate
+                                , UpdateUserName
+                                , UpdateDate       
+                            )
+                            Values(
+                                @AskDate      
+                                , @MemberName
+                                , @Area
+                                , @Inquiry            
+                                , @HandlingSituation
+                                , @Organizer
+                                , @OrganizerMan
+                                , @sStatus
+                                , @Types
+                                , @CreateUserName
+                                , getdate()
+                                , @UpdateUserName
+                                , getdate()       
+                            )
+                ");
+            _sqlParamsList = new List<DynamicParameters>();
+            _sqlParams = new Dapper.DynamicParameters();
+            _sqlParams.Add("AskDate", model.AskDate);
+            _sqlParams.Add("MemberName", model.MemberName);
+            _sqlParams.Add("Area", model.Area);
+            _sqlParams.Add("Inquiry", model.Inquiry);
+            _sqlParams.Add("HandlingSituation", model.HandlingSituation);
+            _sqlParams.Add("Organizer", model.Organizer);
+            _sqlParams.Add("OrganizerMan", model.OrganizerMan);
+            _sqlParams.Add("sStatus", model.sStatus);
+            _sqlParams.Add("Types", model.Types);
+            _sqlParams.Add("CreateUserName", UserName);
+            _sqlParams.Add("UpdateUserName", UserName);
+
+            try
+            {
+                using (var cn = new SqlConnection(_dbConnPPP))//連接資料庫
+                {
+                    cn.Open();
+                    var ExecResult = cn.Execute(_sqlStr.ToString(), _sqlParams);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+        #endregion 單筆新增MCAskTable-迄
+        #region 單筆修改MCAskTable-起
+        internal void UpdateMCAskTable(MCAskModel model, string UserName)
+        {
+            //組立SQL字串並連接資料庫
+            StringBuilder _sqlStr = new StringBuilder();
+            _sqlStr.Append(@"UPDATE MCAsk SET                            
+                            AskDate =@AskDate                            --詢問日期
+                            , MemberName =@MemberName                    --地區
+                            , Area =@Area                                --議員姓名
+                            , Inquiry =@Inquiry                          --詢問事項
+                            , HandlingSituation =@HandlingSituation      --辦理情形
+                            , Organizer =@Organizer                      --承辦單位
+                            , OrganizerMan =@OrganizerMan                --承辦人員
+                            , sStatus =@sStatus                          --狀態
+                            , UpdateUserName =@UpdateUserName            --修改人員
+                            , UpdateDate = GetDate()                    --修改時間
+                ");
+            _sqlStr.Append("WHERE ID = @ID AND Types = @Types ");
+
+            _sqlParams = new Dapper.DynamicParameters();
+            _sqlParams.Add("ID", model.ID);
+            _sqlParams.Add("AskDate", model.AskDate);
+            _sqlParams.Add("MemberName", model.MemberName);
+            _sqlParams.Add("Area", model.Area);
+            _sqlParams.Add("Inquiry", model.Inquiry);
+            _sqlParams.Add("HandlingSituation", model.HandlingSituation);
+            _sqlParams.Add("Organizer", model.Organizer);
+            _sqlParams.Add("OrganizerMan", model.OrganizerMan);
+            _sqlParams.Add("sStatus", model.sStatus);
+            _sqlParams.Add("Types", model.Types);
+            _sqlParams.Add("UpdateUserName", UserName);
+
+            try
+            {
+                using (var cn = new SqlConnection(_dbConnPPP))//連接資料庫
+                {
+                    cn.Open();
+                    var ExecResult = cn.Execute(_sqlStr.ToString(), _sqlParams);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+        #endregion 單筆修改MCAskTable-迄
+        #region 單筆刪除MCAskTable-起
+        internal void DeleteMCAskTable(string ID, string Types, string UserName)
+        {
+            //組立SQL字串並連接資料庫
+            StringBuilder _sqlStr = new StringBuilder();
+            _sqlStr.Append(@"Delete from MCAsk WHERE ID = @ID AND Types = @Types  ");
+
+            _sqlParams = new Dapper.DynamicParameters();
+            _sqlParams.Add("ID", ID);
+            _sqlParams.Add("Types", Types);
+
+
+            try
+            {
+                using (var cn = new SqlConnection(_dbConnPPP))//連接資料庫
+                {
+                    cn.Open();
+                    var ExecResult = cn.Execute(_sqlStr.ToString(), _sqlParams);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+        #endregion 單筆刪除MCAskTable-迄
+        #region 修改用查詢
+        internal MCAskModel QueryUpdateData(string ID, string Types)
+        {
+            #region 參數告宣
+            MCAskModel result = new MCAskModel();
+            #endregion
+
+            #region 流程
+
+            StringBuilder _sqlStr = new StringBuilder();
+            _sqlStr.Append(@"select 
+                                ID                                   --項次
+                                , Convert(varchar(10), AskDate, 111) as 'AskDate' --詢問日期
+                                , MemberName                         --地區
+                                , Area                               --議員姓名
+                                , Inquiry                            --詢問事項
+                                , HandlingSituation                  --辦理情形
+                                , Organizer                          --承辦單位
+                                , OrganizerMan                       --承辦人員
+                                , sStatus                            --狀態
+                                , Types                              --0:市政總質詢事項, 議會案件
+                                , CreateUserName                     --新增人員
+                                , CreateDate                         --新增時間
+                                , UpdateUserName                     --修改人員
+                                , UpdateDate                         --修改時間
+                            from MCAsk WHERE ID = @ID 
+                                            AND  Types = @Types ");
+            _sqlParams = new Dapper.DynamicParameters();
+            _sqlParams.Add("ID", ID);
+            _sqlParams.Add("Types", Types);
+
+            using (var cn = new SqlConnection(_dbConnPPP)) //連接資料庫
+            {
+                cn.Open();
+                result = cn.Query<MCAskModel>(_sqlStr.ToString(), _sqlParams).First();
+            }
+            return result;
+            #endregion
+        }
+        #endregion
     }
 }

@@ -285,6 +285,7 @@
     <Compile Include="Models\ViewModels\ManagementRecordCard\SearchListViewModel.cs" />
     <Compile Include="Models\ViewModels\MCAsk\ExportViewModel.cs" />
     <Compile Include="Models\ViewModels\MCAsk\SearchInfoViewModel.cs" />
+    <Compile Include="Models\ViewModels\MCAsk\SearchInitViewCMModel.cs" />
     <Compile Include="Models\ViewModels\MCAsk\SearchInitViewModel.cs" />
     <Compile Include="Models\ViewModels\MCAsk\SearchListViewModel.cs" />
     <Compile Include="Models\ViewModels\OperationalOverview\SearchListViewModel.cs" />
@@ -2223,6 +2224,7 @@
     <Content Include="Views\JobReminder\Update.cshtml" />
     <Content Include="Views\MCAsk\Maintain0.cshtml" />
     <Content Include="Views\MCAsk\Create0.cshtml" />
+    <Content Include="Views\MCAsk\Edit0.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

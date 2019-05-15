@@ -44,6 +44,22 @@ namespace WaterCaseTracking.Service
             #endregion
         }
 
+        /// <summary>
+        /// 抓狀態下拉選單
+        /// </summary>
+        /// <returns></returns>
+        internal DropDownListViewModel getddlsStatus()
+        {
+            #region 參數宣告				
+            SysCodeDao untilDao = new SysCodeDao();
+            #endregion
+
+            #region 流程																
+            DropDownListViewModel ddlsStatus = untilDao.getddlItem("sStatus");
+
+            return ddlsStatus;
+            #endregion
+        }
 
         /// <summary>
         /// 抓分行下拉選單

@@ -21,5 +21,9 @@ namespace WaterCaseTracking.Models.ViewModels.MCAsk
         public string Organizer { get; set; }
         public string OrganizerMan { get; set; }
         public string sStatus { get; set; }
+        public string CreateUserName { get; set; }
+        public string CreateDate { get; set; }
+        public string UpdateUserName { get; set; }
+        public string UpdateDate { get; set; }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web;
 
@@ -10,20 +11,35 @@ namespace WaterCaseTracking.Models
     {
         [DisplayName("項次")]
         public int ID { get; set; }
+        [StringLength(10)]
+        //[DataType(DataType.Date)]
+        //[DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
         [DisplayName("詢問日期")]
         public string AskDate { get; set; }
+        [Required]
+        [StringLength(20)]
         [DisplayName("地區")]
         public string Area { get; set; }
+        [Required]
+        [StringLength(100)]
         [DisplayName("議員姓名")]
         public string MemberName { get; set; }
+        [Required]
+        [StringLength(1000)]
         [DisplayName("詢問事項")]
         public string Inquiry { get; set; }
+        [Required]
+        [StringLength(1000)]
         [DisplayName("辦理情形")]
         public string HandlingSituation { get; set; }
+        [Required]
+        [StringLength(20)]
         [DisplayName("承辦單位")]
         public string Organizer { get; set; }
+        [StringLength(20)]
         [DisplayName("承辦人員")]
         public string OrganizerMan { get; set; }
+        [StringLength(10)]
         [DisplayName("狀態")]
         public string sStatus { get; set; }
         /// <summary>
