@@ -52,7 +52,7 @@
         oTable.ajax.reload(null, false);
         //判斷是否可以新增跟修改
         if ('@(Session["roleName"] as string)' == 'supervisor') {
-            oTable.columns([0,1,2,6,7,8, 9, 10, 11, 12, 13]).visible(false);
+            oTable.columns([0, 1, 2, 6, 7, 8, 9, 10, 11, 12, 13]).visible(false);
         }
     }
 
@@ -63,6 +63,38 @@
         $('#txtMemberName').val('');
         $('#ddlArea').val('全市');
         $('#ddlOrganizer').val('');
+    }
+
+    //上傳檔案
+    function UpLoad() {
+        //## 宣告一個FormData
+        var data = new FormData();
+        //## 將檔案append FormData
+        var files = $("#files").get(0).files;
+        if (files.length > 0) {
+            data.append("UploadedFile", files[0]);
+        }
+        else {
+            alert('請選擇匯入檔案');
+            return;
+        }
+
+        //## 透過ajax方式Post 至Action
+        var ajaxRequest = $.ajax({
+            type: "POST",
+            url: "@Url.Action("Upload1", "MCAsk")",
+            contentType: false,         // 告诉jQuery不要去這置Content-Type
+            processData: false,         // 告诉jQuery不要去處理發送的數據
+        dataType: "json",
+        data: data
+    })
+    .done(function (result) {
+        alert(result);
+        document.location.replace('@Url.Action("Maintain1", "MCAsk")');
+    })
+    .fail(function () {
+        alert("匯入失敗");
+    });
     }
 
     //匯出範例檔
@@ -80,7 +112,7 @@
             txtMemberName: $('#txtMemberName').val(),
             ddlArea: $('#ddlArea').val(),
             ddlOrganizer: $('#ddlOrganizer').val(),
-            Types: '0',
+            Types: '1',
             fileExtension: $('#ddlFileExtension').val()
         };
 
@@ -110,45 +142,13 @@
     //新增或修改
     function DoAction(ActionName, IDX) {
         if (ActionName == 'Modify')
-            document.location.replace('@Url.Action("Edit0", "MCAsk")' + '?ID=' + IDX);
+            document.location.replace('@Url.Action("Edit1", "MCAsk")' + '?ID=' + IDX);
         if (ActionName == 'Create')
-            document.location.replace('@Url.Action("Create0", "MCAsk")');
+            document.location.replace('@Url.Action("Create1", "MCAsk")');
         if (ActionName == 'Delete') {
             if (confirm('確認刪除'))
-                document.location.replace('@Url.Action("Delete0", "MCAsk")' + '?ID=' + IDX);
+                document.location.replace('@Url.Action("Delete1", "MCAsk")' + '?ID=' + IDX);
         }
-    }
-
-    //上傳檔案
-    function UpLoad() {
-        //## 宣告一個FormData
-        var data = new FormData();
-        //## 將檔案append FormData
-        var files = $("#files").get(0).files;
-        if (files.length > 0) {
-            data.append("UploadedFile", files[0]);
-        }
-        else {
-            alert('請選擇匯入檔案');
-            return;
-        }
-
-        //## 透過ajax方式Post 至Action
-        var ajaxRequest = $.ajax({
-            type: "POST",
-            url: "@Url.Action("Upload0", "MCAsk")",
-            contentType: false,         // 告诉jQuery不要去這置Content-Type
-            processData: false,         // 告诉jQuery不要去處理發送的數據
-        dataType: "json",
-        data: data
-    })
-    .done(function (result) {
-        alert(result);
-        //document.location.replace('@Url.Action("Maintain0", "MCAsk")');
-    })
-    .fail(function () {
-        alert("匯入失敗");
-    });
     }
 
     
@@ -184,13 +184,13 @@
                 aoData.push({ "name": "txtMemberName", "value": $('#txtMemberName').val() });
                 aoData.push({ "name": "ddlArea", "value": $('#ddlArea').val() });
                 aoData.push({ "name": "ddlOrganizer", "value": $('#ddlOrganizer').val() });
-                aoData.push({ "name": "Types", "value": '0' });
+                aoData.push({ "name": "Types", "value": '1' });
             },
             "columns": [
                 { "title": "項次", "data": "ID" },
                 { "title": "詢問日期", "data": "AskDate" },
                 { "title": "地區", "data": "Area" },
-                { "title": "議員姓名", "data": "MemberName","width":"30px" },
+                { "title": "議員姓名", "data": "MemberName", "width": "30px" },
                 { "title": "詢問事項", "data": "Inquiry", "width": "30px" },
                 { "title": "辦理情形", "data": "HandlingSituation" },
                 { "title": "承辦單位", "data": "Organizer" },
@@ -228,7 +228,7 @@
 </script>
 <section class="content-header">
     <h1>
-        市政總質詢事項
+        議會案件
     </h1>
 </section>
 <section class="content">
@@ -282,9 +282,10 @@
                     <div class="row vertical-align">
                         <div class="col-xs-auto "><button type="button" class="btn btn-primary btn-space" onclick="QueryTable();">查 詢</button></div>
                         <div class="col-xs-auto"><button type="button" class="btn btn-primary btn-space" onclick="Reset();">重置</button></div>
-                        @if ((Session["roleName"] as string) != "supervisor") {
-                            <div class="col-xs-auto"><button type="button" class="btn btn-primary btn-space" onclick="DoAction('Create', null);">新增</button></div>
-                        }
+                    @if ((Session["roleName"] as string) != "supervisor")
+                    {
+                        <div class="col-xs-auto"><button type="button" class="btn btn-primary btn-space" onclick="DoAction('Create', null);">新增</button></div>
+                    }
 
                     </div>
                 </div>

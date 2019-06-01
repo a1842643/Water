@@ -21,7 +21,7 @@
                     return;
                 }
                 //地區下拉選單
-                var ddlAreaHtml = "";
+                var ddlAreaHtml = "<option value=''>全部</option>";
                 $.each(result.ddlArea.DropDownListLT, function (i, ddl) {
                     ddlAreaHtml += '<option value="' + ddl.Values + '">' + ddl.Text + '</option>';
                 });
@@ -50,10 +50,6 @@
         oTableSetting();
         //重新查詢
         oTable.ajax.reload(null, false);
-        //判斷是否可以新增跟修改
-        if ('@(Session["roleName"] as string)' == 'supervisor') {
-            oTable.columns([0,1,2,6,7,8, 9, 10, 11, 12, 13]).visible(false);
-        }
     }
 
     //重置查詢條件
@@ -61,7 +57,7 @@
         $('#txtInquiry').val('');
         $('#txtHandlingSituation').val('');
         $('#txtMemberName').val('');
-        $('#ddlArea').val('全市');
+        $('#ddlArea').val('');
         $('#ddlOrganizer').val('');
     }
 
@@ -136,22 +132,20 @@
         //## 透過ajax方式Post 至Action
         var ajaxRequest = $.ajax({
             type: "POST",
-            url: "@Url.Action("Upload0", "MCAsk")",
+            url: "@Url.Action("Upload", "MCAsk")",
             contentType: false,         // 告诉jQuery不要去這置Content-Type
             processData: false,         // 告诉jQuery不要去處理發送的數據
-        dataType: "json",
-        data: data
-    })
+            dataType: "json",
+            data: data
+        })
     .done(function (result) {
         alert(result);
-        //document.location.replace('@Url.Action("Maintain0", "MCAsk")');
+        document.location.replace('@Url.Action("Maintain", "MCAsk")');
     })
     .fail(function () {
         alert("匯入失敗");
     });
     }
-
-    
 
     //查詢Table設定
     function oTableSetting() {
@@ -190,8 +184,8 @@
                 { "title": "項次", "data": "ID" },
                 { "title": "詢問日期", "data": "AskDate" },
                 { "title": "地區", "data": "Area" },
-                { "title": "議員姓名", "data": "MemberName","width":"30px" },
-                { "title": "詢問事項", "data": "Inquiry", "width": "30px" },
+                { "title": "議員姓名", "data": "MemberName" },
+                { "title": "詢問事項", "data": "Inquiry" },
                 { "title": "辦理情形", "data": "HandlingSituation" },
                 { "title": "承辦單位", "data": "Organizer" },
                 { "title": "承辦人員", "data": "OrganizerMan" },
@@ -236,8 +230,6 @@
         <div class="col-xs-12">
             <div class="box">
                 <div class="box-header">
-                @if ((Session["roleName"] as string) != "supervisor")
-                {
                     <div class="row vertical-align">
                         <label id="lblUploadNewFile" for="file">檔案路徑:</label>
                         <input type="file" name="files" id="files" style="display:inline;width:60%;" multiple />
@@ -251,7 +243,6 @@
                             </select>
                         </div>
                     </div>
-                }
                     <div class="row vertical-align">
                         <div class="col-xs-auto">詢問事項:</div>
                         <div class="col-xs-3">
@@ -266,8 +257,6 @@
                             <input type="text" id="txtMemberName" />
                         </div>
                     </div>
-                    @if ((Session["roleName"] as string) != "supervisor")
-                    {
                     <div class="row vertical-align">
                         <div class="col-xs-auto">地區:</div>
                         <div class="col-xs-3">
@@ -278,14 +267,12 @@
                             <select name="ddlOrganizer" id="ddlOrganizer" class="form-control"></select>
                         </div>
                     </div>
-                    }
+
                     <div class="row vertical-align">
                         <div class="col-xs-auto "><button type="button" class="btn btn-primary btn-space" onclick="QueryTable();">查 詢</button></div>
                         <div class="col-xs-auto"><button type="button" class="btn btn-primary btn-space" onclick="Reset();">重置</button></div>
-                        @if ((Session["roleName"] as string) != "supervisor") {
-                            <div class="col-xs-auto"><button type="button" class="btn btn-primary btn-space" onclick="DoAction('Create', null);">新增</button></div>
-                        }
-
+                        <div class="col-xs-auto"><button type="button" class="btn btn-primary btn-space" onclick="DoAction('Create', null);">新增</button></div>
+                        
                     </div>
                 </div>
                 <!-- /.box-header -->

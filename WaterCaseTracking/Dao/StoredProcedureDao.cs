@@ -5,7 +5,6 @@ using System.Data.SqlClient;
 using System.Text;
 using WaterCaseTracking.Models.Common;
 using System.Data;
-using WaterCaseTracking.Models.ViewModels.KPI_ManageQuery;
 using WaterCaseTracking.Models.ViewModels;
 
 namespace WaterCaseTracking.Dao

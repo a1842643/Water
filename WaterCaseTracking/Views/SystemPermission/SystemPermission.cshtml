@@ -41,7 +41,7 @@
 </script>
 <section class="content-header">
     <h1>
-        系統權限功能維護
+        角色權限管理
     </h1>
 </section>
 <section class="content">
@@ -58,7 +58,7 @@
                                 <button id="SearchInfoPermission" type="button" class="btn btn-primary btn-space">查 詢</button>
                             </div>
                             <div class="col-xs-auto">
-                                <button id="EditPermission" type="button" class="btn btn-primary btn-space">編輯角色</button>
+                                @*<button id="EditPermission" type="button" class="btn btn-primary btn-space">編輯角色</button>*@
                             </div>
                         </div>
                     </div>
@@ -71,7 +71,7 @@
                                             <td>
                                                 <label>
                                                     <input name="checkbox" id="Chk_A" type="checkbox" style="display:none" />
-                                                    營業單位資料管理
+                                                    案件追蹤管理系統功能
                                                 </label>
                                             </td>
                                         </tr>
@@ -81,213 +81,16 @@
                                                     <li>
                                                         <label>
                                                             <input name="checkboxA" id="Chk_A01" type="checkbox" onclick="ChkOperating('A')" />
-                                                            資料維護
+                                                            市政總質詢事項
                                                         </label>
                                                     </li>
                                                     <li>
                                                         <label>
                                                             <input name="checkboxA" id="Chk_A02" type="checkbox" onclick="ChkOperating('A')" />
-                                                            資料查詢
+                                                            議會案件
                                                         </label>
                                                     </li>
                                                 </ol>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                <label>
-                                                    <input name="checkbox" id="Chk_B" type="checkbox" style="display:none" />
-                                                    經營績效考核
-                                                </label>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                <ol>
-                                                    <li>
-                                                        <label>
-                                                            <input name="checkboxB" id="Chk_B01" type="checkbox" onclick="ChkOperating('B')" />
-                                                            經營績效配比設定
-                                                        </label>
-                                                    </li>
-                                                    <li>
-                                                        <label>
-                                                            <input name="checkboxB" id="Chk_B02" type="checkbox" onclick="ChkOperating('B')" />
-                                                            管理績效考核作業
-                                                        </label>
-                                                    </li>
-                                                    <li>
-                                                        <label>
-                                                            <input name="checkboxB" id="Chk_B03" type="checkbox" onclick="ChkOperating('B')" />
-                                                            業務績效考核作業
-                                                        </label>
-                                                    </li>
-                                                    <li>
-                                                        <label>
-                                                            <input name="checkboxB" id="Chk_B04" type="checkbox" onclick="ChkOperating('B')" />
-                                                            業績考核成績查詢
-                                                        </label>
-                                                    </li>
-                                                    <li>
-                                                        <label>
-                                                            <input name="checkboxB" id="Chk_B05" type="checkbox" onclick="ChkOperating('B')" />
-                                                            管理績效成績查詢
-                                                        </label>
-                                                    </li>
-                                                    <li>
-                                                        <label>
-                                                            <input name="checkboxB" id="Chk_B06" type="checkbox" onclick="ChkOperating('B')" />
-                                                            經營績效成績查詢
-                                                        </label>
-                                                    </li>
-                                                </ol>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                <label>
-                                                    <input name="checkbox" id="Chk_C" type="checkbox" style="display:none" />
-                                                    報表查詢
-                                                </label>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                <ol>
-                                                    <li>
-                                                        <label>
-                                                            <input name="checkboxC" id="Chk_C01" type="checkbox" onclick="ChkOperating('C')" />
-                                                            營運概況表(個別分行)
-                                                        </label>
-                                                    </li>
-                                                    <li>
-                                                        <label>
-                                                            <input name="checkboxC" id="Chk_C02" type="checkbox" onclick="ChkOperating('C')" />
-                                                            經營管理紀錄卡(個別分行)
-                                                        </label>
-                                                    </li>
-                                                    <li>
-                                                        <label>
-                                                            <input name="checkboxC" id="Chk_C03" type="checkbox" onclick="ChkOperating('C')" />
-                                                            經營管理紀錄卡(群組)
-                                                        </label>
-                                                    </li>
-                                                    <li>
-                                                        <label>
-                                                            <input name="checkboxC" id="Chk_C04" type="checkbox" onclick="ChkOperating('C')" />
-                                                            自定義報表
-                                                        </label>
-                                                    </li>
-                                                    <li>
-                                                        <label>
-                                                            <input name="checkboxC" id="Chk_C05" type="checkbox" onclick="ChkOperating('C')" />
-                                                            趨勢圖表
-                                                        </label>
-                                                    </li>
-                                                    <li>
-                                                        <label>
-                                                            <input name="checkboxC" id="Chk_C06" type="checkbox" onclick="ChkOperating('C')" />
-                                                            自定義報表查詢(年月)
-                                                        </label>
-                                                    </li>
-                                                </ol>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                <label>
-                                                    檔案總管
-                                                </label>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                <ol>
-                                                    <li>
-                                                        <label>
-                                                            <input name="checkbox" id="Chk_D" type="checkbox" />
-                                                            檔案總管
-                                                        </label>
-                                                    </li>
-                                                </ol>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                <label>
-                                                    <input name="checkbox" id="Chk_E" type="checkbox" style="display:none" />
-                                                    報表上傳簽核作業
-                                                </label>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                <ol>
-                                                    <li>
-                                                        <label>
-                                                            <input name="checkboxE" id="Chk_E01" type="checkbox" onclick="ChkOperating('F')" />
-                                                            上傳作業
-                                                        </label>
-                                                    </li>
-                                                    <li>
-                                                        <label>
-                                                            <input name="checkboxE" id="Chk_E02" type="checkbox" onclick="ChkOperating('F')" />
-                                                            簽核處理
-                                                        </label>
-                                                    </li>
-                                                    <li>
-                                                        <label>
-                                                            <input name="checkboxE" id="Chk_E03" type="checkbox" onclick="ChkOperating('F')" />
-                                                            覆核處理
-                                                        </label>
-                                                    </li>
-                                                    <li>
-                                                        <label>
-                                                            <input name="checkboxE" id="Chk_E04" type="checkbox" onclick="ChkOperating('F')" />
-                                                            工作進度追蹤
-                                                        </label>
-                                                    </li>
-                                                </ol>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                <label>
-                                                    <input name="checkbox" id="Chk_F" type="checkbox" style="display:none" />
-                                                    批次作業管理
-                                                </label>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                <ol>
-                                                    <li>
-                                                        <label>
-                                                            <input name="checkboxF" id="Chk_F01" type="checkbox" onclick="ChkOperating('F')" />
-                                                            批次作業管理
-                                                        </label>
-                                                    </li>
-                                                    <li>
-                                                        <label>
-                                                            <input name="checkboxF" id="Chk_F02" type="checkbox" onclick="ChkOperating('F')" />
-                                                            工作提醒設定
-                                                        </label>
-                                                    </li>
-                                                    <li>
-                                                        <label>
-                                                            <input name="checkboxF" id="Chk_F03" type="checkbox" onclick="ChkOperating('F')" />
-                                                            工作提醒查詢
-                                                        </label>
-                                                    </li>
-                                                </ol>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                <label>
-                                                    <input name="checkbox" id="Chk_G" type="checkbox" style="display:none" />
-                                                    系統管理
-                                                </label>
                                             </td>
                                         </tr>
                                         <tr>
@@ -296,13 +99,13 @@
                                                     <li>
                                                         <label>
                                                             <input name="checkboxG" id="Chk_G01" type="checkbox" onclick="ChkOperating('G')" />
-                                                            系統參數設定
+                                                            帳號管理
                                                         </label>
                                                     </li>
                                                     <li>
                                                         <label>
                                                             <input name="checkboxG" id="Chk_G02" type="checkbox" onclick="ChkOperating('G')" />
-                                                            系統權限功能維護
+                                                            角色權限管理
                                                         </label>
                                                     </li>
                                                     <li>

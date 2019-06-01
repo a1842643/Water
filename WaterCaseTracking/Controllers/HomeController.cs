@@ -13,7 +13,6 @@ using System.Linq;
 using Microsoft.VisualBasic.FileIO;
 using System.Security.Cryptography.X509Certificates;
 using System.Net.Security;
-using WaterCaseTracking.Models.ViewModels.JobReminder;
 using WaterCaseTracking.Dao;
 using System.Globalization;
 using System.Data;
@@ -91,16 +90,28 @@ namespace WaterCaseTracking.Controllers
                 TempData["loginMsg"] = "請填帳號及密碼";
                 return View();
             }
+            AccountsService accountsService = new AccountsService();
+            AccountsModel accountsModel = new AccountsModel();
 
+            accountsModel = accountsService.QueryAccountInfo(txtAccount, txtPassword);
+            if(accountsModel == null)
+            {
+                TempData["loginMsg"] = "帳號或密碼錯誤，請重新輸入";
+                return View();
+            }
+
+            Session["Menu"] = GetOperating(accountsModel.Role);
 
             //單位名稱
             Session["UnitName"] = "營業部";
                 //單位代碼
                 Session["Unit"] = "00M";
                 //登入者ID
-                Session["UserID"] = "090888";
+                Session["UserID"] = accountsModel.AccountID;
                 //登入者姓名
-                Session["UserName"] = "張小品";
+                Session["UserName"] = accountsModel.AccountName;
+                //登入者角色
+                Session["roleName"] = accountsModel.Role;
             //角色代碼清單
             Session["roleId"] = "admin,user,application,signing,review";//請傳入字串 格式如 : admin,user,application,signing,review
             UserInfoModel UserInfo = new UserInfoModel()
@@ -151,7 +162,7 @@ namespace WaterCaseTracking.Controllers
             //角色清單
             Session["roleName"] = RoleList.Text.ToString();
 
-            Session["Menu"] = GetOperating(Groups);
+            Session["Menu"] = GetOperating("admin");
 
             if (RoleList.Values.ToString() == "admin")
             {

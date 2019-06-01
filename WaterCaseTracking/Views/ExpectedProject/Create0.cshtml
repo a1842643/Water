@@ -1,7 +1,7 @@
 ﻿@model WaterCaseTracking.Models.MCAskModel
 
 @{
-    ViewBag.Title = "Edit";
+    ViewBag.Title = "Create";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
@@ -53,7 +53,7 @@
     @*@Html.AntiForgeryToken()*@
     <section class="content-header">
         <h1>
-            市政總質詢事項-修改
+            市政總質詢事項-新增
         </h1>
     </section>
     <section class="content">
@@ -97,7 +97,7 @@
                         <div class="form-group">
                             @Html.LabelFor(model => model.HandlingSituation, htmlAttributes: new { @class = "control-label col-md-2" })
                             <div class="col-md-10">
-                                @Html.EditorFor(model => model.HandlingSituation, new { htmlAttributes = new { @class = "form-control", rows = "4" } })
+                                @Html.EditorFor(model => model.HandlingSituation, new { htmlAttributes = new { @class = "form-control" } })
                                 @Html.ValidationMessageFor(model => model.HandlingSituation, "", new { @class = "text-danger" })
                             </div>
                         </div>
@@ -129,7 +129,7 @@
 
                         <div class="form-group">
                             <div class="col-md-offset-2 col-md-10">
-                                <input type="submit" value="修改" class="btn btn-default" />
+                                <input type="submit" value="新增" class="btn btn-default" />
                                 @Html.ActionLink("返回", "Maintain0", null, new { @class = "btn btn-default" })
                             </div>
                         </div>

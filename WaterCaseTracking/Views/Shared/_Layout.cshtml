@@ -14,6 +14,7 @@
 <html>
 <head>
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
     @{
         //Session是否消失
         if (string.IsNullOrEmpty(Session["UserID"] as String))
@@ -39,18 +40,19 @@
             alert(message);
         </script>
     }
+
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>土地銀行 - 營業單位營運資訊管理系統</title>
+    <title>新北市水利局 - 案件追蹤管理系統</title>
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/js")
     @Styles.Render("~/Content/jqueryui")
     @Scripts.Render("~/bundles/jqueryui")
     <link rel="stylesheet" href="~/Content/dist/default/style.min.css" />
     <script type="text/javascript" language="javascript">
-            ////預防掃描出的中風險:Client Cross Frame Scripting Attack
-            if (top != self) { top.location = encodeURI(self.location); }
+        ////預防掃描出的中風險:Client Cross Frame Scripting Attack
+        if (top != self) { top.location = encodeURI(self.location); }
 
     </script>
     <script type="text/javascript">
@@ -151,13 +153,31 @@
                 //yearRange: "-100:+0",
                 dateFormat: "yy/mm/dd"
             });
+            yearPadZero: false
+            //MenuOperating();
+            SetMenu('@Session["Menu"]');
+            @*手機模式不擋Menu*@
             
-
         });
 
-        
+        //function MenuOperating() {
+        //    for (var i = 65; i < 90; i++) {
+        //        var id = String.fromCharCode(i);
+        //        $('#' + id).hide();
+        //        for (var j = 0; j < 10; j++) {
+        //            $('#' + id + "0" + j).hide();
+        //        }
+        //    }
+        //}
 
-       
+        function SetMenu(StrMenu) {
+            var menu = StrMenu.split(',');
+            console.log(StrMenu);
+
+            $(menu).each(function (index) {
+                $('#' + menu[index]).show();
+            });
+        }
     </script>
     <style>
         .vertical-align {
@@ -182,9 +202,9 @@
             <!-- Logo -->
             <a href="/" class="logo">
                 <!-- mini logo for sidebar mini 50x50 pixels -->
-                <span class="logo-mini"><b>營管</b></span>
+                <span class="logo-mini"><b></b></span>
                 <!-- logo for regular state and mobile devices -->
-                <span class="logo-lg"><b>營業單位營運資訊管理系統</b></span>
+                <span class="logo-lg"><b>新北市政府水利局案件追蹤管理系統</b></span>
             </a>
             <!-- Header Navbar -->
             <nav class="navbar navbar-static-top" role="navigation">
@@ -197,18 +217,25 @@
                     <div>
                         <ul class="nav navbar-nav">
                             <li>
-                                <a><i class="fa fa-address-card-o"></i> 登入角色: @sRoleName (@Groups)</a>
+                                <a><i class="fa fa-address-card-o"></i> 登入角色: @sRoleName</a>
                             </li>
                             <li>
-                                <a><i class="fa fa-address-book-o"></i> 登入人員: @sUnitName (@sUnit)/@sUserModel (@sUser)</a>
+                                <a><i class="fa fa-address-book-o"></i> 登入人員: @sUserModel (@sUser)</a>
                             </li>
-                            <li>
-                                <a><i class="fa fa-clock-o"></i> 今日日期: @DateTime.Now.ToString("yyyy/MM/dd")</a>
-                            </li>
+                            
                             <li>
                                 <a id="exit" href="#"><i class="fa fa-gears"></i> 登出帳號</a>
                             </li>
-                            
+                            @*<li style="position: absolute; color: blue; bottom: 0; right: 0;font-weight: bold;margin-right: 20px;">
+                                    登入人員: @sUnitName (@sUnit)/@sUserModel (@sUser)
+                                </li>
+                                <li style="position: absolute; color: #800000;bottom: 0;right: 272px;font-weight: bold;margin-right: 20px;">
+                                    今日日期: @DateTime.Now.ToString("yyyy/MM/dd")
+                                </li>*@
+                        </ul>
+                    </div>
+                    @*<div style="position: absolute; color: blue; bottom: 0; right: 0;font-weight: bold;">登入人員: @sUnitName (@sUnit)/@sUserModel (@sUser)</div>*@
+                    @*<div style="position: absolute; color: #800000;bottom: 0;right: 272px;font-weight: bold;">今日日期: @DateTime.Now.ToString("yyyy/MM/dd")</div>*@
                 </div>
             </nav>
         </header>
@@ -219,104 +246,31 @@
                 <!-- Sidebar Menu -->
                 <ul id="TreeViewMenuList" class="sidebar-menu" data-widget="tree">
                     <li class="treeview">
-                        <a id="A" href="#" >
-                        @*<a href="#">*@
-                            <i class="fa fa-television"></i><span>營業單位資料</span>
+                        <a id="A" href="#" style="display:none">
+                            @*<a href="#">*@
+                            <i class="fa fa-television"></i><span>案件追蹤管理系統功能</span>
                             <span class="pull-right-container">
                                 <i class="fa fa-angle-left pull-right"></i>
                             </span>
                         </a>
                         <ul class="treeview-menu">
-                            <li ><a href="@Url.Content("~/MCAsk/Maintain0")"><i class="fa fa-caret-right"></i>市政總質詢事項</a></li>
-                            <li id="A02" ><a href="@Url.Content("~/BusinessUTQuery/Maintain")"><i class="fa fa-caret-right"></i>資料查詢</a></li>
+                            <li id="A01" style="display:none"><a href="@Url.Content("~/MCAsk/Maintain0")"><i class="fa fa-caret-right"></i>市政總質詢事項</a></li>
+                            <li id="A02" style="display:none"><a href="@Url.Content("~/MCAsk/Maintain1")"><i class="fa fa-caret-right"></i>議會案件</a></li>
                         </ul>
                     </li>
-                    <li class="treeview">
-                        <a id="B" href="#" >
-                        @*<a href="#">*@
-                            <i class="fa fa-area-chart"></i><span>經營績效考核</span>
-                            <span class="pull-right-container">
-                                <i class="fa fa-angle-left pull-right"></i>
-                            </span>
-                        </a>
-                        <ul class="treeview-menu">
-                            <li id="B01" ><a href="@Url.Content("~/KPI_Busines/Maintain")"><i class="fa fa-caret-right"></i>經營績效配比設定</a></li>
-                            <li id="B02" ><a href="@Url.Content("~/KPI_Manage/Maintain")"><i class="fa fa-caret-right"></i>管理績效考核作業</a></li>
-                            <li id="B03" ><a href="@Url.Content("~/KPI_Performance/Maintain")"><i class="fa fa-caret-right"></i>業務績效考核作業</a></li>
-                            <li id="B04" ><a href="@Url.Content("~/KPI_ManageQuery/Maintain")"><i class="fa fa-caret-right"></i>管理績效成績查詢</a></li>
-                            <li id="B05" ><a href="@Url.Content("~/KPI_PerformanceQuery/Maintain")"><i class="fa fa-caret-right"></i>業績考核成績查詢</a></li>
-                            <li id="B06" ><a href="@Url.Content("~/KPI_BusinesQuery/Maintain")"><i class="fa fa-caret-right"></i>經營績效成績查詢</a></li>
-                        </ul>
-                    </li>
-                    <li class="treeview">
-                        <a id="C" href="#" >
-                        @*<a href="#">*@
-                            <i class="fa fa-area-chart"></i><span>報表查詢</span>
-                            <span class="pull-right-container">
-                                <i class="fa fa-angle-left pull-right"></i>
-                            </span>
-                        </a>
-                        <ul class="treeview-menu">
-                            <li id="C01" ><a href="@Url.Content("~/OperationalOverview/OperationalOverview")"><i class="fa fa-caret-right"></i>營運概況表(個別分行)</a></li>
-                            <li id="C02" ><a href="@Url.Content("~/ManagementRecordCard/ManagementRecordCard")"><i class="fa fa-caret-right"></i>經營管理紀錄卡(個別分行)</a></li>
-                            <li id="C03" ><a href="@Url.Content("~/AverageCountB/Admin_card")"><i class="fa fa-caret-right"></i>經營管理紀錄卡(群組)</a></li>
-                            <li id="C04" ><a href="@Url.Content("~/CustomReportUntil/CustomReportUntil")"><i class="fa fa-caret-right"></i>自定義報表</a></li>
-                            <li id="C05" ><a href="@Url.Content("~/ChartTable/ChartTable")"><i class="fa fa-caret-right"></i>趨勢圖表</a></li>
 
-                            @*暫定*@
-                            <li id="C06" ><a href="@Url.Content("~/Customreport/Customreport")"><i class="fa fa-caret-right"></i>自定義報表查詢(年月)</a></li> @**@
-                        </ul>
-                    </li>
-                    <li class="">
-                        <a id="D" href="@Url.Content("~/FileManager/FileManager")" >
-                        @*<a href="#">*@
-                            <i class="fa fa-edit"></i><span>檔案總管</span>
-                            <span class="pull-right-container">
-                                <i class="fa fa-angle-left pull-right"></i>
-                            </span>
-                        </a>
-                    </li>
                     <li class="treeview">
-                        <a id="E" href="#" >
-                        @*<a href="#">*@
-                            <i class="fa fa-edit"></i><span>報表上傳簽核作業</span>
-                            <span class="pull-right-container">
-                                <i class="fa fa-angle-left pull-right"></i>
-                            </span>
-                        </a>
-                        <ul class="treeview-menu">
-                            <li id="E01" ><a href="@Url.Content("~/ManualUpload/Index")"><i class="fa fa-caret-right"></i>上傳作業</a></li>
-                            <li id="E02" ><a href="@Url.Content("~/SigningProcess/SigningProcess")"><i class="fa fa-caret-right"></i>簽核處理</a></li>
-                            <li id="E03" ><a href="@Url.Content("~/SigningProcess/ReviewProcess")"><i class="fa fa-caret-right"></i>覆核處理</a></li>
-                            <li id="E04" ><a href="@Url.Content("~/SigningProcess/QueryOver")"><i class="fa fa-caret-right"></i>工作進度追蹤</a></li>
-                        </ul>
-                    </li>
-                    <li class="treeview">
-                        <a id="F" href="#" >
-                        @*<a href="#">*@
-                            <i class="fa fa-edit"></i><span>批次作業管理</span>
-                            <span class="pull-right-container">
-                                <i class="fa fa-angle-left pull-right"></i>
-                            </span>
-                        </a>
-                        <ul class="treeview-menu">
-                            <li id="F01" ><a href="@Url.Content("~/BatchManage/BatchManage")"><i class="fa fa-caret-right"></i>批次作業管理</a></li>
-                            <li id="F02" ><a href="@Url.Content("~/JobReminder/Maintain")"><i class="fa fa-caret-right"></i>工作提醒設定</a></li>
-                            <li id="F03" ><a href="@Url.Content("~/JobReminder/Query")"><i class="fa fa-caret-right"></i>工作提醒查詢</a></li>
-                        </ul>
-                    </li>
-                    <li class="treeview">
-                        <a id="G" href="#" >
-                        @*<a href="#">*@
+                        <a id="G" href="#" style="display:none">
+                            @*<a href="#">*@
                             <i class="fa fa-edit"></i><span>系統管理</span>
                             <span class="pull-right-container">
                                 <i class="fa fa-angle-left pull-right"></i>
                             </span>
                         </a>
                         <ul class="treeview-menu">
-                            <li id="G01" ><a href="@Url.Content("~/ParameterSettings/ParameterSettings")"><i class="fa fa-caret-right"></i>系統參數設定</a></li>
-                            <li id="G02" ><a href="@Url.Content("~/SystemPermission/SystemPermission")"><i class="fa fa-caret-right"></i>系統權限功能維護</a></li>
-                            <li id="G03" ><a href="@Url.Content("~/MinuteLog/Maintain")"><i class="fa fa-caret-right"></i>操作紀錄查詢</a></li>
+                            <li id="G01" style="display:none"><a href="@Url.Content("~/ParameterSettings/XXX")"><i class="fa fa-caret-right"></i>帳號管理</a></li>
+                            <li id="G02" style="display:none"><a href="@Url.Content("~/SystemPermission/SystemPermission")"><i class="fa fa-caret-right"></i>角色權限管理</a></li>
+                            <li id="G03" style="display:none"><a href="@Url.Content("~/MinuteLog/Maintain")"><i class="fa fa-caret-right"></i>操作紀錄查詢</a></li>
                         </ul>
                     </li>
                 </ul>
@@ -342,10 +296,8 @@
 </html>
 <script>
     $('#exit').on('click', function () {
-        if (confirm("您正在離開營業單位營運資訊管理系統。\n按下確定後登出並關閉視窗。")) {
-            window.opener = null;
-            window.open('', '_self');
-            window.close();
+        if (confirm("您正在離開營業單位營運資訊管理系統。\n按下確定後登出。")) {
+            document.location.replace('@Url.Action("login", "Home")');
         }
     });
 </script>

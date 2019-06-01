@@ -28,6 +28,13 @@ namespace WaterCaseTracking.Controllers
             return View();
         }
 
+        public ActionResult Maintain1()
+        {
+            logging(FuncName1, "進入功能-" + FuncName1);
+
+            return View();
+        }
+
         #region 初始化-起
         [HttpPost]
         public ActionResult searchInit()
@@ -61,7 +68,8 @@ namespace WaterCaseTracking.Controllers
         #region 取得表單oTable資料-起
         public ActionResult GetoTable(SearchInfoViewModel searchInfo)
         {
-            logging(FuncName0, "取得表單資料");
+            string FuncName = searchInfo.Types == "0" ? FuncName0 : FuncName1;
+            logging(FuncName, "取得表單資料");
             #region 參數宣告
 
             SearchListViewModel searchList = new SearchListViewModel();
@@ -78,7 +86,7 @@ namespace WaterCaseTracking.Controllers
             catch (Exception ex)
             {
                 searchList.db_Result = "Fail , " + ex.Message;
-                errLogging(FuncName0, ex.ToString());
+                errLogging(FuncName, ex.ToString());
             }
             //組Json格式回傳Models資料
             return Json(searchList, JsonRequestBehavior.AllowGet);
@@ -91,7 +99,8 @@ namespace WaterCaseTracking.Controllers
         [HttpPost]
         public ActionResult Export(ExportViewModel exportViewModel)
         {
-            logging(FuncName0, "匯出範例檔");
+            string FuncName = exportViewModel.Types == "0" ? FuncName0 : FuncName1;
+            logging(FuncName, "匯出範例檔");
             #region 參數宣告
             MCAskService mcaskService = new MCAskService();
             DataTable dt = new DataTable();
@@ -116,7 +125,7 @@ namespace WaterCaseTracking.Controllers
             }
             catch (Exception ex)
             {
-                errLogging(FuncName0, ex.ToString());
+                errLogging(FuncName, ex.ToString());
             }
             return Json(fileNamePath, JsonRequestBehavior.AllowGet);
 
@@ -243,7 +252,7 @@ namespace WaterCaseTracking.Controllers
         #endregion 修改-迄
 
         #region 刪除-起
-        public ActionResult Delete(string ID)
+        public ActionResult Delete0(string ID)
         {
             logging(FuncName0D, "刪除");
             #region 參數宣告
@@ -276,7 +285,161 @@ namespace WaterCaseTracking.Controllers
             return View();
             #endregion
         }
-#endregion 刪除-迄
+        #endregion 刪除-迄
+
+        #region 新增1-起
+        public ActionResult Create1()
+        {
+            #region 參數宣告
+            MCAskModel mcaskModel = new MCAskModel();
+            string fail = "";
+            #endregion
+            logging(FuncName1C, "進入功能-" + FuncName1C);
+            return View(mcaskModel);
+        }
+
+        [HttpPost]
+        public ActionResult Create1(MCAskModel mcaskModel)
+        {
+            logging(FuncName1C, "新增");
+            #region 驗證
+            if (!ModelState.IsValid)
+            { return View(mcaskModel); }
+            #endregion
+            #region 參數宣告
+            MCAskService MCAskService = new MCAskService();
+            string fail = "";
+            #endregion
+
+            #region 流程	
+            try
+            {
+                //送參數進入Service層做商業邏輯
+                MCAskService.AddMCAskTable(mcaskModel, UserName);
+            }
+            catch (Exception ex)
+            {
+                fail = "Fail," + ex.Message;
+                errLogging(FuncName1C, ex.ToString());
+            }
+            //成功的話返回主頁
+            if (string.IsNullOrEmpty(fail))
+            {
+                TempData["message"] = "新增成功";
+                return RedirectToAction("Maintain1");
+            }
+            else
+            {
+                TempData["message"] = fail;
+            }
+
+            return View(mcaskModel);
+            #endregion
+        }
+        #endregion 新增-迄
+
+        #region 修改1-起
+        public ActionResult Edit1(string ID)
+        {
+            logging(FuncName1M, "進入功能-" + FuncName1M);
+            #region 參數宣告
+            MCAskService mcaskService = new MCAskService();
+            MCAskModel mcaskModel = new MCAskModel();
+            string fail = "";
+            #endregion
+
+            #region 流程	
+            try
+            {
+                //查詢有無資料
+                mcaskModel = mcaskService.QueryUpdateData(ID, "1");
+            }
+            catch (Exception ex)
+            {
+                fail = "Fail," + ex.Message;
+                errLogging(FuncName1M, ex.ToString());
+            }
+            #endregion
+
+            return View("Edit1", mcaskModel);
+        }
+
+        [HttpPost]
+        public ActionResult Edit1(MCAskModel mcaskModel)
+        {
+            logging(FuncName1M, "修改");
+            #region 驗證
+            if (!ModelState.IsValid)
+            { return View(mcaskModel); }
+            #endregion
+            #region 參數宣告
+            MCAskService MCAskService = new MCAskService();
+            string fail = "";
+            #endregion
+
+            #region 流程	
+            try
+            {
+                //送參數進入Service層做商業邏輯
+                MCAskService.UpdateMCAskTable(mcaskModel, UserName);
+            }
+            catch (Exception ex)
+            {
+                fail = "Fail," + ex.Message;
+                errLogging(FuncName1M, ex.ToString());
+            }
+            //成功的話返回主頁
+            if (string.IsNullOrEmpty(fail))
+            {
+                TempData["message"] = "修改成功";
+                return RedirectToAction("Maintain1");
+            }
+            else
+            {
+                TempData["message"] = fail;
+            }
+
+            return View(mcaskModel);
+            #endregion
+        }
+        #endregion 修改-迄
+
+        #region 刪除-起
+        public ActionResult Delete1(string ID)
+        {
+            logging(FuncName1D, "刪除");
+            #region 參數宣告
+            MCAskService MCAskService = new MCAskService();
+            string fail = "";
+            #endregion
+
+            #region 流程	
+            try
+            {
+                //送參數進入Service層做商業邏輯
+                MCAskService.DeleteMCAskTable(ID, "1", UserName);
+            }
+            catch (Exception ex)
+            {
+                fail = "Fail," + ex.Message;
+                errLogging(FuncName1D, ex.ToString());
+            }
+            //成功的話返回主頁
+            if (string.IsNullOrEmpty(fail))
+            {
+                TempData["message"] = "刪除成功";
+                return RedirectToAction("Maintain1");
+            }
+            else
+            {
+                TempData["message"] = fail;
+            }
+
+            return View();
+            #endregion
+        }
+        #endregion 刪除-迄
+
 
 
 
@@ -311,5 +474,74 @@ namespace WaterCaseTracking.Controllers
 
         }
         #endregion 新增初始化-迄
+
+        #region 匯入
+        [HttpPost]
+        public JsonResult Upload0()
+        {
+            try
+            {
+                #region 參數宣告
+                MCAskService mcaskService = new MCAskService();
+                int successQty = 0;
+                #endregion
+                //## 如果有任何檔案類型才做
+                if (Request.Files.AllKeys.Any())
+                {
+                    logging(FuncName1D, "上傳");
+                    //## 讀取指定的上傳檔案ID
+                    HttpPostedFileBase httpPostedFile = Request.Files["UploadedFile"];
+                    string fileName = httpPostedFile.FileName;
+                    //取得副檔名
+                    string FileExtension = System.IO.Path.GetExtension(fileName);
+                    if (FileExtension != ".xlsx")
+                        throw new Exception("匯入檔案錯誤");
+                    successQty = mcaskService.doUpLoad(httpPostedFile, "0", UserName);
+
+
+                }
+
+                return Json("成功匯入" + successQty + "筆");
+            }
+            catch (Exception ex)
+            {
+                errLogging(FuncName1D, ex.ToString());
+                return Json(ex.Message);
+            }
+        }
+
+        public JsonResult Upload1()
+        {
+            try
+            {
+                #region 參數宣告
+                MCAskService mcaskService = new MCAskService();
+                int successQty = 0;
+                #endregion
+                //## 如果有任何檔案類型才做
+                if (Request.Files.AllKeys.Any())
+                {
+                    logging(FuncName1D, "上傳");
+                    //## 讀取指定的上傳檔案ID
+                    HttpPostedFileBase httpPostedFile = Request.Files["UploadedFile"];
+                    string fileName = httpPostedFile.FileName;
+                    //取得副檔名
+                    string FileExtension = System.IO.Path.GetExtension(fileName);
+                    if (FileExtension != ".xlsx")
+                        throw new Exception("匯入檔案錯誤");
+                    successQty = mcaskService.doUpLoad(httpPostedFile, "1", UserName);
+
+
+                }
+
+                return Json("成功匯入" + successQty + "筆");
+            }
+            catch (Exception ex)
+            {
+                errLogging(FuncName1D, ex.ToString());
+                return Json(ex.Message);
+            }
+        }
+        #endregion
     }
 }

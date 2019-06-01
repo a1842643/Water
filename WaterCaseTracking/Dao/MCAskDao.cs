@@ -67,10 +67,13 @@ namespace WaterCaseTracking.Dao
                 _sqlParams.Add("MemberName", "%" + searchInfo.txtMemberName + "%");
             }
             //地區
-            if (!string.IsNullOrEmpty(searchInfo.ddlArea))
+            if (!string.IsNullOrEmpty(searchInfo.ddlArea) && searchInfo.ddlArea != "全市")
             {
-                _sqlParamStr.Append(" and AREA = @AREA ");
-                _sqlParams.Add("AREA", searchInfo.ddlArea);
+                _sqlParamStr.Append(" and (AREA like @AREA ");
+                if(searchInfo.ddlArea != "無")
+                    _sqlParamStr.Append(" OR AREA = '全市' ");
+                _sqlParamStr.Append(" ) ");
+                _sqlParams.Add("AREA", '%' + searchInfo.ddlArea + '%');
             }
             //承辦單位
             if (!string.IsNullOrEmpty(searchInfo.ddlOrganizer))
@@ -133,6 +136,18 @@ namespace WaterCaseTracking.Dao
                                 ,sStatus                                              as '狀態'
                                   FROM MCAsk                                          
                             WHERE 1 = 1 ");
+
+            //_sqlStr.Append(@"SELECT
+            //                    ''                        as '項次'
+            //                    ,''                        as '詢問日期'
+            //                    ,''                        as '地區'
+            //                    ,''                        as '議員姓名'
+            //                    ,''                        as '詢問事項'
+            //                    ,''                        as '辦理情形'
+            //                    ,''                        as '承辦單位'
+            //                    ,''                        as '承辦人員'
+            //                    ,''                        as '狀態'
+            //                      ");
 
             _sqlParams = new Dapper.DynamicParameters();
             ////詢問事項
@@ -362,5 +377,104 @@ namespace WaterCaseTracking.Dao
             #endregion
         }
         #endregion
+
+        #region 多筆新增MCAskTable-起
+        internal int AddMCAskListTable(List<MCAskModel> listModel, string UserName)
+        {
+            //組立SQL字串並連接資料庫
+            StringBuilder _sqlStr = new StringBuilder();
+            _sqlStr.Append(@"Insert Into MCAsk ( 
+                                AskDate
+                                , MemberName
+                                , Area
+                                , Inquiry
+                                , HandlingSituation
+                                , Organizer
+                                , OrganizerMan
+                                , sStatus
+                                , Types
+                                , CreateUserName
+                                , CreateDate
+                                , UpdateUserName
+                                , UpdateDate       
+                            )
+                            Values(
+                                @AskDate      
+                                , @MemberName
+                                , @Area
+                                , @Inquiry            
+                                , @HandlingSituation
+                                , @Organizer
+                                , @OrganizerMan
+                                , @sStatus
+                                , @Types
+                                , @CreateUserName
+                                , getdate()
+                                , @UpdateUserName
+                                , getdate()       
+                            )
+                ");
+            _sqlParamsList = new List<DynamicParameters>();
+            foreach (var model in listModel)
+            {
+                _sqlParams = new Dapper.DynamicParameters();
+                _sqlParams.Add("AskDate", model.AskDate);
+                _sqlParams.Add("MemberName", model.MemberName);
+                _sqlParams.Add("Area", model.Area);
+                _sqlParams.Add("Inquiry", model.Inquiry);
+                _sqlParams.Add("HandlingSituation", model.HandlingSituation);
+                _sqlParams.Add("Organizer", model.Organizer);
+                _sqlParams.Add("OrganizerMan", model.OrganizerMan);
+                _sqlParams.Add("sStatus", model.sStatus);
+                _sqlParams.Add("Types", model.Types);
+                _sqlParams.Add("CreateUserName", UserName);
+                _sqlParams.Add("UpdateUserName", UserName);
+                _sqlParamsList.Add(_sqlParams);
+            }
+
+            try
+            {
+                using (var cn = new SqlConnection(_dbConnPPP))//連接資料庫
+                {
+                    cn.Open();
+                    var ExecResult = cn.Execute(_sqlStr.ToString(), _sqlParamsList);
+                    return ExecResult;
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+        internal int DeleteMCAskListTable(List<MCAskModel> listModel)
+        {
+            //組立SQL字串並連接資料庫
+            StringBuilder _sqlStr = new StringBuilder();
+            _sqlStr.Append(@" Delete From MCAsk Where ID = @ID
+                ");
+            _sqlParamsList = new List<DynamicParameters>();
+            foreach (var model in listModel)
+            {
+                _sqlParams = new Dapper.DynamicParameters();
+                _sqlParams.Add("ID", model.ID);
+                _sqlParamsList.Add(_sqlParams);
+            }
+
+            try
+            {
+                using (var cn = new SqlConnection(_dbConnPPP))//連接資料庫
+                {
+                    cn.Open();
+                    var ExecResult = cn.Execute(_sqlStr.ToString(), _sqlParamsList);
+                    return ExecResult;
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        #endregion 多筆新增MCAskTable-迄
     }
 }

@@ -1,6 +1,5 @@
 ﻿using Dapper;
 using WaterCaseTracking.Models.ViewModels;
-using WaterCaseTracking.Models.ViewModels.BusinessUT;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;

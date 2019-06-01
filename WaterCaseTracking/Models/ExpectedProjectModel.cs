@@ -7,7 +7,7 @@ using System.Web;
 
 namespace WaterCaseTracking.Models
 {
-    public class MCAskModel
+    public class ExpectedProjectModel
     {
         [DisplayName("項次")]
         public int ID { get; set; }
@@ -25,10 +25,11 @@ namespace WaterCaseTracking.Models
         [DisplayName("議員姓名")]
         public string MemberName { get; set; }
         [Required]
+        [StringLength(1000)]
         [DisplayName("詢問事項")]
         public string Inquiry { get; set; }
         [Required]
-        [DataType(DataType.MultilineText)]
+        [StringLength(1000)]
         [DisplayName("辦理情形")]
         public string HandlingSituation { get; set; }
         [Required]

@@ -1,7 +1,7 @@
 ﻿@model WaterCaseTracking.Models.MCAskModel
 
 @{
-    ViewBag.Title = "Create0";
+    ViewBag.Title = "Create";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
@@ -97,7 +97,7 @@
                         <div class="form-group">
                             @Html.LabelFor(model => model.HandlingSituation, htmlAttributes: new { @class = "control-label col-md-2" })
                             <div class="col-md-10">
-                                @Html.EditorFor(model => model.HandlingSituation, new { htmlAttributes = new { @class = "form-control" } })
+                                @Html.EditorFor(model => model.HandlingSituation, new { htmlAttributes = new { @class = "form-control", rows = "4" } })
                                 @Html.ValidationMessageFor(model => model.HandlingSituation, "", new { @class = "text-danger" })
                             </div>
                         </div>
