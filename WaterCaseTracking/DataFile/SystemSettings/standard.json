@@ -1,1 +1,0 @@
-﻿{"Sql": [{"Address": "SqlAddress","Account": "Account","Password": "Password"}],"Ftp": [{"Address": "FtpAddress","Account": "Account","Password": "Password"}],"SSO": [{"Address": "SSOAddress","Account": "Account","Password": "Password"}],"Mail": [{"Address": "MailAddress","Account": "Account","Password": "Password"}]}

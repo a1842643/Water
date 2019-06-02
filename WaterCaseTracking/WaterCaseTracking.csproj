@@ -196,19 +196,13 @@
     <Compile Include="Controllers\BaseController.cs" />
     <Compile Include="Controllers\MCAskController.cs" />
     <Compile Include="Controllers\MinuteLogController.cs" />
-    <Compile Include="Controllers\ParameterSettingsController.cs" />
     <Compile Include="Controllers\SystemPermissionController.cs" />
-    <Compile Include="Dao\AverageCountDao.cs" />
-    <Compile Include="Dao\clsDB.cs" />
     <Compile Include="Dao\MCAskDao.cs" />
-    <Compile Include="Dao\StoredProcedureDao.cs" />
     <Compile Include="Dao\LoggDao.cs" />
-    <Compile Include="Dao\StepLogDao.cs" />
-    <Compile Include="Dao\SystemPermissionDao.cs" />
-    <Compile Include="Dao\SYS_announcementDao.cs" />
     <Compile Include="Dao\AccountsDao.cs" />
-    <Compile Include="Dao\ProductDao.cs" />
     <Compile Include="Dao\SysCodeDao.cs" />
+    <Compile Include="Dao\PermissionProgDao.cs" />
+    <Compile Include="Dao\SystemPermissionDao.cs" />
     <Compile Include="Dao\_BaseDao.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -218,7 +212,6 @@
     <Compile Include="Models\MCAskModel.cs" />
     <Compile Include="Models\AccountsModel.cs" />
     <Compile Include="Models\PermissionModel.cs" />
-    <Compile Include="Models\ProductModel.cs" />
     <Compile Include="Models\ViewModels\Accounts\SearchInfoViewModel.cs" />
     <Compile Include="Models\ViewModels\Accounts\SearchInitViewModel.cs" />
     <Compile Include="Models\ViewModels\Accounts\SearchListViewModel.cs" />
@@ -229,20 +222,7 @@
     <Compile Include="Models\ViewModels\MCAsk\SearchInitViewCMModel.cs" />
     <Compile Include="Models\ViewModels\MCAsk\SearchInitViewModel.cs" />
     <Compile Include="Models\ViewModels\MCAsk\SearchListViewModel.cs" />
-    <Compile Include="Models\ViewModels\ReportQuery\Admin_Card.cs" />
-    <Compile Include="Models\ViewModels\ReportQuery\Admin_Card_Count.cs" />
-    <Compile Include="Models\ViewModels\ReportQuery\ImportFile_15_1.cs" />
-    <Compile Include="Models\ViewModels\ReportQuery\ImportFile_51.cs" />
-    <Compile Include="Models\ViewModels\ReportQuery\ImportFile_52.cs" />
-    <Compile Include="Models\ViewModels\ReportQuery\ImportFile_53.cs" />
-    <Compile Include="Models\ViewModels\ReportQuery\ImportFile_54.cs" />
-    <Compile Include="Models\ViewModels\ReportQuery\Placings .cs" />
-    <Compile Include="Models\ViewModels\ReportQuery\Until.cs" />
-    <Compile Include="Models\StepLogModel.cs" />
     <Compile Include="Models\ViewModels\SystemPermission\SearchInfoViewModel.cs" />
-    <Compile Include="Models\SYS_announcementModel.cs" />
-    <Compile Include="Models\UntilModel.cs" />
-    <Compile Include="Models\UseCodeModel.cs" />
     <Compile Include="Models\ViewModels\Account\AccountModel.cs" />
     <Compile Include="Models\ViewModels\DataTables\ParametersModel.cs" />
     <Compile Include="Models\ViewModels\DropDownListViewModel.cs" />
@@ -251,10 +231,6 @@
     <Compile Include="Models\ViewModels\MinuteLog\MinuteLogItemViewModel.cs" />
     <Compile Include="Models\ViewModels\MinuteLog\QueryGetoTableViewModel.cs" />
     <Compile Include="Models\ViewModels\MinuteLog\SearchConditionViewModel.cs" />
-    <Compile Include="Models\ViewModels\ParameterSettings\SearchInfoViewModel.cs" />
-    <Compile Include="Models\ViewModels\ProductList\detailViewModel.cs" />
-    <Compile Include="Models\ViewModels\ProductList\SearchInfoViewModel.cs" />
-    <Compile Include="Models\ViewModels\ProductList\SearchListViewModel.cs" />
     <Compile Include="Models\ViewModels\SystemPermission\SearchListViewModel.cs" />
     <Compile Include="Models\ViewModels\_BaseRequestViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -265,18 +241,12 @@
     </Compile>
     <Compile Include="Service\Account\AccountService.cs" />
     <Compile Include="Service\AccountsService.cs" />
-    <Compile Include="Service\clsConvert.cs" />
-    <Compile Include="Service\clsCustomerAttribute.cs" />
-    <Compile Include="Service\clsEnum.cs" />
-    <Compile Include="Service\EIFunc.cs" />
     <Compile Include="Service\CommonService.cs" />
     <Compile Include="Service\DropDownListService.cs" />
     <Compile Include="Service\HomeService.cs" />
     <Compile Include="Service\ExpectedProjectService.cs" />
     <Compile Include="Service\MCAskService.cs" />
     <Compile Include="Service\MinuteLogService.cs" />
-    <Compile Include="Service\ParameterSettingsService.cs" />
-    <Compile Include="Service\ProductListService.cs" />
     <Compile Include="Service\SystemPermissionService.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -2059,7 +2029,6 @@
     <Content Include="Scripts\jstree.min.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
-    <Content Include="DataFile\SystemSettings\SystemSettings.json" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -2095,7 +2064,6 @@
     <Content Include="Views\Shared\_Layout.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\MinuteLog\Maintain.cshtml" />
-    <Content Include="Views\ParameterSettings\ParameterSettings.cshtml" />
     <Content Include="Views\SystemPermission\SystemPermission.cshtml" />
     <Content Include="Views\CustomReportUntil\CustomReportUntil.cshtml" />
     <Content Include="Views\Home\RoleMenu.cshtml" />
@@ -2112,7 +2080,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="DataFile\bulletin\" />
+    <Folder Include="DataFile\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\datatables.net-bs\.bower.json" />
@@ -2129,7 +2097,6 @@
     <Content Include="Content\bootstrap\dist\css\bootstrap-theme.min.css.map" />
     <Content Include="Content\bootstrap\dist\css\bootstrap.css.map" />
     <Content Include="Content\bootstrap\dist\css\bootstrap.min.css.map" />
-    <Content Include="DataFile\匯入營業單位格式.xlsx" />
     <None Include="packages.config" />
     <Content Include="Views\Home\login.cshtml" />
     <None Include="Properties\PublishProfiles\LandBank.pubxml" />
