@@ -32,7 +32,7 @@ namespace WaterCaseTracking.Dao
             _sqlCountStr.Append("select count(1) from MCAsk WHERE 1 = 1 ");
             _sqlStr.Append(@"SELECT
                                 ROW_NUMBER() OVER(ORDER BY ID ASC) as 'ID'            --編碼
-                                NGuid + CONVERT(varchar,ID) as 'HID'                  --項次
+                                ,NGuid + CONVERT(varchar,ID) as 'HID'                  --項次
                                 ,CONVERT(VARCHAR,AskDate, 111) as 'AskDate'           --詢問日期
                                 ,Area                                                 --地區
                                 ,MemberName                                           --議員姓名
@@ -127,7 +127,7 @@ namespace WaterCaseTracking.Dao
             //查詢SQL
             StringBuilder _sqlStr = new StringBuilder();
             _sqlStr.Append(@"SELECT
-                                NGuid + ID                                            as '項次'
+                                NGuid + CONVERT(varchar,ID)                           as '項次'
                                 ,CONVERT(VARCHAR,AskDate, 111)                        as '詢問日期'
                                 ,Area                                                 as '地區'
                                 ,MemberName                                           as '議員姓名'

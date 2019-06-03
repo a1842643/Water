@@ -168,7 +168,7 @@ namespace WaterCaseTracking.Service
                     }
                     catch (Exception)
                     {
-                        throw new Exception("第" + i + "筆資料有誤，請確認");
+                        throw new Exception("第" + (i + 1) + "筆資料有誤，請確認");
                     }
                     //沒錯誤則Commit
                     mcaskDao.CommitSqlP(ref sqlConn, ref sqlTrans);

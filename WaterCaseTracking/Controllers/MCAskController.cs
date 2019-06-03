@@ -534,7 +534,8 @@ namespace WaterCaseTracking.Controllers
 
                 }
 
-                return Json("成功匯入" + successQty + "筆");
+                //return Json("成功匯入" + successQty + "筆");
+                return Json("匯入成功");
             }
             catch (Exception ex)
             {
