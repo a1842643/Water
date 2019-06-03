@@ -126,13 +126,15 @@ namespace WaterCaseTracking.Service
                 {
                     throw new Exception("匯入檔案錯誤");
                 }
+                SqlConnection sqlConn;
+                SqlTransaction sqlTrans;
                 List<MCAskModel> listModel = new List<MCAskModel>();
                 for (int i = 0; i < orgDt.Rows.Count; i++)
                 {
                     try
                     {
                         mcaskModel = new MCAskModel();
-                        mcaskModel.ID = Convert.ToInt32(orgDt.Rows[i][0]);
+                        mcaskModel.ID = orgDt.Rows[i][0].ToString();
                         mcaskModel.AskDate = orgDt.Rows[i][1].ToString();
                         mcaskModel.Area = orgDt.Rows[i][2].ToString();
                         mcaskModel.MemberName = orgDt.Rows[i][3].ToString();
@@ -142,22 +144,42 @@ namespace WaterCaseTracking.Service
                         mcaskModel.OrganizerMan = orgDt.Rows[i][7].ToString();
                         mcaskModel.sStatus = orgDt.Rows[i][8].ToString();
                         mcaskModel.Types = Types;
-                        listModel.Add(mcaskModel);
+                        //listModel.Add(mcaskModel);
+                        //先初始化值
+                        mcaskDao.defaultSqlP(out sqlConn, out sqlTrans);
+                        //判斷無ID則新增，有ID正確就修改
+                        if (!string.IsNullOrEmpty(mcaskModel.ID))
+                        {
+                            //若資料正確則修改
+                            if (mcaskDao.QueryUpdateData(mcaskModel.ID, Types) != null)
+                            {
+                                mcaskDao.UpdateMulMCAskTable(mcaskModel, UserName, ref sqlConn, ref sqlTrans);
+                            }
+                            //若沒有資料則錯誤
+                            else
+                            {
+                                throw new Exception("");
+                            }
+                        }
+                        else
+                        {
+                            mcaskDao.AddMulMCAskTable(mcaskModel, UserName, ref sqlConn, ref sqlTrans);
+                        }
                     }
                     catch (Exception)
                     {
                         throw new Exception("第" + i + "筆資料有誤，請確認");
                     }
+                    //沒錯誤則Commit
+                    mcaskDao.CommitSqlP(ref sqlConn, ref sqlTrans);
                 }
-                //SqlConnection sqlConn;
-                //SqlTransaction sqlTrans;
                 ////刪除資料
                 //untilDao.DeleteUpdateUntil(listModel, out sqlConn, out sqlTrans);
                 ////新增資料
                 //successQty = untilDao.AddUpdateUntil(listModel, ref sqlConn, ref sqlTrans);
                 //新增資料
-                successQty = mcaskDao.AddMCAskListTable(listModel, UserName);
-                mcaskDao.DeleteMCAskListTable(listModel);
+                //successQty = mcaskDao.AddMCAskListTable(listModel, UserName);
+                //mcaskDao.DeleteMCAskListTable(listModel);
             }
             return successQty;
             #endregion

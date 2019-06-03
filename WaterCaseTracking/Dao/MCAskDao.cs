@@ -31,7 +31,8 @@ namespace WaterCaseTracking.Dao
             StringBuilder _sqlCountStr = new StringBuilder();
             _sqlCountStr.Append("select count(1) from MCAsk WHERE 1 = 1 ");
             _sqlStr.Append(@"SELECT
-                                ID                                                    --項次
+                                ROW_NUMBER() OVER(ORDER BY ID ASC) as 'ID'            --編碼
+                                NGuid + CONVERT(varchar,ID) as 'HID'                  --項次
                                 ,CONVERT(VARCHAR,AskDate, 111) as 'AskDate'           --詢問日期
                                 ,Area                                                 --地區
                                 ,MemberName                                           --議員姓名
@@ -109,7 +110,8 @@ namespace WaterCaseTracking.Dao
             return result;
             #endregion
         }
-        
+
+
 
         #endregion 取得表單oTable資料-迄
 
@@ -125,7 +127,7 @@ namespace WaterCaseTracking.Dao
             //查詢SQL
             StringBuilder _sqlStr = new StringBuilder();
             _sqlStr.Append(@"SELECT
-                                ID                                                    as '項次'
+                                NGuid + ID                                            as '項次'
                                 ,CONVERT(VARCHAR,AskDate, 111)                        as '詢問日期'
                                 ,Area                                                 as '地區'
                                 ,MemberName                                           as '議員姓名'
@@ -199,6 +201,12 @@ namespace WaterCaseTracking.Dao
             return dt;
             #endregion
         }
+
+        
+
+
+
+
         #endregion 取得範例檔資料-迄
 
         #region 單筆新增MCAskTable-起
@@ -208,6 +216,7 @@ namespace WaterCaseTracking.Dao
             StringBuilder _sqlStr = new StringBuilder();
             _sqlStr.Append(@"Insert Into MCAsk ( 
                                 AskDate
+                                , NGuid
                                 , MemberName
                                 , Area
                                 , Inquiry
@@ -223,6 +232,7 @@ namespace WaterCaseTracking.Dao
                             )
                             Values(
                                 @AskDate      
+                                , NEWID()
                                 , @MemberName
                                 , @Area
                                 , @Inquiry            
@@ -282,7 +292,7 @@ namespace WaterCaseTracking.Dao
                             , UpdateUserName =@UpdateUserName            --修改人員
                             , UpdateDate = GetDate()                    --修改時間
                 ");
-            _sqlStr.Append("WHERE ID = @ID AND Types = @Types ");
+            _sqlStr.Append("WHERE NGuid + CONVERT(varchar,ID) = @ID AND Types = @Types ");
 
             _sqlParams = new Dapper.DynamicParameters();
             _sqlParams.Add("ID", model.ID);
@@ -316,7 +326,7 @@ namespace WaterCaseTracking.Dao
         {
             //組立SQL字串並連接資料庫
             StringBuilder _sqlStr = new StringBuilder();
-            _sqlStr.Append(@"Delete from MCAsk WHERE ID = @ID AND Types = @Types  ");
+            _sqlStr.Append(@"Delete from MCAsk WHERE NGuid + CONVERT(varchar,ID) = @ID AND Types = @Types  ");
 
             _sqlParams = new Dapper.DynamicParameters();
             _sqlParams.Add("ID", ID);
@@ -362,7 +372,7 @@ namespace WaterCaseTracking.Dao
                                 , CreateDate                         --新增時間
                                 , UpdateUserName                     --修改人員
                                 , UpdateDate                         --修改時間
-                            from MCAsk WHERE ID = @ID 
+                            from MCAsk WHERE NGuid + CONVERT(varchar,ID) = @ID 
                                             AND  Types = @Types ");
             _sqlParams = new Dapper.DynamicParameters();
             _sqlParams.Add("ID", ID);
@@ -371,7 +381,7 @@ namespace WaterCaseTracking.Dao
             using (var cn = new SqlConnection(_dbConnPPP)) //連接資料庫
             {
                 cn.Open();
-                result = cn.Query<MCAskModel>(_sqlStr.ToString(), _sqlParams).First();
+                result = cn.Query<MCAskModel>(_sqlStr.ToString(), _sqlParams).FirstOrDefault();
             }
             return result;
             #endregion
@@ -476,5 +486,129 @@ namespace WaterCaseTracking.Dao
         }
 
         #endregion 多筆新增MCAskTable-迄
+
+        #region 初始化值
+        
+        internal void defaultSqlP(out SqlConnection conn, out SqlTransaction trans)
+        {
+            conn = GetOpenConnection();
+            trans = GetTransaction(conn);
+        }
+        #endregion
+        #region Commit修改的值
+        internal void CommitSqlP(ref SqlConnection conn, ref SqlTransaction trans)
+        {
+            TransactionCommit(trans);
+            GetCloseConnection(conn);
+        }
+        #endregion
+        #region 單筆修改Trans版
+        internal void UpdateMulMCAskTable(MCAskModel model, string UserName, ref SqlConnection conn, ref SqlTransaction trans)
+        {
+            //組立SQL字串並連接資料庫
+            StringBuilder _sqlStr = new StringBuilder();
+            _sqlStr.Append(@"UPDATE MCAsk SET                            
+                            AskDate =@AskDate                            --詢問日期
+                            , MemberName =@MemberName                    --地區
+                            , Area =@Area                                --議員姓名
+                            , Inquiry =@Inquiry                          --詢問事項
+                            , HandlingSituation =@HandlingSituation      --辦理情形
+                            , Organizer =@Organizer                      --承辦單位
+                            , OrganizerMan =@OrganizerMan                --承辦人員
+                            , sStatus =@sStatus                          --狀態
+                            , UpdateUserName =@UpdateUserName            --修改人員
+                            , UpdateDate = GetDate()                    --修改時間
+                ");
+            _sqlStr.Append("WHERE NGuid + CONVERT(varchar,ID) = @ID AND Types = @Types ");
+
+            _sqlParams = new Dapper.DynamicParameters();
+            _sqlParams.Add("ID", model.ID);
+            _sqlParams.Add("AskDate", model.AskDate);
+            _sqlParams.Add("MemberName", model.MemberName);
+            _sqlParams.Add("Area", model.Area);
+            _sqlParams.Add("Inquiry", model.Inquiry);
+            _sqlParams.Add("HandlingSituation", model.HandlingSituation);
+            _sqlParams.Add("Organizer", model.Organizer);
+            _sqlParams.Add("OrganizerMan", model.OrganizerMan);
+            _sqlParams.Add("sStatus", model.sStatus);
+            _sqlParams.Add("Types", model.Types);
+            _sqlParams.Add("UpdateUserName", UserName);
+
+            try
+            {
+                var ExecResult = conn.Execute(_sqlStr.ToString(), _sqlParams, trans);
+            }
+            catch (Exception ex)
+            {
+                TransactionRollback(trans);
+                GetCloseConnection(conn);
+                throw ex;
+            }
+        }
+        #endregion
+        #region 單筆新增Trans版
+        internal void AddMulMCAskTable(MCAskModel model, string UserName, ref SqlConnection conn, ref SqlTransaction trans)
+        {
+            //組立SQL字串並連接資料庫
+            StringBuilder _sqlStr = new StringBuilder();
+            _sqlStr.Append(@"Insert Into MCAsk ( 
+                                AskDate
+                                , NGuid
+                                , MemberName
+                                , Area
+                                , Inquiry
+                                , HandlingSituation
+                                , Organizer
+                                , OrganizerMan
+                                , sStatus
+                                , Types
+                                , CreateUserName
+                                , CreateDate
+                                , UpdateUserName
+                                , UpdateDate       
+                            )
+                            Values(
+                                @AskDate      
+                                , NEWID()
+                                , @MemberName
+                                , @Area
+                                , @Inquiry            
+                                , @HandlingSituation
+                                , @Organizer
+                                , @OrganizerMan
+                                , @sStatus
+                                , @Types
+                                , @CreateUserName
+                                , getdate()
+                                , @UpdateUserName
+                                , getdate()       
+                            )
+                ");
+            _sqlParamsList = new List<DynamicParameters>();
+            _sqlParams = new Dapper.DynamicParameters();
+            _sqlParams.Add("AskDate", model.AskDate);
+            _sqlParams.Add("MemberName", model.MemberName);
+            _sqlParams.Add("Area", model.Area);
+            _sqlParams.Add("Inquiry", model.Inquiry);
+            _sqlParams.Add("HandlingSituation", model.HandlingSituation);
+            _sqlParams.Add("Organizer", model.Organizer);
+            _sqlParams.Add("OrganizerMan", model.OrganizerMan);
+            _sqlParams.Add("sStatus", model.sStatus);
+            _sqlParams.Add("Types", model.Types);
+            _sqlParams.Add("CreateUserName", UserName);
+            _sqlParams.Add("UpdateUserName", UserName);
+
+            try
+            {
+                var ExecResult = conn.Execute(_sqlStr.ToString(), _sqlParams, trans);
+            }
+            catch (Exception ex)
+            {
+                TransactionRollback(trans);
+                GetCloseConnection(conn);
+                throw ex;
+            }
+        }
+        #endregion
     }
 }

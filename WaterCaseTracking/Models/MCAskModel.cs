@@ -10,7 +10,7 @@ namespace WaterCaseTracking.Models
     public class MCAskModel
     {
         [DisplayName("項次")]
-        public int ID { get; set; }
+        public string ID { get; set; }
         [StringLength(10)]
         //[DataType(DataType.Date)]
         //[DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
@@ -41,6 +41,10 @@ namespace WaterCaseTracking.Models
         [StringLength(10)]
         [DisplayName("狀態")]
         public string sStatus { get; set; }
+        /// <summary>
+        /// GUID匯出匯入用
+        /// </summary>
+        public string NGuid { get; set; }
         /// <summary>
         /// 0:市政總質詢事項
         /// 1:議會案件

@@ -12,7 +12,11 @@ namespace WaterCaseTracking.Models.ViewModels.MCAsk
 
     public class SearchItemViewModel
     {
-        public int ID { get; set; }
+        public string ID { get; set; }
+        /// <summary>
+        /// 項次+Guid
+        /// </summary>
+        public string HID { get; set; }
         public string AskDate { get; set; }
         public string Area { get; set; }
         public string MemberName { get; set; }
