@@ -81,7 +81,7 @@ namespace WaterCaseTracking.Controllers
             try
             {
                 //送參數進入Service層做商業邏輯
-                searchList = mcaskService.QuerySearchList(searchInfo);
+                searchList = mcaskService.QuerySearchList(searchInfo, UserName, roleName);
             }
             catch (Exception ex)
             {
@@ -111,7 +111,7 @@ namespace WaterCaseTracking.Controllers
             try
             {
                 //查詢修改資料
-                dt = mcaskService.getExportData(exportViewModel);
+                dt = mcaskService.getExportData(exportViewModel, UserName, roleName);
                 string Name = "";
                 if (exportViewModel.Types == "0")
                 {
@@ -488,7 +488,7 @@ namespace WaterCaseTracking.Controllers
                 //## 如果有任何檔案類型才做
                 if (Request.Files.AllKeys.Any())
                 {
-                    logging(FuncName1D, "上傳");
+                    logging(FuncName0, "上傳");
                     //## 讀取指定的上傳檔案ID
                     HttpPostedFileBase httpPostedFile = Request.Files["UploadedFile"];
                     string fileName = httpPostedFile.FileName;
@@ -505,7 +505,7 @@ namespace WaterCaseTracking.Controllers
             }
             catch (Exception ex)
             {
-                errLogging(FuncName1D, ex.ToString());
+                errLogging(FuncName0, ex.ToString());
                 return Json(ex.Message);
             }
         }
@@ -521,7 +521,7 @@ namespace WaterCaseTracking.Controllers
                 //## 如果有任何檔案類型才做
                 if (Request.Files.AllKeys.Any())
                 {
-                    logging(FuncName1D, "上傳");
+                    logging(FuncName1, "上傳");
                     //## 讀取指定的上傳檔案ID
                     HttpPostedFileBase httpPostedFile = Request.Files["UploadedFile"];
                     string fileName = httpPostedFile.FileName;
@@ -539,7 +539,7 @@ namespace WaterCaseTracking.Controllers
             }
             catch (Exception ex)
             {
-                errLogging(FuncName1D, ex.ToString());
+                errLogging(FuncName1, ex.ToString());
                 return Json(ex.Message);
             }
         }

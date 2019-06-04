@@ -23,6 +23,8 @@ namespace WaterCaseTracking.Controllers
         public string Groups { get { return Session["Groups"] as String; } }
         //角色
         public string roleId { get { return Session["roleId"] as String; } }
+        //登入者角色
+        public string roleName { get { return Session["roleName"] as String; } }
 
         //編輯權限判定
         public string operating { get { return Session["operating"] as String; } }

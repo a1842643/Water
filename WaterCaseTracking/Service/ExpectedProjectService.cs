@@ -20,7 +20,7 @@ namespace WaterCaseTracking.Service
             #endregion
 
             #region 流程																
-            searchList = mcaskDao.QuerySearchList(searchInfo); //將參數送入Dao層,組立SQL字串並連接資料庫
+            //searchList = mcaskDao.QuerySearchList(searchInfo); //將參數送入Dao層,組立SQL字串並連接資料庫
 
             return searchList;
             #endregion
@@ -36,7 +36,7 @@ namespace WaterCaseTracking.Service
             #endregion
 
             #region 流程																
-            dt = mcaskDao.getExportData(exportViewModel); //將參數送入Dao層,組立SQL字串並連接資料庫
+            //dt = mcaskDao.getExportData(exportViewModel); //將參數送入Dao層,組立SQL字串並連接資料庫
 
             return dt;
             #endregion

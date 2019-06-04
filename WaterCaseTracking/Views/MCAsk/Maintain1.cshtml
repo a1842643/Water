@@ -52,7 +52,10 @@
         oTable.ajax.reload(null, false);
         //判斷是否可以新增跟修改
         if ('@(Session["roleName"] as string)' == 'supervisor') {
-            oTable.columns([0, 1, 2, 6, 7, 8, 9, 10, 11, 12, 13]).visible(false);
+            oTable.columns([0, 1, 2, 6, 7, 8, 9, 10, 11, 12, 13, 14]).visible(false);
+        }
+        if ('@(Session["roleName"] as string)' == "user") {
+            oTable.columns([14]).visible(false);
         }
     }
 
@@ -151,7 +154,7 @@
         }
     }
 
-    
+
 
     //查詢Table設定
     function oTableSetting() {
@@ -172,7 +175,7 @@
             "iDisplayLength": 10,
             "bStateSave": false,
             "bPaginate": true,
-            "scrollY": ($(window).height() - 290),
+            "scrollY": 600, //($(window).height() - 290),
             "scrollX": true,
             "bProcessing": true,
             "bServerSide": true,
@@ -202,9 +205,13 @@
                 { "title": "修改時間", "data": "UpdateDate" },
 
                 {
-                    "title": "操作", "orderable": false, render: function (data, type, row) {
-                        return '<button type="button" class="btn btn-primary btn-space" onclick="DoAction(\'Modify\',\'' + row.HID + '\')">修改</button>'
-                            + '<button type="button" class="btn btn-primary btn-space" onclick="DoAction(\'Delete\',\'' + row.HID + '\')">刪除</button>';
+                    "title": "修改", "orderable": false, render: function (data, type, row) {
+                        return '<button type="button" class="btn btn-primary btn-space" onclick="DoAction(\'Modify\',\'' + row.HID + '\')">修改</button>';
+                    }
+                },
+                {
+                    "title": "刪除", "orderable": false, render: function (data, type, row) {
+                        return '<button name="btnDtl" type="button" class="btn btn-primary btn-space btnDtl" onclick="DoAction(\'Delete\',\'' + row.HID + '\')">刪除</button>';
                     }
                 }
             ],
@@ -282,7 +289,7 @@
                     <div class="row vertical-align">
                         <div class="col-xs-auto "><button type="button" class="btn btn-primary btn-space" onclick="QueryTable();">查 詢</button></div>
                         <div class="col-xs-auto"><button type="button" class="btn btn-primary btn-space" onclick="Reset();">重置</button></div>
-                    @if ((Session["roleName"] as string) != "supervisor")
+                    @if ((Session["roleName"] as string) != "supervisor" && (Session["roleName"] as string) != "user")
                     {
                         <div class="col-xs-auto"><button type="button" class="btn btn-primary btn-space" onclick="DoAction('Create', null);">新增</button></div>
                     }

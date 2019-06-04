@@ -15,7 +15,7 @@ namespace WaterCaseTracking.Dao
     {
         #region 取得表單oTable資料-起
 
-        public SearchListViewModel QuerySearchList(SearchInfoViewModel searchInfo)
+        public SearchListViewModel QuerySearchList(SearchInfoViewModel searchInfo, string UserName, string roleName)
         {
             //組立SQL字串並連接資料庫
             #region 參數告宣
@@ -88,6 +88,12 @@ namespace WaterCaseTracking.Dao
                 _sqlParamStr.Append(" and Types = @Types ");
                 _sqlParams.Add("Types", searchInfo.Types);
             }
+            //登入角色若是User則只能查詢到自己的
+            if (roleName == "user")
+            {
+                _sqlParamStr.Append(" and CreateUserName = @UserName ");
+                _sqlParams.Add("UserName", UserName);
+            }
 
 
             #region 條件、排序(起)
@@ -116,7 +122,7 @@ namespace WaterCaseTracking.Dao
         #endregion 取得表單oTable資料-迄
 
         #region 取得範例檔資料-起
-        internal DataTable getExportData(ExportViewModel model)
+        internal DataTable getExportData(ExportViewModel model, string UserName, string roleName)
         {
             //組立SQL字串並連接資料庫
             #region 參數告宣
@@ -188,6 +194,12 @@ namespace WaterCaseTracking.Dao
             {
                 _sqlStr.Append(" and Types = @Types ");
                 _sqlParams.Add("Types", model.Types);
+            }
+            //登入角色若是User則只能查詢到自己的
+            if (roleName == "user")
+            {
+                _sqlStr.Append(" and CreateUserName = @UserName ");
+                _sqlParams.Add("UserName", UserName);
             }
 
             //排序
