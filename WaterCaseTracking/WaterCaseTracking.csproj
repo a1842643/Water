@@ -194,9 +194,11 @@
     <Compile Include="Controllers\AccountsController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\BaseController.cs" />
+    <Compile Include="Controllers\ExpectedProjectController.cs" />
     <Compile Include="Controllers\MCAskController.cs" />
     <Compile Include="Controllers\MinuteLogController.cs" />
     <Compile Include="Controllers\SystemPermissionController.cs" />
+    <Compile Include="Dao\ExpectedProjectDao.cs" />
     <Compile Include="Dao\MCAskDao.cs" />
     <Compile Include="Dao\LoggDao.cs" />
     <Compile Include="Dao\AccountsDao.cs" />
@@ -217,6 +219,11 @@
     <Compile Include="Models\ViewModels\Accounts\SearchListViewModel.cs" />
     <Compile Include="Models\ViewModels\ExportViewModel.cs" />
     <Compile Include="Models\ViewModels\Home\SearchInitViewModel.cs" />
+    <Compile Include="Models\ViewModels\ExpectedProject\ExportViewModel.cs" />
+    <Compile Include="Models\ViewModels\ExpectedProject\SearchInfoViewModel.cs" />
+    <Compile Include="Models\ViewModels\ExpectedProject\SearchInitViewCMModel.cs" />
+    <Compile Include="Models\ViewModels\ExpectedProject\SearchInitViewModel.cs" />
+    <Compile Include="Models\ViewModels\ExpectedProject\SearchListViewModel.cs" />
     <Compile Include="Models\ViewModels\MCAsk\ExportViewModel.cs" />
     <Compile Include="Models\ViewModels\MCAsk\SearchInfoViewModel.cs" />
     <Compile Include="Models\ViewModels\MCAsk\SearchInitViewCMModel.cs" />
@@ -2073,10 +2080,13 @@
     <Content Include="Views\MCAsk\Create1.cshtml" />
     <Content Include="Views\MCAsk\Edit1.cshtml" />
     <Content Include="Views\MCAsk\Maintain1.cshtml" />
+    <Content Include="Views\ExpectedProject\1Create02.cshtml" />
+    <Content Include="Views\ExpectedProject\1Edit02.cshtml" />
+    <Content Include="Views\ExpectedProject\1Maintain02.cshtml" />
+    <Content Include="Views\Accounts\Maintain.cshtml" />
     <Content Include="Views\ExpectedProject\Create0.cshtml" />
     <Content Include="Views\ExpectedProject\Edit0.cshtml" />
     <Content Include="Views\ExpectedProject\Maintain0.cshtml" />
-    <Content Include="Views\Accounts\Maintain.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

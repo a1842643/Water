@@ -10,42 +10,59 @@ namespace WaterCaseTracking.Models
     public class ExpectedProjectModel
     {
         [DisplayName("項次")]
-        public int ID { get; set; }
-        [StringLength(10)]
-        //[DataType(DataType.Date)]
-        //[DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
-        [DisplayName("詢問日期")]
-        public string AskDate { get; set; }
-        [Required]
-        [StringLength(20)]
-        [DisplayName("地區")]
-        public string Area { get; set; }
+        public string ID { get; set; }
         [Required]
         [StringLength(100)]
-        [DisplayName("議員姓名")]
-        public string MemberName { get; set; }
-        [Required]
-        [StringLength(1000)]
-        [DisplayName("詢問事項")]
-        public string Inquiry { get; set; }
-        [Required]
-        [StringLength(1000)]
-        [DisplayName("辦理情形")]
-        public string HandlingSituation { get; set; }
+        [DisplayName("工程名稱")]
+        public string ProjectName { get; set; }
+        [StringLength(10)]
+        [DisplayName("成案預計完成日期 ")]
+        public string CrProExpDate { get; set; }
+        [StringLength(10)]
+        [DisplayName("成案實際完成日期")]
+        public string CrProReaDate { get; set; }
+        [StringLength(10)]
+        [DisplayName("規劃預計完成日期")]
+        public string PlanExpDate { get; set; }
+        [StringLength(10)]
+        [DisplayName("規劃實際完成日期")]
+        public string PlanReaDate { get; set; }
+        [StringLength(10)]
+        [DisplayName("基本設計預計完成日期")]
+        public string BasDesExpDate { get; set; }
+        [StringLength(10)]
+        [DisplayName("基本設計實際完成日期")]
+        public string BasDesReaDate { get; set; }
+        [StringLength(10)]
+        [DisplayName("細部設計預計完成日期")]
+        public string DetailDesExpDate { get; set; }
+        [StringLength(10)]
+        [DisplayName("細部設計實際完成日期")]
+        public string DetailDesReaDate { get; set; }
+        [StringLength(10)]
+        [DisplayName("上網發包預計完成日期")]
+        public string OnlineExpDate { get; set; }
+        [StringLength(10)]
+        [DisplayName("上網發包實際完成日期")]
+        public string OnlineReaDate { get; set; }
+        [StringLength(10)]
+        [DisplayName("評選預計完成日期")]
+        public string SelectionExpDate { get; set; }
+        [StringLength(10)]
+        [DisplayName("評選實際完成日期")]
+        public string SelectionReaDate { get; set; }
+        [StringLength(10)]
+        [DisplayName("決標時間預計完成日期")]
+        public string AwardExpDate { get; set; }
+        [StringLength(10)]
+        [DisplayName("決標時間實際完成日期")]
+        public string AwardReaDate { get; set; }
         [Required]
         [StringLength(20)]
-        [DisplayName("承辦單位")]
+        [DisplayName("科室")]
         public string Organizer { get; set; }
         [StringLength(20)]
         [DisplayName("承辦人員")]
         public string OrganizerMan { get; set; }
-        [StringLength(10)]
-        [DisplayName("狀態")]
-        public string sStatus { get; set; }
-        /// <summary>
-        /// 0:市政總質詢事項
-        /// 1:議會案件
-        /// </summary>
-        public string Types { get; set; }
     }
 }
