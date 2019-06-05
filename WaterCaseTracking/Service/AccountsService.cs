@@ -27,12 +27,9 @@ namespace WaterCaseTracking.Service
             return searchList;
             #endregion
         }
-        /// <summary>
-        /// 修改初始值
-        /// </summary>
-        /// <param name="Branch_No">Branch_No</param>
-        /// <returns></returns>
         #endregion
+
+        #region 取得登入者資訊
         internal AccountsModel QueryAccountInfo(string AccountID, string Password)
         {
             #region 參數宣告				
@@ -47,7 +44,45 @@ namespace WaterCaseTracking.Service
             #endregion
         }
 
-       
+
+
+        #endregion
+
+        #region 修改密碼-起
+        internal int ToChangePW(ChangePwViewModel changePwViewModel)
+        {
+            #region 參數宣告				
+            AccountsDao accountsDao = new AccountsDao();
+            AccountsModel accountsModel = new AccountsModel();
+            #endregion
+
+            #region 流程
+            //修改密碼
+            return accountsDao.ToChangePW(changePwViewModel); //將參數送入Dao層,組立SQL字串並連接資料庫
+            #endregion
+        }
+
+        #endregion 修改密碼-迄
+
+        #region 確認密碼有無與前三次相同
+        internal AccountsModel CheckPassword(ChangePwViewModel changePwViewModel)
+        {
+            #region 參數宣告				
+            AccountsModel accountsModel = new AccountsModel();
+            AccountsDao accountsDao = new AccountsDao();
+            #endregion
+
+            #region 流程																
+            accountsModel = accountsDao.CheckPassword(changePwViewModel);
+
+            return accountsModel;
+            #endregion
+        }
+
+
+
+        #endregion
+
 
     }
 }

@@ -1,18 +1,21 @@
 ﻿using WaterCaseTracking.Models;
 using WaterCaseTracking.Models.ViewModels.Accounts;
 using WaterCaseTracking.Service;
+using System.Web.Security;
 using System;
 using System.Data;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using Newtonsoft.Json;
 
 namespace WaterCaseTracking.Controllers
 {
-    [Authorize]
+    //[Authorize]
     public class AccountsController : BaseController
     {
         string FuncName = "帳號管理";
+        string FuncName1 = "修改密碼功能";
         // GET: BusinessUT
         public ActionResult Maintain()
         {
@@ -78,6 +81,158 @@ namespace WaterCaseTracking.Controllers
         }
         #endregion 查詢-訖
 
+        #region 修改密碼-起
+        
+        public ActionResult ChangePW(ChangePwViewModel changePwViewModel)
+        {
+            //判斷是否正確進入該頁面
+            if (string.IsNullOrEmpty(changePwViewModel.AccountID ))
+            {
+                TempData["loginMsg"] = "資訊錯誤，請重新登入";
+                return RedirectToAction("login", "Home");
+            }
+            logging(FuncName1, "進入修改密碼頁面");
+            return View(changePwViewModel);
 
+        }
+        #endregion 修改密碼-訖
+        #region 確認舊密碼正確性-起
+        [HttpPost]
+        public ActionResult CheckOldpassword(string AccountID, string oldpassword)
+        {
+            #region 參數宣告
+            AccountsService accountsService = new AccountsService();
+            AccountsModel accountsModel = new AccountsModel();
+            //是否正確
+            int IsCorrect = 0;
+            #endregion
+
+            #region 流程	
+
+            try
+            {
+                //確認帳號正確性
+                accountsModel = accountsService.QueryAccountInfo(AccountID, oldpassword);
+                if (accountsModel != null)
+                {
+                    IsCorrect = 1;
+                }
+            }
+            catch (Exception ex)
+            {
+                return Json(IsCorrect, JsonRequestBehavior.AllowGet);
+            }
+            //組Json格式回傳Models資料
+            return Json(IsCorrect, JsonRequestBehavior.AllowGet);
+            #endregion
+
+        }
+        #endregion 確認舊密碼正確性-迄
+
+        #region 修改密碼-起
+        [HttpPost]
+        public ActionResult ToChangePW(ChangePwViewModel changePwViewModel)
+        {
+            logging(FuncName1, "修改密碼");
+            #region 驗證
+            if (!ModelState.IsValid)
+            {
+                return View("ChangePW", changePwViewModel);
+            }
+            #endregion
+            #region 參數宣告
+            AccountsService accountsService = new AccountsService();
+            AccountsModel accountsModel = new AccountsModel();
+            //是否修改成功
+            int IsSuccess = 0;
+            #endregion
+
+            #region 流程	
+            //確認密碼有無與前三次相同
+            accountsModel = accountsService.CheckPassword(changePwViewModel);
+            if (accountsModel != null)
+            {
+                TempData["ChangePWMessage"] = "密碼修改失敗，新密碼不得與前設定三次密碼相同";
+                return View("ChangePW", changePwViewModel);
+            }
+
+            try
+            {
+                //修改密碼
+                IsSuccess = accountsService.ToChangePW(changePwViewModel);
+            }
+            catch (Exception ex)
+            {
+                errLogging(FuncName1, "密碼修改失敗");
+                TempData["ChangePWMessage"] = "密碼修改失敗";
+                return View("ChangePW", changePwViewModel);
+            }
+                if (IsSuccess == 0)
+                {
+                errLogging(FuncName1, "密碼修改失敗");
+                TempData["ChangePWMessage"] = "密碼修改失敗";
+                    return View("ChangePW", changePwViewModel);
+                }
+            //取得帳號資訊
+            accountsModel = accountsService.QueryAccountInfo(changePwViewModel.AccountID, changePwViewModel.password1);
+            Session["Menu"] = GetOperating(accountsModel.Role);
+
+            //單位名稱
+            Session["UnitName"] = "營業部";
+            //單位代碼
+            Session["Unit"] = "00M";
+            //登入者ID
+            Session["UserID"] = accountsModel.AccountID;
+            //登入者姓名
+            Session["UserName"] = accountsModel.AccountName;
+            //登入者角色
+            Session["roleName"] = accountsModel.Role;
+            //角色代碼清單
+            Session["roleId"] = "admin,user,application,signing,review";//請傳入字串 格式如 : admin,user,application,signing,review
+            Models.ViewModels.Account.UserInfoModel UserInfo = new Models.ViewModels.Account.UserInfoModel()
+            {
+                Account = accountsModel.AccountID,
+                UserName = UserName,
+                Power = roleId,
+                SessinID = Session.SessionID,
+                LoginTime = DateTime.Now
+            };
+
+            ViewBag.UserInfo = UserInfo;
+            string user = Environment.UserName;
+            var ticket = new FormsAuthenticationTicket(
+                         version: 1,
+                         name: UserInfo.Account,
+                         issueDate: DateTime.Now,
+                         expiration: DateTime.Now.AddHours(360),
+                         isPersistent: true,
+                         userData: JsonConvert.SerializeObject(UserInfo),
+                         cookiePath: FormsAuthentication.FormsCookiePath);
+
+            string encryptedTicket = FormsAuthentication.Encrypt(ticket);
+            //Response.Cookies.Clear();
+            Response.Cookies[FormsAuthentication.FormsCookieName].Value = encryptedTicket;
+
+            return RedirectToAction("Maintain0", "MCAsk");
+            #endregion
+
+        }
+        #endregion 修改密碼-迄
+        #region 取得功能列表 GetOperating()
+        public string GetOperating(string searchInfo)
+        {
+            #region 參數宣告		
+            Models.ViewModels.Home.SearchListViewModel searchList = new Models.ViewModels.Home.SearchListViewModel();
+            HomeService homeService = new HomeService();
+            #endregion
+
+            #region 流程					
+            logging("功能設定", "取得功能列表 : " + searchInfo);
+            searchList = homeService.GetOperating(searchInfo); //將參數送入Dao層,組立SQL字串並連接資料庫
+
+            return searchList.UserModel[0].PROID.ToString();
+            #endregion
+        }
+        #endregion
     }
 }

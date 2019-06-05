@@ -1,0 +1,116 @@
+﻿
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    @if (TempData["ChangePWMessage"] != null)
+    {
+        <script type="text/javascript">
+            var message = @Html.Raw(Json.Encode(TempData["ChangePWMessage"]));
+            alert(message);
+        </script>
+    }
+
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>新北市水利局 - 案件追蹤管理系統</title>
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/js")
+    @Styles.Render("~/Content/jqueryui")
+    @Scripts.Render("~/bundles/jqueryui")
+    <link rel="stylesheet" href="~/Content/dist/default/style.min.css" />
+    <script type="text/javascript" language="javascript">
+        ////預防掃描出的中風險:Client Cross Frame Scripting Attack
+        if (top != self) { top.location = encodeURI(self.location); }
+
+    </script>
+    <style>
+        .vertical-align {
+            display: flex;
+            align-items: center;
+            margin-left: 10px;
+        }
+
+        .btn-space {
+            margin-right: 5px;
+        }
+
+        .box {
+            margin-bottom: 0px !important;
+        }
+
+        .content-wrapper, .main-footer {
+            margin-left: 0px;
+        }
+    </style>
+</head>
+<body class="hold-transition skin-blue sidebar-mini">
+    <div class="wrapper">
+        <!-- Main Header -->
+        <header class="main-header">
+            <!-- Logo -->
+            <a href="/" class="logo">
+                <!-- mini logo for sidebar mini 50x50 pixels -->
+                <span class="logo-mini"><b></b></span>
+                <!-- logo for regular state and mobile devices -->
+                <span class="logo-lg"><b>新北市政府水利局案件追蹤管理系統</b></span>
+            </a>
+            <!-- Header Navbar -->
+            <nav class="navbar navbar-static-top" role="navigation">
+
+                <!-- Navbar Right Menu -->
+                <div class="navbar-custom-menu" style="margin-right: 20px;">
+                    <div>
+                        <ul class="nav navbar-nav">
+
+
+                            <li>
+                                <a id="exit" href="#"><i class="fa fa-gears"></i> 登出帳號</a>
+                            </li>
+                            @*<li style="position: absolute; color: blue; bottom: 0; right: 0;font-weight: bold;margin-right: 20px;">
+                                    登入人員: @sUnitName (@sUnit)/@sUserModel (@sUser)
+                                </li>
+                                <li style="position: absolute; color: #800000;bottom: 0;right: 272px;font-weight: bold;margin-right: 20px;">
+                                    今日日期: @DateTime.Now.ToString("yyyy/MM/dd")
+                                </li>*@
+                        </ul>
+                    </div>
+                    @*<div style="position: absolute; color: blue; bottom: 0; right: 0;font-weight: bold;">登入人員: @sUnitName (@sUnit)/@sUserModel (@sUser)</div>*@
+                    @*<div style="position: absolute; color: #800000;bottom: 0;right: 272px;font-weight: bold;">今日日期: @DateTime.Now.ToString("yyyy/MM/dd")</div>*@
+                </div>
+            </nav>
+        </header>
+        <!-- Left side column. contains the logo and sidebar -->
+        <aside class="">
+            <!-- sidebar: style can be found in sidebar.less -->
+            <section class="sidebar">
+                <!-- Sidebar Menu -->
+                <!-- /.sidebar-menu -->
+            </section>
+            <!-- /.sidebar -->
+        </aside>
+        <!-- Content Wrapper. Contains page content -->
+        <div class="content-wrapper">
+
+            <!-- Main content -->
+            <section class="content container-fluid">
+                @RenderBody()
+            </section>
+            <!-- /.content -->
+        </div>
+
+    </div>
+
+
+</body>
+
+</html>
+<script>
+    $('#exit').on('click', function () {
+        if (confirm("您正在離開營業單位營運資訊管理系統。\n按下確定後登出。")) {
+            document.location.replace('@Url.Action("login", "Home")');
+        }
+    });
+</script>

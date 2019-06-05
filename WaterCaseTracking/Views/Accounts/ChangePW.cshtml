@@ -1,0 +1,140 @@
+﻿@model WaterCaseTracking.Models.ViewModels.Accounts.ChangePwViewModel
+@{
+    Layout = "~/Views/Shared/_ChangePWLayout.cshtml";
+}
+
+<!DOCTYPE html>
+
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>修改密碼</title>
+    <script>
+        $(document).ready(function () {
+            $("#oldpassword").blur(function () {
+                var param = $("#oldpassword").val();
+                $.ajax({
+                    type: 'POST',
+                    url: '@Url.Action("CheckOldpassword", "Accounts")',
+                    data: {
+                        AccountID: '@Model.AccountID',
+                        oldpassword: param
+                    },
+                    contenType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function (e) {
+                        if (e == 1) {
+                            $("#tip1").html("<font color=\"green\" size=\"2\">通過</font>");
+                        }
+                        else {
+                            $("#tip1").html("<font color=\"red\" size=\"2\">錯誤</font>");
+                        }
+                    }
+                });
+            });
+            $("#password1").blur(function () {
+                var num = $("#password1").val().length;
+                if (num < 8) {
+                    $("#tip2").html("<font color=\"red\" size=\"2\">太短</font>");
+                }
+                else if (num > 18) {
+                    $("#tip2").html("<font color=\"red\" size=\"2\">太長</font>");
+                }
+                else if ($("#password1").val() == $("#oldpassword").val()) {
+                    $("#tip2").html("<font color=\"green\" size=\"2\">新密碼不得與原密碼相同</font>");
+                }
+                else {
+                    $("#tip2").html("<font color=\"green\" size=\"2\">通過</font>");
+                }
+            });
+            $("#password2").blur(function () {
+                var tmp = $("#password1").val();
+                var num = $("#password2").val().length;
+                if ($("#password2").val() != tmp) {
+                    $("#tip3").html("<font color=\"red\" size=\"2\">第二次輸入的新密碼必須與第一次相同</font>");
+                }
+                else {
+                    if (num >= 8 && num <= 20) {
+                        $("#tip3").html("<font color=\"green\" size=\"2\">通過</font>");
+                    }
+                    else {
+                        $("#tip3").html("<font color=\"red\" size=\"2\">錯誤</font>");
+                    }
+                }
+            });
+        });
+        function ToChangePW() {
+            var flag = true;
+            var old = $("#oldpassword").val();
+            var pass = $("#password1").val();
+            var pass2 = $("#password2").val();
+            var num1 = $("#password1").val().length;
+            var num2 = $("#password2").val().length;
+            if (num1 != num2 || num1 < 8 || num2 < 8 || num1 > 20 || num2 > 20 || pass != pass2) {
+                flag = false;
+            }
+            else {
+                flag = true;
+            }
+            if (!flag) {
+                $("#tip4").show().html("<font color=\"red\" size=\"3\">  請照著提示進行</font>");
+            }
+            return flag;
+        }
+    </script>
+</head>
+<body>
+    @using (Html.BeginForm("ToChangePW", "Accounts", FormMethod.Post))
+    {
+        <div class="col-xs-12">
+            <div class="box">
+                <div class="box-body">
+                    <table align="center">
+                        <tr>
+                            <td class='form-label'>原密碼 :　　　　　　　　　</td>
+                            <td class='form-input'>
+                                <input type='password' id="oldpassword" name="oldpassword" />
+                            </td>
+                            <td>
+                                <div style="display: inline" id="tip1"></div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class='form-label'>新密碼 :　　　　　　　　　</td>
+                            <td class='form-input'>
+                                <input type='password' id="password1" name="password1" placeholder="長度 8-20" />
+                            </td>
+                            <td>
+                                <div style="display: inline" id="tip2">
+                                @Html.ValidationMessageFor(model => model.password1, "", new { @class = "text-danger" })
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class='form-label'>再輸入一次新密碼 :　　　　</td>
+                            <td class='form-input'>
+                                <input type='password' id="password2" name="password2" placeholder="必須與第一次相同" />
+                            </td>
+                            <td>
+                                <div style="display: inline" id="tip3">
+                                </div>
+                            </td>
+                        </tr>
+                        <tr class="text-center">
+                            <td class="btn-submit"><input type="submit" value="修改" onclick="return ToChangePW();" id="btn"></td>
+                            <td>
+                                <div class="text-center">
+                                    <div id="tip4"></div>
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+                    <input type="text" name="AccountID" value="@Model.AccountID" hidden />
+                    <input type="text" name="UpdateUserName" value="@Model.UpdateUserName" hidden />
+                </div>
+            </div>
+        </div>
+    }
+</body>
+</html>

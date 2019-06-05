@@ -198,6 +198,7 @@
     <Compile Include="Controllers\MCAskController.cs" />
     <Compile Include="Controllers\MinuteLogController.cs" />
     <Compile Include="Controllers\SystemPermissionController.cs" />
+    <Compile Include="Dao\LoginErrorTimesDao.cs" />
     <Compile Include="Dao\ExpectedProjectDao.cs" />
     <Compile Include="Dao\MCAskDao.cs" />
     <Compile Include="Dao\LoggDao.cs" />
@@ -209,11 +210,13 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\LoginErrorTimesModel.cs" />
     <Compile Include="Models\Common\LoggModel.cs" />
     <Compile Include="Models\ExpectedProjectModel.cs" />
     <Compile Include="Models\MCAskModel.cs" />
     <Compile Include="Models\AccountsModel.cs" />
     <Compile Include="Models\PermissionModel.cs" />
+    <Compile Include="Models\ViewModels\Accounts\ChangePwViewModel.cs" />
     <Compile Include="Models\ViewModels\Accounts\SearchInfoViewModel.cs" />
     <Compile Include="Models\ViewModels\Accounts\SearchInitViewModel.cs" />
     <Compile Include="Models\ViewModels\Accounts\SearchListViewModel.cs" />
@@ -2080,13 +2083,12 @@
     <Content Include="Views\MCAsk\Create1.cshtml" />
     <Content Include="Views\MCAsk\Edit1.cshtml" />
     <Content Include="Views\MCAsk\Maintain1.cshtml" />
-    <Content Include="Views\ExpectedProject\1Create02.cshtml" />
-    <Content Include="Views\ExpectedProject\1Edit02.cshtml" />
-    <Content Include="Views\ExpectedProject\1Maintain02.cshtml" />
     <Content Include="Views\Accounts\Maintain.cshtml" />
     <Content Include="Views\ExpectedProject\Create0.cshtml" />
     <Content Include="Views\ExpectedProject\Edit0.cshtml" />
     <Content Include="Views\ExpectedProject\Maintain0.cshtml" />
+    <Content Include="Views\Accounts\ChangePW.cshtml" />
+    <Content Include="Views\Shared\_ChangePWLayout.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

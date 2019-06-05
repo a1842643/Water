@@ -90,14 +90,72 @@ namespace WaterCaseTracking.Controllers
                 TempData["loginMsg"] = "請填帳號及密碼";
                 return View();
             }
-            AccountsService accountsService = new AccountsService();
+            if ( txtPassword.Length < 0)
+            {
+                TempData["loginMsg"] = "密碼需8個字以上";
+                return View();
+            }
+            HomeService homeService = new HomeService();
             AccountsModel accountsModel = new AccountsModel();
+            LoginErrorTimesModel loginErrorTimesModel = new LoginErrorTimesModel();
+            //判斷該帳號是否錯誤三次以上
+            loginErrorTimesModel = homeService.getAccountErrorTimes(txtAccount);
+            if(loginErrorTimesModel !=null)
+            {
+                //若失敗次數大於2則判斷是否已
+                if (loginErrorTimesModel.ErrorTimes > 2)
+                {
+                    //判斷是否超過15分鐘未登入
+                    TimeSpan ts = new TimeSpan(DateTime.Now.Ticks - loginErrorTimesModel.LoginTime.Ticks);
+                    if(ts.TotalMinutes < 15)
+                    {
+                        TempData["loginMsg"] = "該帳號錯誤次數達三次以上，請15分鐘後再試";
+                        return View();
+                    }
+                }
+            }
 
-            accountsModel = accountsService.QueryAccountInfo(txtAccount, txtPassword);
+            accountsModel = homeService.QueryAccountInfo(txtAccount, txtPassword);
             if(accountsModel == null)
             {
                 TempData["loginMsg"] = "帳號或密碼錯誤，請重新輸入";
+                //寫入資料庫
+                if (loginErrorTimesModel == null)
+                {
+                    homeService.AddAccountErrorTimes(txtAccount,false);
+                }
+                else
+                {
+                    homeService.UpdateAccountErrorTimes(loginErrorTimesModel,false);
+                }
                 return View();
+            }
+
+            //如果正確錯誤次數改完0
+            if (loginErrorTimesModel == null)
+            {
+                homeService.AddAccountErrorTimes(txtAccount, true);
+            }
+            else
+            {
+                homeService.UpdateAccountErrorTimes(loginErrorTimesModel, true);
+            }
+            TimeSpan ts90day = new TimeSpan(DateTime.Now.Ticks - Convert.ToDateTime(accountsModel.UpdateDate).Ticks);
+            //使用預設密碼登入或最後修改時間超過90天
+            if (accountsModel.IsDefault || ts90day.TotalDays > 90)
+            {
+                Models.ViewModels.Accounts.ChangePwViewModel changePwViewModel = new Models.ViewModels.Accounts.ChangePwViewModel();
+                changePwViewModel.AccountID = accountsModel.AccountID;
+                changePwViewModel.UpdateUserName = accountsModel.AccountName;
+                if(accountsModel.IsDefault)
+                {
+                    TempData["ChangePWMessage"] = "使用預設密碼登入，請先修改密碼";
+                }
+                else
+                {
+                    TempData["ChangePWMessage"] = "已超過90天未登入，請先修改密碼";
+                }
+                return View(@"~\Views\Accounts\ChangePW.cshtml", changePwViewModel);
             }
 
             Session["Menu"] = GetOperating(accountsModel.Role);

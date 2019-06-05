@@ -11,7 +11,8 @@ namespace WaterCaseTracking.Models
         public string Password { get; set; }
         public string AccountName { get; set; }
         public string Role { get; set; }
-        public string LoginTime { get; set; }
+        public bool IsDefault { get; set; }
+
         public string CreateUserName { get; set; }
         public string CreateDate { get; set; }
         public string UpdateUserName { get; set; }
