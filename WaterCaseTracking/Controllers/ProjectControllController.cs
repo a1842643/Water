@@ -5,19 +5,19 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using WaterCaseTracking.Models;
-using WaterCaseTracking.Models.ViewModels.ExpectedProject;
+using WaterCaseTracking.Models.ViewModels.ProjectControll;
 using WaterCaseTracking.Service;
 
 namespace WaterCaseTracking.Controllers
 {
     [Authorize]
-    public class ExpectedProjectController : BaseController
+    public class ProjectControllController : BaseController
     {
-        string FuncName0 = "預計發包案件";
-        string FuncName0C = "預計發包案件-新增";
-        string FuncName0M = "預計發包案件-修改";
-        string FuncName0D = "預計發包案件-刪除";
-        // GET: ExpectedProject
+        string FuncName0 = "工程列管";
+        string FuncName0C = "工程列管-新增";
+        string FuncName0M = "工程列管-修改";
+        string FuncName0D = "工程列管-刪除";
+        // GET: ProjectControll
         public ActionResult Maintain0()
         {
             logging(FuncName0, "進入功能-" + FuncName0);
@@ -61,7 +61,7 @@ namespace WaterCaseTracking.Controllers
             #region 參數宣告
 
             SearchListViewModel searchList = new SearchListViewModel();
-            ExpectedProjectService expectedProjectService = new ExpectedProjectService();
+            ProjectControllService projectControllService = new ProjectControllService();
             #endregion
 
             #region 流程	
@@ -69,7 +69,7 @@ namespace WaterCaseTracking.Controllers
             try
             {
                 //送參數進入Service層做商業邏輯
-                searchList = expectedProjectService.QuerySearchList(searchInfo, UserName, roleName);
+                searchList = projectControllService.QuerySearchList(searchInfo, UserName, roleName);
             }
             catch (Exception ex)
             {
@@ -89,7 +89,7 @@ namespace WaterCaseTracking.Controllers
         {
             logging(FuncName0, "匯出範例檔");
             #region 參數宣告
-            ExpectedProjectService expectedProjectService = new ExpectedProjectService();
+            ProjectControllService projectControllService = new ProjectControllService();
             DataTable dt = new DataTable();
             string fileNamePath = "";
             #endregion
@@ -98,7 +98,7 @@ namespace WaterCaseTracking.Controllers
             try
             {
                 //查詢修改資料
-                dt = expectedProjectService.getExportData(exportViewModel, UserName, roleName);
+                dt = projectControllService.getExportData(exportViewModel, UserName, roleName);
                 string Name = "";
                 Name = "預計發包案件";
                 fileNamePath = ExportFunction.ExportDataTableTo(dt, exportViewModel.fileExtension, Name + "範例檔");
@@ -118,23 +118,24 @@ namespace WaterCaseTracking.Controllers
         public ActionResult Create0()
         {
             #region 參數宣告
-            ExpectedProjectModel expectedProjectModel = new ExpectedProjectModel();
+            ProjectControllModel projectControllModel = new ProjectControllModel();
             string fail = "";
             #endregion
             logging(FuncName0C, "進入功能-" + FuncName0C);
-            return View(expectedProjectModel);
+            return View(projectControllModel);
         }
 
         [HttpPost]
-        public ActionResult Create0(ExpectedProjectModel expectedProjectModel)
+        public ActionResult Create0(ProjectControllModel projectControllModel)
         {
             logging(FuncName0C, "新增");
             #region 驗證
             if (!ModelState.IsValid)
-            { return View(expectedProjectModel); }
+            { return View(projectControllModel); }
+            projectControllModel.ContractAmount = Convert.ToDecimal(projectControllModel.SContractAmount);
             #endregion
             #region 參數宣告
-            ExpectedProjectService expectedProjectService = new ExpectedProjectService();
+            ProjectControllService projectControllService = new ProjectControllService();
             string fail = "";
             #endregion
 
@@ -142,7 +143,7 @@ namespace WaterCaseTracking.Controllers
             try
             {
                 //送參數進入Service層做商業邏輯
-                expectedProjectService.AddExpectedProjectTable(expectedProjectModel, UserName);
+                projectControllService.AddProjectControllTable(projectControllModel, UserName);
             }
             catch (Exception ex)
             {
@@ -160,7 +161,7 @@ namespace WaterCaseTracking.Controllers
                 TempData["message"] = fail;
             }
 
-            return View(expectedProjectModel);
+            return View(projectControllModel);
             #endregion
         }
         #endregion 新增-迄
@@ -170,8 +171,8 @@ namespace WaterCaseTracking.Controllers
         {
             logging(FuncName0M, "進入功能-" + FuncName0M);
             #region 參數宣告
-            ExpectedProjectService expectedProjectService = new ExpectedProjectService();
-            ExpectedProjectModel expectedProjectModel = new ExpectedProjectModel();
+            ProjectControllService projectControllService = new ProjectControllService();
+            ProjectControllModel projectControllModel = new ProjectControllModel();
             string fail = "";
             #endregion
 
@@ -179,7 +180,7 @@ namespace WaterCaseTracking.Controllers
             try
             {
                 //查詢有無資料
-                expectedProjectModel = expectedProjectService.QueryUpdateData(ID);
+                projectControllModel = projectControllService.QueryUpdateData(ID);
             }
             catch (Exception ex)
             {
@@ -188,19 +189,20 @@ namespace WaterCaseTracking.Controllers
             }
             #endregion
 
-            return View("Edit0", expectedProjectModel);
+            return View("Edit0", projectControllModel);
         }
 
         [HttpPost]
-        public ActionResult Edit0(ExpectedProjectModel expectedProjectModel)
+        public ActionResult Edit0(ProjectControllModel projectControllModel)
         {
             logging(FuncName0M, "修改");
             #region 驗證
             if (!ModelState.IsValid)
-            { return View(expectedProjectModel); }
+            { return View(projectControllModel); }
+            projectControllModel.ContractAmount = Convert.ToDecimal(projectControllModel.SContractAmount);
             #endregion
             #region 參數宣告
-            ExpectedProjectService ExpectedProjectService = new ExpectedProjectService();
+            ProjectControllService projectControllService = new ProjectControllService();
             string fail = "";
             #endregion
 
@@ -208,7 +210,7 @@ namespace WaterCaseTracking.Controllers
             try
             {
                 //送參數進入Service層做商業邏輯
-                ExpectedProjectService.UpdateExpectedProjectTable(expectedProjectModel, UserName);
+                projectControllService.UpdateProjectControllTable(projectControllModel, UserName);
             }
             catch (Exception ex)
             {
@@ -226,7 +228,7 @@ namespace WaterCaseTracking.Controllers
                 TempData["message"] = fail;
             }
 
-            return View(expectedProjectModel);
+            return View(projectControllModel);
             #endregion
         }
         #endregion 修改-迄
@@ -236,7 +238,7 @@ namespace WaterCaseTracking.Controllers
         {
             logging(FuncName0D, "刪除");
             #region 參數宣告
-            ExpectedProjectService expectedProjectService = new ExpectedProjectService();
+            ProjectControllService projectControllService = new ProjectControllService();
             string fail = "";
             #endregion
 
@@ -244,7 +246,7 @@ namespace WaterCaseTracking.Controllers
             try
             {
                 //送參數進入Service層做商業邏輯
-                expectedProjectService.DeleteExpectedProjectTable(ID);
+                projectControllService.DeleteProjectControllTable(ID);
             }
             catch (Exception ex)
             {
@@ -307,7 +309,7 @@ namespace WaterCaseTracking.Controllers
             try
             {
                 #region 參數宣告
-                ExpectedProjectService expectedProjectService = new ExpectedProjectService();
+                ProjectControllService projectControllService = new ProjectControllService();
                 int successQty = 0;
                 #endregion
                 //## 如果有任何檔案類型才做
@@ -321,7 +323,7 @@ namespace WaterCaseTracking.Controllers
                     string FileExtension = System.IO.Path.GetExtension(fileName);
                     if (FileExtension != ".xlsx")
                         throw new Exception("匯入檔案錯誤");
-                    successQty = expectedProjectService.doUpLoad(httpPostedFile, UserName);
+                    successQty = projectControllService.doUpLoad(httpPostedFile, UserName);
 
 
                 }

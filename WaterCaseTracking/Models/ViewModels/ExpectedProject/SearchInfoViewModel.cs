@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 
-namespace WaterCaseTracking.Models.ViewModels.ExpectedProject
+namespace WaterCaseTracking.Models.ViewModels.ProjectControll
 {
     public class SearchInfoViewModel : _BaseRequestViewModel
     {
@@ -15,6 +15,5 @@ namespace WaterCaseTracking.Models.ViewModels.ExpectedProject
         /// 科室
         /// </summary>
         public string ddlOrganizer { get; set; }
-        public string Types { get; set; }
     }
 }

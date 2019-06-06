@@ -10,6 +10,7 @@ using WaterCaseTracking.Service;
 
 namespace WaterCaseTracking.Controllers
 {
+    [Authorize]
     public class MCAskController : BaseController
     {
         string FuncName0 = "市政總質詢事項";

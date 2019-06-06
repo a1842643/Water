@@ -62,7 +62,7 @@ namespace WaterCaseTracking.Models
         [DisplayName("科室")]
         public string Organizer { get; set; }
         [StringLength(20)]
-        [DisplayName("承辦人員")]
+        [DisplayName("承辦人")]
         public string OrganizerMan { get; set; }
     }
 }

@@ -192,12 +192,14 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Controllers\AccountsController.cs" />
+    <Compile Include="Controllers\ProjectControllController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\BaseController.cs" />
     <Compile Include="Controllers\ExpectedProjectController.cs" />
     <Compile Include="Controllers\MCAskController.cs" />
     <Compile Include="Controllers\MinuteLogController.cs" />
     <Compile Include="Controllers\SystemPermissionController.cs" />
+    <Compile Include="Dao\ProjectControllDao.cs" />
     <Compile Include="Dao\LoginErrorTimesDao.cs" />
     <Compile Include="Dao\ExpectedProjectDao.cs" />
     <Compile Include="Dao\MCAskDao.cs" />
@@ -210,6 +212,7 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\ProjectControllModel.cs" />
     <Compile Include="Models\LoginErrorTimesModel.cs" />
     <Compile Include="Models\Common\LoggModel.cs" />
     <Compile Include="Models\ExpectedProjectModel.cs" />
@@ -220,6 +223,11 @@
     <Compile Include="Models\ViewModels\Accounts\SearchInfoViewModel.cs" />
     <Compile Include="Models\ViewModels\Accounts\SearchInitViewModel.cs" />
     <Compile Include="Models\ViewModels\Accounts\SearchListViewModel.cs" />
+    <Compile Include="Models\ViewModels\ProjectControll\ExportViewModel.cs" />
+    <Compile Include="Models\ViewModels\ProjectControll\SearchInfoViewModel.cs" />
+    <Compile Include="Models\ViewModels\ProjectControll\SearchInitViewCMModel.cs" />
+    <Compile Include="Models\ViewModels\ProjectControll\SearchInitViewModel.cs" />
+    <Compile Include="Models\ViewModels\ProjectControll\SearchListViewModel.cs" />
     <Compile Include="Models\ViewModels\ExportViewModel.cs" />
     <Compile Include="Models\ViewModels\Home\SearchInitViewModel.cs" />
     <Compile Include="Models\ViewModels\ExpectedProject\ExportViewModel.cs" />
@@ -253,6 +261,7 @@
     <Compile Include="Service\AccountsService.cs" />
     <Compile Include="Service\CommonService.cs" />
     <Compile Include="Service\DropDownListService.cs" />
+    <Compile Include="Service\ProjectControllService.cs" />
     <Compile Include="Service\HomeService.cs" />
     <Compile Include="Service\ExpectedProjectService.cs" />
     <Compile Include="Service\MCAskService.cs" />
@@ -2089,6 +2098,10 @@
     <Content Include="Views\ExpectedProject\Maintain0.cshtml" />
     <Content Include="Views\Accounts\ChangePW.cshtml" />
     <Content Include="Views\Shared\_ChangePWLayout.cshtml" />
+    <Content Include="Views\ProjectControll\Create0.cshtml" />
+    <Content Include="Views\ProjectControll\Edit0.cshtml" />
+    <Content Include="Views\ProjectControll\Maintain0.cshtml" />
+    <Content Include="Views\ProjectControll\Create1.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

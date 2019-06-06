@@ -11,7 +11,7 @@
             type: 'POST',
             data: '{}',
             //async: false, //啟用同步請求
-            url: '@Url.Action("searchInit", "ExpectedProject")',
+            url: '@Url.Action("searchInit", "ProjectControll")',
             contenType: "application/json; charset=utf-8",
             dataType: "json",
             success: function (result) {
@@ -80,7 +80,7 @@
 
         $.ajax({
             type: "POST",
-            url: '@Url.Action("Export", "ExpectedProject")',
+            url: '@Url.Action("Export", "ProjectControll")',
             data: ExportViewModel,
             contenType: "application/json; charset=utf-8",
         })
@@ -104,12 +104,12 @@
     //新增或修改
     function DoAction(ActionName, IDX) {
         if (ActionName == 'Modify')
-            document.location.replace('@Url.Action("Edit0", "ExpectedProject")' + '?ID=' + IDX);
+            document.location.replace('@Url.Action("Edit0", "ProjectControll")' + '?ID=' + IDX);
         if (ActionName == 'Create')
-            document.location.replace('@Url.Action("Create0", "ExpectedProject")');
+            document.location.replace('@Url.Action("Create0", "ProjectControll")');
         if (ActionName == 'Delete') {
             if (confirm('確認刪除'))
-                document.location.replace('@Url.Action("Delete0", "ExpectedProject")' + '?ID=' + IDX);
+                document.location.replace('@Url.Action("Delete0", "ProjectControll")' + '?ID=' + IDX);
         }
     }
 
@@ -130,7 +130,7 @@
         //## 透過ajax方式Post 至Action
         var ajaxRequest = $.ajax({
             type: "POST",
-            url: "@Url.Action("Upload0", "ExpectedProject")",
+            url: "@Url.Action("Upload0", "ProjectControll")",
             contentType: false,         // 告诉jQuery不要去這置Content-Type
             processData: false,         // 告诉jQuery不要去處理發送的數據
             dataType: "json",
@@ -138,7 +138,7 @@
         })
     .done(function (result) {
         alert(result);
-        //document.location.replace('@Url.Action("Maintain0", "ExpectedProject")');
+        //document.location.replace('@Url.Action("Maintain0", "ProjectControll")');
     })
     .fail(function () {
         alert("匯入失敗");
@@ -180,22 +180,14 @@
             "columns": [
                 { "title": "項次", "data": "ID" },
                 { "title": "工程名稱", "data": "ProjectName" },
-                { "title": "成案預計完成日期", "data": "CrProExpDate" },
-                { "title": "成案實際完成日期", "data": "CrProReaDate" },
-                { "title": "規劃預計完成日期", "data": "PlanExpDate" },
-                { "title": "規劃實際完成日期", "data": "PlanReaDate" },
-                { "title": "基本設計預計完成日期", "data": "BasDesExpDate" },
-                { "title": "基本設計實際完成日期", "data": "BasDesReaDate" },
-                { "title": "細部設計預計完成日期", "data": "DetailDesExpDate" },
-                { "title": "細部設計實際完成日期", "data": "DetailDesReaDate" },
-                { "title": "上網發包預計完成日期", "data": "OnlineExpDate" },
-                { "title": "上網發包實際完成日期", "data": "OnlineReaDate" },
-                { "title": "評選預計完成日期", "data": "SelectionExpDate" },
-                { "title": "評選實際完成日期", "data": "SelectionReaDate" },
-                { "title": "決標時間預計完成日期", "data": "AwardExpDate" },
-                { "title": "決標時間實際完成日期", "data": "AwardReaDate" },
+                { "title": "契約金額", "data": "ContractAmount" },
+                { "title": "開工日期", "data": "BeginDate" },
+                { "title": "預訂完工日期", "data": "PlanFinishDate" },
+                { "title": "預定進度", "data": "PlanScheduleExpDate" },
+                { "title": "實際進度", "data": "PlanScheduleReaDate" },
                 { "title": "科室", "data": "Organizer" },
                 { "title": "承辦人", "data": "OrganizerMan" },
+                { "title": "備註", "data": "Remark" },
                 { "title": "新增人員", "data": "CreateUserName" },
                 { "title": "新增時間", "data": "CreateDate" },
                 { "title": "修改人員", "data": "UpdateUserName" },
@@ -232,7 +224,7 @@
 </script>
 <section class="content-header">
     <h1>
-        預計發包案件
+        工程列管
     </h1>
 </section>
 <section class="content">

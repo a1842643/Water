@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 
-namespace WaterCaseTracking.Models.ViewModels.ProjectControll
+namespace WaterCaseTracking.Models.ViewModels.ExpectedProject
 {
-    public class ExportViewModel
+    public class SearchInfoViewModel : _BaseRequestViewModel
     {
         /// <summary>
         /// 工程名稱
@@ -15,9 +15,6 @@ namespace WaterCaseTracking.Models.ViewModels.ProjectControll
         /// 科室
         /// </summary>
         public string ddlOrganizer { get; set; }
-        /// <summary>
-        /// 副檔名
-        /// </summary>
-        public string fileExtension { get; set; }
+        public string Types { get; set; }
     }
 }
