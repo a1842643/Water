@@ -12,6 +12,8 @@ namespace WaterCaseTracking.Service
 {
     public class ExpectedProjectService
     {
+        SqlConnection sqlConn;
+        SqlTransaction sqlTrans;
         #region 查詢 QuerySearchList()
         public SearchListViewModel QuerySearchList(SearchInfoViewModel searchInfo, string UserName, string roleName, string Organizer)
         {
@@ -103,11 +105,12 @@ namespace WaterCaseTracking.Service
 
         #endregion
         #region 匯入
-        internal int doUpLoad(HttpPostedFileBase file, string UserName)
+        internal int doUpLoad(HttpPostedFileBase file, string UserName, string roleName, string Organizer)
         {
             #region 參數宣告				
             ExpectedProjectModel expectedProjectModel = new ExpectedProjectModel();
             ExpectedProjectDao expectedProjectDao = new ExpectedProjectDao();
+            SysCodeDao sysCodeDao = new SysCodeDao();
             int successQty = 0;
             #endregion
 
@@ -126,8 +129,8 @@ namespace WaterCaseTracking.Service
                 {
                     throw new Exception("匯入檔案錯誤");
                 }
-                SqlConnection sqlConn;
-                SqlTransaction sqlTrans;
+                //先初始化值
+                expectedProjectDao.defaultSqlP(out sqlConn, out sqlTrans);
                 List<ExpectedProjectModel> listModel = new List<ExpectedProjectModel>();
                 for (int i = 0; i < orgDt.Rows.Count; i++)
                 {
@@ -151,14 +154,27 @@ namespace WaterCaseTracking.Service
                         expectedProjectModel.AwardExpDate = orgDt.Rows[i][14].ToString();          //決標時間預計完成日期
                         expectedProjectModel.AwardReaDate = orgDt.Rows[i][15].ToString();          //決標時間實際完成日期
                         expectedProjectModel.Organizer = orgDt.Rows[i][16].ToString();             //科室
+                        //如果是資料維護者或是一般使用者只能是自己的科室
+                        if (roleName == "maintain" || roleName == "user")
+                        {
+                            expectedProjectModel.Organizer = Organizer;
+                        }
+                        else
+                        {
+                            expectedProjectModel.Organizer = orgDt.Rows[i][16].ToString();             //科室
+                            //判斷科室有無正確
+                            if (!sysCodeDao.CheckSysCode(expectedProjectModel.Organizer))
+                            {
+                                throw new Exception("查無此科室");
+                            }
+                        }
                         expectedProjectModel.OrganizerMan = orgDt.Rows[i][17].ToString();          //承辦人
-                        //先初始化值
-                        expectedProjectDao.defaultSqlP(out sqlConn, out sqlTrans);
+
                         //判斷無ID則新增，有ID正確就修改
                         if (!string.IsNullOrEmpty(expectedProjectModel.ID))
                         {
                             //若資料正確則修改
-                            if (expectedProjectDao.QueryUpdateData(expectedProjectModel.ID) != null)
+                            if (expectedProjectDao.QueryUpdateData(expectedProjectModel.ID, ref sqlConn, ref sqlTrans) != null)
                             {
                                 expectedProjectDao.UpdateMulExpectedProjectTable(expectedProjectModel, UserName, ref sqlConn, ref sqlTrans);
                             }
@@ -175,11 +191,11 @@ namespace WaterCaseTracking.Service
                     }
                     catch (Exception ex)
                     {
-                        throw new Exception("第" + (i + 1) + "筆資料有誤，請確認");
+                        throw new Exception("第" + (i + 2) + "筆資料有誤，請確認");
                     }
                     //沒錯誤則Commit
-                    expectedProjectDao.CommitSqlP(ref sqlConn, ref sqlTrans);
                 }
+                expectedProjectDao.CommitSqlP(ref sqlConn, ref sqlTrans);
             }
             return successQty;
             #endregion

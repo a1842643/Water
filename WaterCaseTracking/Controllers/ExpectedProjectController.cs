@@ -321,7 +321,7 @@ namespace WaterCaseTracking.Controllers
                     string FileExtension = System.IO.Path.GetExtension(fileName);
                     if (FileExtension != ".xlsx")
                         throw new Exception("匯入檔案錯誤");
-                    successQty = expectedProjectService.doUpLoad(httpPostedFile, UserName);
+                    successQty = expectedProjectService.doUpLoad(httpPostedFile, UserName, roleName, Organizer);
 
 
                 }

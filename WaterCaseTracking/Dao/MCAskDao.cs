@@ -412,6 +412,52 @@ namespace WaterCaseTracking.Dao
             #endregion
         }
         #endregion
+        #region 修改用查詢Conn版
+        internal MCAskModel QueryUpdateDataConn(string ID, string Types, ref SqlConnection conn, ref SqlTransaction trans)
+        {
+            #region 參數告宣
+            MCAskModel result = new MCAskModel();
+            #endregion
+
+            #region 流程
+
+            StringBuilder _sqlStr = new StringBuilder();
+            _sqlStr.Append(@"select 
+                                ID                                   --項次
+                                , Convert(varchar(10), AskDate, 111) as 'AskDate' --詢問日期
+                                , MemberName                         --地區
+                                , Area                               --議員姓名
+                                , Inquiry                            --詢問事項
+                                , HandlingSituation                  --辦理情形
+                                , Organizer                          --承辦單位
+                                , OrganizerMan                       --承辦人員
+                                , sStatus                            --狀態
+                                , Types                              --0:市政總質詢事項, 議會案件
+                                , CreateUserName                     --新增人員
+                                , CreateDate                         --新增時間
+                                , UpdateUserName                     --修改人員
+                                , UpdateDate                         --修改時間
+                            from MCAsk WHERE NGuid + CONVERT(varchar,ID) = @ID 
+                                            AND  Types = @Types ");
+            _sqlParams = new Dapper.DynamicParameters();
+            _sqlParams.Add("ID", ID);
+            _sqlParams.Add("Types", Types);
+
+            try
+            {
+                result = conn.Query<MCAskModel>(_sqlStr.ToString(), _sqlParams, trans).FirstOrDefault();
+            }
+            catch (Exception ex)
+            {
+                TransactionRollback(trans);
+                GetCloseConnection(conn);
+                throw ex;
+            }
+
+            return result;
+            #endregion
+        }
+        #endregion
 
         #region 多筆新增MCAskTable-起
         internal int AddMCAskListTable(List<MCAskModel> listModel, string UserName)
@@ -526,6 +572,12 @@ namespace WaterCaseTracking.Dao
             TransactionCommit(trans);
             GetCloseConnection(conn);
         }
+
+        internal void RollbackSqlP(ref SqlConnection conn, ref SqlTransaction trans)
+        {
+            TransactionRollback(trans);
+            GetCloseConnection(conn);
+        }
         #endregion
         #region 單筆修改Trans版
         internal void UpdateMulMCAskTable(MCAskModel model, string UserName, ref SqlConnection conn, ref SqlTransaction trans)
@@ -636,4 +688,5 @@ namespace WaterCaseTracking.Dao
         }
         #endregion
     }
+
 }

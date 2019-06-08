@@ -12,6 +12,8 @@ namespace WaterCaseTracking.Service
 {
     public class ProjectControllService
     {
+        SqlConnection sqlConn;
+        SqlTransaction sqlTrans;
         #region 查詢 QuerySearchList()
         public SearchListViewModel QuerySearchList(SearchInfoViewModel searchInfo, string UserName, string roleName, string Organizer)
         {
@@ -103,11 +105,12 @@ namespace WaterCaseTracking.Service
 
         #endregion
         #region 匯入
-        internal int doUpLoad(HttpPostedFileBase file, string UserName)
+        internal int doUpLoad(HttpPostedFileBase file, string UserName, string roleName, string Organizer)
         {
             #region 參數宣告				
             ProjectControllModel projectControllModel = new ProjectControllModel();
             ProjectControllDao projectControllDao = new ProjectControllDao();
+            SysCodeDao sysCodeDao = new SysCodeDao();
             int successQty = 0;
             #endregion
 
@@ -126,8 +129,8 @@ namespace WaterCaseTracking.Service
                 {
                     throw new Exception("匯入檔案錯誤");
                 }
-                SqlConnection sqlConn;
-                SqlTransaction sqlTrans;
+                //先初始化值
+                projectControllDao.defaultSqlP(out sqlConn, out sqlTrans);
                 List<ProjectControllModel> listModel = new List<ProjectControllModel>();
                 for (int i = 0; i < orgDt.Rows.Count; i++)
                 {
@@ -141,16 +144,29 @@ namespace WaterCaseTracking.Service
                         projectControllModel.PlanFinishDate = orgDt.Rows[i][4].ToString();         //預訂完工日期   
                         projectControllModel.PlanScheduleExpDate = orgDt.Rows[i][5].ToString();    //預定進度        
                         projectControllModel.PlanScheduleReaDate = orgDt.Rows[i][6].ToString();    //實際進度        
-                        projectControllModel.Organizer = orgDt.Rows[i][7].ToString();              //科室
+
+                        //如果是資料維護者或是一般使用者只能是自己的科室
+                        if (roleName == "maintain" || roleName == "user")
+                        {
+                            projectControllModel.Organizer = Organizer;
+                        }
+                        else
+                        {
+                            projectControllModel.Organizer = orgDt.Rows[i][7].ToString();              //科室
+                            //判斷科室有無正確
+                            if (!sysCodeDao.CheckSysCode(projectControllModel.Organizer))
+                            {
+                                throw new Exception("查無此科室");
+                            }
+                        }
                         projectControllModel.OrganizerMan = orgDt.Rows[i][8].ToString();           //承辦人 
                         projectControllModel.Remark = orgDt.Rows[i][9].ToString();                 //備註
-                        //先初始化值
-                        projectControllDao.defaultSqlP(out sqlConn, out sqlTrans);
+
                         //判斷無ID則新增，有ID正確就修改
                         if (!string.IsNullOrEmpty(projectControllModel.ID))
                         {
                             //若資料正確則修改
-                            if (projectControllDao.QueryUpdateData(projectControllModel.ID) != null)
+                            if (projectControllDao.QueryUpdateData(projectControllModel.ID, ref sqlConn, ref sqlTrans) != null)
                             {
                                 projectControllDao.UpdateMulProjectControllTable(projectControllModel, UserName, ref sqlConn, ref sqlTrans);
                             }
@@ -167,11 +183,11 @@ namespace WaterCaseTracking.Service
                     }
                     catch (Exception ex)
                     {
-                        throw new Exception("第" + (i + 1) + "筆資料有誤，請確認");
+                        throw new Exception("第" + (i + 2) + "筆資料有誤，請確認");
                     }
                     //沒錯誤則Commit
-                    projectControllDao.CommitSqlP(ref sqlConn, ref sqlTrans);
                 }
+                projectControllDao.CommitSqlP(ref sqlConn, ref sqlTrans);
             }
             return successQty;
             #endregion

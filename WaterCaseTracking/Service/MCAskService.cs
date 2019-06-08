@@ -12,6 +12,8 @@ namespace WaterCaseTracking.Service
 {
     public class MCAskService
     {
+        SqlConnection sqlConn;
+        SqlTransaction sqlTrans;
         #region 查詢 QuerySearchList()
         public SearchListViewModel QuerySearchList(SearchInfoViewModel searchInfo, string UserName, string roleName, string Organizer)
         {
@@ -103,17 +105,19 @@ namespace WaterCaseTracking.Service
 
         #endregion
         #region 匯入
-        internal int doUpLoad(HttpPostedFileBase file, string Types, string UserName)
+        internal int doUpLoad(HttpPostedFileBase file, string Types, string UserName, string roleName, string Organizer)
         {
             #region 參數宣告				
             MCAskModel mcaskModel = new MCAskModel();
             MCAskDao mcaskDao = new MCAskDao();
+            SysCodeDao sysCodeDao = new SysCodeDao();
             int successQty = 0;
             #endregion
 
             #region 流程	
             //存Xls轉的DataTable
             DataTable orgDt = new DataTable();
+
             //判斷檔案室否有trans_date資料
             if (file.ContentLength > 0 || file != null)
             {
@@ -126,8 +130,8 @@ namespace WaterCaseTracking.Service
                 {
                     throw new Exception("匯入檔案錯誤");
                 }
-                SqlConnection sqlConn;
-                SqlTransaction sqlTrans;
+                //先初始化值
+                mcaskDao.defaultSqlP(out sqlConn, out sqlTrans);
                 List<MCAskModel> listModel = new List<MCAskModel>();
                 for (int i = 0; i < orgDt.Rows.Count; i++)
                 {
@@ -140,25 +144,36 @@ namespace WaterCaseTracking.Service
                         mcaskModel.MemberName = orgDt.Rows[i][3].ToString();
                         mcaskModel.Inquiry = orgDt.Rows[i][4].ToString();
                         mcaskModel.HandlingSituation = orgDt.Rows[i][5].ToString();
-                        mcaskModel.Organizer = orgDt.Rows[i][6].ToString();
+                        //如果是資料維護者或是一般使用者只能是自己的科室
+                        if (roleName == "maintain" || roleName == "user")
+                        {
+                            mcaskModel.Organizer = Organizer;
+                        }
+                        else
+                        {
+                            mcaskModel.Organizer = orgDt.Rows[i][6].ToString();
+                            //判斷科室有無正確
+                            if (!sysCodeDao.CheckSysCode(mcaskModel.Organizer))
+                            {
+                                throw new Exception("查無此科室");
+                            }
+                        }
                         mcaskModel.OrganizerMan = orgDt.Rows[i][7].ToString();
                         mcaskModel.sStatus = orgDt.Rows[i][8].ToString();
                         mcaskModel.Types = Types;
                         //listModel.Add(mcaskModel);
-                        //先初始化值
-                        mcaskDao.defaultSqlP(out sqlConn, out sqlTrans);
                         //判斷無ID則新增，有ID正確就修改
                         if (!string.IsNullOrEmpty(mcaskModel.ID))
                         {
                             //若資料正確則修改
-                            if (mcaskDao.QueryUpdateData(mcaskModel.ID, Types) != null)
+                            if (mcaskDao.QueryUpdateDataConn(mcaskModel.ID, Types, ref sqlConn, ref sqlTrans) != null)
                             {
                                 mcaskDao.UpdateMulMCAskTable(mcaskModel, UserName, ref sqlConn, ref sqlTrans);
                             }
                             //若沒有資料則錯誤
                             else
                             {
-                                throw new Exception("");
+                                throw new Exception("查無此筆資料");
                             }
                         }
                         else
@@ -166,13 +181,15 @@ namespace WaterCaseTracking.Service
                             mcaskDao.AddMulMCAskTable(mcaskModel, UserName, ref sqlConn, ref sqlTrans);
                         }
                     }
-                    catch (Exception)
+                    catch (Exception ex)
                     {
-                        throw new Exception("第" + (i + 1) + "筆資料有誤，請確認");
+                        //錯誤的話就Rollback
+                        mcaskDao.RollbackSqlP(ref sqlConn, ref sqlTrans);
+                        throw new Exception("第" + (i + 2) + "筆資料有誤" + ex.Message);
                     }
-                    //沒錯誤則Commit
-                    mcaskDao.CommitSqlP(ref sqlConn, ref sqlTrans);
                 }
+                //沒錯誤則Commit
+                mcaskDao.CommitSqlP(ref sqlConn, ref sqlTrans);
                 ////刪除資料
                 //untilDao.DeleteUpdateUntil(listModel, out sqlConn, out sqlTrans);
                 ////新增資料

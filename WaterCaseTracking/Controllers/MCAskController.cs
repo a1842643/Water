@@ -497,7 +497,7 @@ namespace WaterCaseTracking.Controllers
                     string FileExtension = System.IO.Path.GetExtension(fileName);
                     if (FileExtension != ".xlsx")
                         throw new Exception("匯入檔案錯誤");
-                    successQty = mcaskService.doUpLoad(httpPostedFile, "0", UserName);
+                    successQty = mcaskService.doUpLoad(httpPostedFile, "0", UserName, roleName, Organizer);
 
 
                 }
@@ -530,7 +530,7 @@ namespace WaterCaseTracking.Controllers
                     string FileExtension = System.IO.Path.GetExtension(fileName);
                     if (FileExtension != ".xlsx")
                         throw new Exception("匯入檔案錯誤");
-                    successQty = mcaskService.doUpLoad(httpPostedFile, "1", UserName);
+                    successQty = mcaskService.doUpLoad(httpPostedFile, "1", UserName, roleName, Organizer);
 
 
                 }

@@ -100,7 +100,7 @@ namespace WaterCaseTracking.Controllers
                 //查詢修改資料
                 dt = projectControllService.getExportData(exportViewModel, UserName, roleName, Organizer);
                 string Name = "";
-                Name = "預計發包案件";
+                Name = "工程列管";
                 fileNamePath = ExportFunction.ExportDataTableTo(dt, exportViewModel.fileExtension, Name + "範例檔");
             }
             catch (Exception ex)
@@ -323,7 +323,7 @@ namespace WaterCaseTracking.Controllers
                     string FileExtension = System.IO.Path.GetExtension(fileName);
                     if (FileExtension != ".xlsx")
                         throw new Exception("匯入檔案錯誤");
-                    successQty = projectControllService.doUpLoad(httpPostedFile, UserName);
+                    successQty = projectControllService.doUpLoad(httpPostedFile, UserName, roleName, Organizer);
 
 
                 }

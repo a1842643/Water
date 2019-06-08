@@ -340,6 +340,52 @@ namespace WaterCaseTracking.Dao
         }
         #endregion 單筆刪除ProjectControllTable-迄
         #region 修改用查詢
+        internal ProjectControllModel QueryUpdateData(string ID, ref SqlConnection conn, ref SqlTransaction trans)
+        {
+            #region 參數告宣
+            ProjectControllModel result = new ProjectControllModel();
+            #endregion
+
+            #region 流程
+
+            StringBuilder _sqlStr = new StringBuilder();
+            _sqlStr.Append(@"select 
+                                ID                                   --項次
+                                ,ProjectName                                                 --工程名稱
+                                ,ContractAmount                                                 --契約金額
+                                ,ContractAmount as 'SContractAmount'                                                --契約金額
+                                ,CONVERT(VARCHAR,BeginDate, 111) as 'BeginDate'           --開工日期 
+                                ,CONVERT(VARCHAR,PlanFinishDate, 111) as 'PlanFinishDate'           --預訂完工日期
+                                ,CONVERT(VARCHAR,PlanScheduleExpDate, 111) as 'PlanScheduleExpDate'           --預定進度
+                                ,CONVERT(VARCHAR,PlanScheduleReaDate, 111) as 'PlanScheduleReaDate'           --實際進度
+                                ,Organizer                                            --承辦單位
+                                ,OrganizerMan                                         --承辦人員
+                                ,Remark                                               --備註
+                                ,CreateUserName                                       --新增人員 
+                                ,CreateDate                                           --新增時間
+                                ,UpdateUserName                                       --修改人員
+                                ,UpdateDate                                           --修改時間  
+                                  FROM ProjectControll  WHERE NGuid + CONVERT(varchar,ID) = @ID 
+                                             ");
+            _sqlParams = new Dapper.DynamicParameters();
+            _sqlParams.Add("ID", ID);
+
+            try
+            {
+                result = conn.Query<ProjectControllModel>(_sqlStr.ToString(), _sqlParams, trans).FirstOrDefault();
+            }
+            catch (Exception ex)
+            {
+                TransactionRollback(trans);
+                GetCloseConnection(conn);
+                throw ex;
+            }
+            return result;
+            #endregion
+        }
+        #endregion
+
+        #region 修改用查詢
         internal ProjectControllModel QueryUpdateData(string ID)
         {
             #region 參數告宣

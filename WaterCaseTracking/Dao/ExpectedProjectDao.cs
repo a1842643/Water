@@ -439,9 +439,58 @@ namespace WaterCaseTracking.Dao
         }
         #endregion
 
+        #region 修改用查詢
+        internal ExpectedProjectModel QueryUpdateData(string ID, ref SqlConnection conn, ref SqlTransaction trans)
+        {
+            #region 參數告宣
+            ExpectedProjectModel result = new ExpectedProjectModel();
+            #endregion
+
+            #region 流程
+
+            StringBuilder _sqlStr = new StringBuilder();
+            _sqlStr.Append(@"select 
+                                ID                                   --項次
+                                , ProjectName                                                   --工程名稱
+                                ,CONVERT(VARCHAR,CrProExpDate, 111) as 'CrProExpDate'           --成案預計完成日期 
+                                ,CONVERT(VARCHAR,CrProReaDate, 111) as 'CrProReaDate'           --成案實際完成日期
+                                ,CONVERT(VARCHAR,PlanExpDate, 111) as 'PlanExpDate'           --規劃預計完成日期
+                                ,CONVERT(VARCHAR,PlanReaDate, 111) as 'PlanReaDate'           --規劃實際完成日期
+                                ,CONVERT(VARCHAR,BasDesExpDate, 111) as 'BasDesExpDate'           --基本設計預計完成日期
+                                ,CONVERT(VARCHAR,BasDesReaDate, 111) as 'BasDesReaDate'           --基本設計實際完成日期
+                                ,CONVERT(VARCHAR,DetailDesExpDate, 111) as 'DetailDesExpDate'           --細部設計預計完成日期
+                                ,CONVERT(VARCHAR,DetailDesReaDate, 111) as 'DetailDesReaDate'           --細部設計實際完成日期
+                                ,CONVERT(VARCHAR,OnlineExpDate, 111) as 'OnlineExpDate'           --上網發包預計完成日期
+                                ,CONVERT(VARCHAR,OnlineReaDate, 111) as 'OnlineReaDate'           --上網發包實際完成日期
+                                ,CONVERT(VARCHAR,SelectionExpDate, 111) as 'SelectionExpDate'           --評選預計完成日期
+                                ,CONVERT(VARCHAR,SelectionReaDate, 111) as 'SelectionReaDate'           --評選實際完成日期
+                                ,CONVERT(VARCHAR,AwardExpDate, 111) as 'AwardExpDate'           --決標時間預計完成日期
+                                ,CONVERT(VARCHAR,AwardReaDate, 111) as 'AwardReaDate'           --決標時間實際完成日期
+                                ,Organizer                                            --承辦單位
+                                ,OrganizerMan                                         --承辦人員
+                            from ExpectedProject WHERE NGuid + CONVERT(varchar,ID) = @ID 
+                                             ");
+            _sqlParams = new Dapper.DynamicParameters();
+            _sqlParams.Add("ID", ID);
+
+            try
+            {
+                result = conn.Query<ExpectedProjectModel>(_sqlStr.ToString(), _sqlParams, trans).FirstOrDefault();
+            }
+            catch (Exception ex)
+            {
+                TransactionRollback(trans);
+                GetCloseConnection(conn);
+                throw ex;
+            }
+            return result;
+            #endregion
+        }
+        #endregion
+
 
         #region 初始化值
-        
+
         internal void defaultSqlP(out SqlConnection conn, out SqlTransaction trans)
         {
             conn = GetOpenConnection();
