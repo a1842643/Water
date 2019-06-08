@@ -121,7 +121,7 @@ namespace WaterCaseTracking.Dao
             //查詢SQL
             StringBuilder _sqlStr = new StringBuilder();
             _sqlStr.Append(@"SELECT
-                               NGuid + CONVERT(varchar,ID)                   as '項次'
+                               NGuid + CONVERT(varchar,ID)                   as '項次(不可修改，若要新增資料則留空白)'
                                 ,ProjectName                                                 as '工程名稱'
                                 ,CONVERT(VARCHAR,CrProExpDate, 111)           as '成案預計完成日期 '
                                 ,CONVERT(VARCHAR,CrProReaDate, 111)            as '成案實際完成日期'
@@ -137,7 +137,7 @@ namespace WaterCaseTracking.Dao
                                 ,CONVERT(VARCHAR,SelectionReaDate, 111)            as '評選實際完成日期'
                                 ,CONVERT(VARCHAR,AwardExpDate, 111)            as '決標時間預計完成日期'
                                 ,CONVERT(VARCHAR,AwardReaDate, 111)            as '決標時間實際完成日期'
-                                ,Organizer                                            as '承辦單位'
+                                ,Organizer                                            as '承辦單位(若角色是一般使用者或資料維護者，科室預設自己的科室)'
                                 ,OrganizerMan                                         as '承辦人員'
                                   FROM ExpectedProject                                          
                             WHERE 1 = 1 ");

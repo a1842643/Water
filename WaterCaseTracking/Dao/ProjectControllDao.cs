@@ -113,14 +113,14 @@ namespace WaterCaseTracking.Dao
             //查詢SQL
             StringBuilder _sqlStr = new StringBuilder();
             _sqlStr.Append(@"SELECT
-                                NGuid + CONVERT(varchar,ID) as '項次'
+                                NGuid + CONVERT(varchar,ID) as '項次(不可修改，若要新增資料則留空白)'
                                 ,ProjectName                                                 as '工程名稱'
                                 ,ContractAmount                                                 as '契約金額'
                                 ,CONVERT(VARCHAR,BeginDate, 111)          as '開工日期 '
                                 ,CONVERT(VARCHAR,PlanFinishDate, 111)           as '預訂完工日期'
                                 ,CONVERT(VARCHAR,PlanScheduleExpDate, 111)            as '預定進度'
                                 ,CONVERT(VARCHAR,PlanScheduleReaDate, 111)           as '實際進度'
-                                ,Organizer                                            as '承辦單位'
+                                ,Organizer                                            as '承辦單位(若角色是一般使用者或資料維護者，科室預設自己的科室)'
                                 ,OrganizerMan                                         as '承辦人員'
                                 ,Remark                                               as '備註'
                                   FROM ProjectControll                                            

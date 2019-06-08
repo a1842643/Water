@@ -139,13 +139,13 @@ namespace WaterCaseTracking.Dao
             //查詢SQL
             StringBuilder _sqlStr = new StringBuilder();
             _sqlStr.Append(@"SELECT
-                                NGuid + CONVERT(varchar,ID)                           as '項次'
+                                NGuid + CONVERT(varchar,ID)                           as '項次(不可修改，若要新增資料則留空白)'
                                 ,CONVERT(VARCHAR,AskDate, 111)                        as '詢問日期'
                                 ,Area                                                 as '地區'
                                 ,MemberName                                           as '議員姓名'
                                 ,Inquiry                                              as '詢問事項'
                                 ,HandlingSituation                                    as '辦理情形'
-                                ,Organizer                                            as '承辦單位'
+                                ,Organizer                                            as '承辦單位(若角色是一般使用者或資料維護者，科室預設自己的科室)'
                                 ,OrganizerMan                                         as '承辦人員'
                                 ,sStatus                                              as '狀態'
                                   FROM MCAsk                                          
