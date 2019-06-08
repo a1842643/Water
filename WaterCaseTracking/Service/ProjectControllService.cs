@@ -13,7 +13,7 @@ namespace WaterCaseTracking.Service
     public class ProjectControllService
     {
         #region 查詢 QuerySearchList()
-        public SearchListViewModel QuerySearchList(SearchInfoViewModel searchInfo, string UserName, string roleName)
+        public SearchListViewModel QuerySearchList(SearchInfoViewModel searchInfo, string UserName, string roleName, string Organizer)
         {
             #region 參數宣告				
             SearchListViewModel searchList = new SearchListViewModel();
@@ -21,7 +21,7 @@ namespace WaterCaseTracking.Service
             #endregion
 
             #region 流程																
-            searchList = projectControllDao.QuerySearchList(searchInfo, UserName, roleName); //將參數送入Dao層,組立SQL字串並連接資料庫
+            searchList = projectControllDao.QuerySearchList(searchInfo, UserName, roleName, Organizer); //將參數送入Dao層,組立SQL字串並連接資料庫
 
             return searchList;
             #endregion
@@ -29,7 +29,7 @@ namespace WaterCaseTracking.Service
         #endregion
 
         #region 匯出範例檔-起
-        internal DataTable getExportData(ExportViewModel exportViewModel, string UserName, string roleName)
+        internal DataTable getExportData(ExportViewModel exportViewModel, string UserName, string roleName, string Organizer)
         {
             #region 參數宣告				
             ProjectControllDao projectControllDao = new ProjectControllDao();
@@ -37,7 +37,7 @@ namespace WaterCaseTracking.Service
             #endregion
 
             #region 流程																
-            dt = projectControllDao.getExportData(exportViewModel, UserName, roleName); //將參數送入Dao層,組立SQL字串並連接資料庫
+            dt = projectControllDao.getExportData(exportViewModel, UserName, roleName, Organizer); //將參數送入Dao層,組立SQL字串並連接資料庫
 
             return dt;
             #endregion

@@ -90,7 +90,7 @@ namespace WaterCaseTracking.Controllers
                 TempData["loginMsg"] = "請填帳號及密碼";
                 return View();
             }
-            if ( txtPassword.Length < 0)
+            if (txtPassword.Length < 0)
             {
                 TempData["loginMsg"] = "密碼需8個字以上";
                 return View();
@@ -100,14 +100,14 @@ namespace WaterCaseTracking.Controllers
             LoginErrorTimesModel loginErrorTimesModel = new LoginErrorTimesModel();
             //判斷該帳號是否錯誤三次以上
             loginErrorTimesModel = homeService.getAccountErrorTimes(txtAccount);
-            if(loginErrorTimesModel !=null)
+            if (loginErrorTimesModel != null)
             {
                 //若失敗次數大於2則判斷是否已
                 if (loginErrorTimesModel.ErrorTimes > 2)
                 {
                     //判斷是否超過15分鐘未登入
                     TimeSpan ts = new TimeSpan(DateTime.Now.Ticks - loginErrorTimesModel.LoginTime.Ticks);
-                    if(ts.TotalMinutes < 15)
+                    if (ts.TotalMinutes < 15)
                     {
                         TempData["loginMsg"] = "該帳號錯誤次數達三次以上，請15分鐘後再試";
                         return View();
@@ -116,17 +116,17 @@ namespace WaterCaseTracking.Controllers
             }
 
             accountsModel = homeService.QueryAccountInfo(txtAccount, txtPassword);
-            if(accountsModel == null)
+            if (accountsModel == null)
             {
                 TempData["loginMsg"] = "帳號或密碼錯誤，請重新輸入";
                 //寫入資料庫
                 if (loginErrorTimesModel == null)
                 {
-                    homeService.AddAccountErrorTimes(txtAccount,false);
+                    homeService.AddAccountErrorTimes(txtAccount, false);
                 }
                 else
                 {
-                    homeService.UpdateAccountErrorTimes(loginErrorTimesModel,false);
+                    homeService.UpdateAccountErrorTimes(loginErrorTimesModel, false);
                 }
                 return View();
             }
@@ -147,7 +147,7 @@ namespace WaterCaseTracking.Controllers
                 Models.ViewModels.Accounts.ChangePwViewModel changePwViewModel = new Models.ViewModels.Accounts.ChangePwViewModel();
                 changePwViewModel.AccountID = accountsModel.AccountID;
                 changePwViewModel.UpdateUserName = accountsModel.AccountName;
-                if(accountsModel.IsDefault)
+                if (accountsModel.IsDefault)
                 {
                     TempData["ChangePWMessage"] = "使用預設密碼登入，請先修改密碼";
                 }
@@ -162,14 +162,16 @@ namespace WaterCaseTracking.Controllers
 
             //單位名稱
             Session["UnitName"] = "營業部";
-                //單位代碼
-                Session["Unit"] = "00M";
-                //登入者ID
-                Session["UserID"] = accountsModel.AccountID;
-                //登入者姓名
-                Session["UserName"] = accountsModel.AccountName;
-                //登入者角色
-                Session["roleName"] = accountsModel.Role;
+            //單位代碼
+            Session["Unit"] = "00M";
+            //登入者ID
+            Session["UserID"] = accountsModel.AccountID;
+            //登入者姓名
+            Session["UserName"] = accountsModel.AccountName;
+            //登入者科室
+            Session["Organizer"] = accountsModel.Organizer;
+            //登入者角色
+            Session["roleName"] = accountsModel.Role;
             //角色代碼清單
             Session["roleId"] = "admin,user,application,signing,review";//請傳入字串 格式如 : admin,user,application,signing,review
             UserInfoModel UserInfo = new UserInfoModel()
@@ -198,7 +200,7 @@ namespace WaterCaseTracking.Controllers
             //Session.RemoveAll();
 
             //string account = new AccountService().GetValue();
-            
+
             logging(funcName, UserID + "登入成功");
             //判斷工作事項是否有需要提醒的
 

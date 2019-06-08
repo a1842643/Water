@@ -98,6 +98,7 @@ namespace WaterCaseTracking.Dao
                                 , Password                                          --密碼
                                 , AccountName                                       --帳號名稱
                                 , Role                                              --角色
+                                , Organizer                                         --科室
                                 , IsDefault                                         --是否為預設密碼
                                 , CreateUserName                                    --新增人員
                                 , CreateDate                                        --新增時間

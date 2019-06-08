@@ -21,9 +21,16 @@
                 return;
             }
             //科室下拉選單
-            var ddlOrganizer = "<option value=''>請選擇</option>";
+            var ddlOrganizer = "<option value=''>全部</option>";
             $.each(result.ddlOrganizer.DropDownListLT, function (i, ddl) {
-                ddlOrganizer += '<option value="' + ddl.Values + '">' + ddl.Text + '</option>';
+                //判斷資料維護者或使用者就只能有自己科室
+                if ('@(Session["roleName"] as string)' == 'maintain' || '@(Session["roleName"] as string)' == 'user') {
+                    if (ddl.Values == '@(Session["Organizer"] as String)')
+                        ddlOrganizer = '<option value="' + ddl.Values + '">' + ddl.Text + '</option>';
+                }
+                else {
+                    ddlOrganizer += '<option value="' + ddl.Values + '">' + ddl.Text + '</option>';
+                }
             });
             $('#ddlOrganizer').html(ddlOrganizer);
             $('#ddlOrganizer').val('@Model.Organizer');

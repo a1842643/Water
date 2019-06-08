@@ -82,7 +82,7 @@ namespace WaterCaseTracking.Controllers
             try
             {
                 //送參數進入Service層做商業邏輯
-                searchList = mcaskService.QuerySearchList(searchInfo, UserName, roleName);
+                searchList = mcaskService.QuerySearchList(searchInfo, UserName, roleName, Organizer);
             }
             catch (Exception ex)
             {
@@ -112,7 +112,7 @@ namespace WaterCaseTracking.Controllers
             try
             {
                 //查詢修改資料
-                dt = mcaskService.getExportData(exportViewModel, UserName, roleName);
+                dt = mcaskService.getExportData(exportViewModel, UserName, roleName, Organizer);
                 string Name = "";
                 if (exportViewModel.Types == "0")
                 {

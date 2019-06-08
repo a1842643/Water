@@ -69,7 +69,7 @@ namespace WaterCaseTracking.Controllers
             try
             {
                 //送參數進入Service層做商業邏輯
-                searchList = expectedProjectService.QuerySearchList(searchInfo, UserName, roleName);
+                searchList = expectedProjectService.QuerySearchList(searchInfo, UserName, roleName, Organizer);
             }
             catch (Exception ex)
             {
@@ -98,7 +98,7 @@ namespace WaterCaseTracking.Controllers
             try
             {
                 //查詢修改資料
-                dt = expectedProjectService.getExportData(exportViewModel, UserName, roleName);
+                dt = expectedProjectService.getExportData(exportViewModel, UserName, roleName, Organizer);
                 string Name = "";
                 Name = "預計發包案件";
                 fileNamePath = ExportFunction.ExportDataTableTo(dt, exportViewModel.fileExtension, Name + "範例檔");

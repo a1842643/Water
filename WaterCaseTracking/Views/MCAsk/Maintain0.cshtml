@@ -29,7 +29,14 @@
                 //科室下拉選單
                 var ddlOrganizer = "<option value=''>全部</option>";
                 $.each(result.ddlOrganizer.DropDownListLT, function (i, ddl) {
-                    ddlOrganizer += '<option value="' + ddl.Values + '">' + ddl.Text + '</option>';
+                    //判斷資料維護者或使用者就只能有自己科室
+                    if ('@(Session["roleName"] as string)' == 'maintain' || '@(Session["roleName"] as string)' == 'user') {
+                        if (ddl.Values == '@(Session["Organizer"] as String)')
+                            ddlOrganizer = '<option value="' + ddl.Values + '">' + ddl.Text + '</option>';
+                    }
+                    else {
+                        ddlOrganizer += '<option value="' + ddl.Values + '">' + ddl.Text + '</option>';
+                    }
                 });
                 $('#ddlOrganizer').html(ddlOrganizer);
 
@@ -53,9 +60,6 @@
         //判斷是否可以新增跟修改跟刪除
         if ('@(Session["roleName"] as string)' == 'supervisor') {
             oTable.columns([0, 1, 2, 6, 7, 8, 9, 10, 11, 12, 13, 14]).visible(false);
-        }
-        if ('@(Session["roleName"] as string)' == "user") {
-            oTable.columns([14]).visible(false);
         }
     }
 
@@ -206,13 +210,13 @@
                 { "title": "修改時間", "data": "UpdateDate" },
 
                 {
-                    "title": "修改", "orderable": false, render: function (data, type, row) {
-                        return '<button type="button" class="btn btn-primary btn-space" onclick="DoAction(\'Modify\',\'' + row.HID + '\')">修改</button>';
-                    }
-                },
-                {
-                    "title": "刪除", "orderable": false, render: function (data, type, row) {
-                        return '<button name="btnDtl" type="button" class="btn btn-primary btn-space btnDtl" onclick="DoAction(\'Delete\',\'' + row.HID + '\')">刪除</button>';
+                    "title": "操作", "orderable": false, render: function (data, type, row) {
+                        var button = '<button type="button" class="btn btn-primary btn-space" onclick="DoAction(\'Modify\',\'' + row.HID + '\')">修改</button>';
+                        if ('@(Session["roleName"] as string)' != "user")
+                        {
+                            button += '<button name="btnDtl" type="button" class="btn btn-primary btn-space btnDtl" onclick="DoAction(\'Delete\',\'' + row.HID + '\')">刪除</button>';
+                        }
+                        return button;
                     }
                 }
             ],
