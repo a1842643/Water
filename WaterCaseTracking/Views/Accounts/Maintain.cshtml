@@ -23,7 +23,13 @@
                 //角色
                 var ddlRoleHtml = "<option value=''>全部</option>";
                 $.each(result.ddlRole.DropDownListLT, function (i, ddl) {
-                    ddlRoleHtml += '<option value="' + ddl.Values + '">' + ddl.Text + '</option>';
+                    if ('@(Session["roleName"] as string)' == 'maintain') {
+                        if (ddl.Text == '一般使用者')
+                            ddlRoleHtml = '<option value="' + ddl.Values + '">' + ddl.Text + '</option>';
+                    }
+                    else {
+                        ddlRoleHtml += '<option value="' + ddl.Values + '">' + ddl.Text + '</option>';
+                    }
                 });
                 $('#ddlRole').html(ddlRoleHtml);
 
@@ -48,25 +54,59 @@
 
     //重置查詢條件
     function Reset() {
-        //$('#files').val('');
-        //$('#ddlArea').val('');
-        //$('#ddlUntil').val('');
-        //$('#ddlAssessmentGroup').val('');
-        //$('#ddlAreacenterName').val('');
-        //$('#ddlGen_JurisName').val('');
-        //$('#ddlDormName').val('');
-
+        $('#txtAccountName').val('');
+        $('#ddlRole').val('');
     }
 
     //新增或修改
-    function DoAction(ActionName, Branch_No) {
+    function DoAction(ActionName, idx, IsEnable) {
+        var confirmTxt = '';
+        if (IsEnable) {
+            confirmTxt = '確定啟用該帳號?'
+        }
+        else {
+            confirmTxt = '確定停用該帳號?'
+        }
         if (ActionName == 'Modify')
-            document.location.replace('@Url.Action("Edit", "BusinessUT")' + '?Branch_No=' + Branch_No);
+            $.ajax({
+                type: 'POST',
+                data: { 'idx': idx },
+                //async: false, //啟用同步請求
+                url: '@Url.Action("Edit", "Accounts")',
+                contenType: "application/json; charset=utf-8",
+                dataType: "json"
+            })
         if (ActionName == 'Create')
-            document.location.replace('@Url.Action("Create", "BusinessUT")');
+            document.location.replace('@Url.Action("Create", "Accounts")');
         if (ActionName == 'Delete') {
-            if (confirm('確認刪除'))
-                document.location.replace('@Url.Action("Delete", "BusinessUT")' + '?Branch_No=' + Branch_No);
+            if (confirm(confirmTxt)) {
+                $.ajax({
+                    type: 'POST',
+                    data: { 'idx': idx },
+                    async: false, //啟用同步請求
+                    url: '@Url.Action("Delete", "Accounts")',
+                    contenType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function (result) {
+                        if (IsEnable) {
+                            $('#btnEnable' + idx).removeClass("btn-danger").addClass("btn-success");
+                            $('#btnEnable' + idx).text('啟用該帳號');
+                            $('#btnEnable' + idx).attr('onclick', "DoAction('Delete','" + idx + "',false);");
+                            alert('停用成功');
+                        }
+                        else {
+                            $('#btnEnable' + idx).removeClass("btn-success").addClass("btn-danger");
+                            $('#btnEnable' + idx).text('停用該帳號');
+                            $('#btnEnable' + idx).attr('onclick', "DoAction('Delete','" + idx + "',true);");
+                            alert('啟用成功');
+                        }
+
+
+                    }, fail: function () {
+                        alert('啟用/停用失敗!!');
+                    }
+                })
+            }
         }
     }
 
@@ -90,7 +130,7 @@
             "iDisplayLength": 10,
             "bStateSave": false,
             "bPaginate": true,
-            "scrollY": ($(window).height() - 290),
+            "scrollY": 600,
             "scrollX": true,
             "bProcessing": true,
             "bServerSide": true,
@@ -104,14 +144,22 @@
                 { "title": "帳號", "data": "AccountID" },
                 { "title": "姓名", "data": "AccountName" },
                 { "title": "角色", "data": "RoleName" },
+                { "title": "科室", "data": "Organizer" },
                 { "title": "新增人員", "data": "CreateUserName" },
                 { "title": "新增時間", "data": "CreateDate" },
                 { "title": "修改人員", "data": "UpdateUserName" },
                 { "title": "修改時間", "data": "UpdateDate" },
                 {
                     "title": "操作", "orderable": false, render: function (data, type, row) {
-                        return '<button type="button" class="btn btn-primary btn-space" onclick="DoAction(\'Modify\',\'' + row.Branch_No + '\');">啟用</button>'
-                            + '<button type="button" class="btn btn-primary btn-space" onclick="DoAction(\'Delete\',\'' + row.Branch_No + '\');">停用</button>';
+                        var button = '<form action="/Accounts/Edit" method="post"><input type="submit" value="修改" class="btn btn-primary btn-flat"><input name="idx" type="hidden" value="' + row.AccountID + '">';
+                        if (row.IsEnable) {
+                            button += '　<button type="button" id="btnEnable' + row.AccountID + '" class="btn btn-primary btn-danger" onclick="DoAction(\'Delete\',\'' + row.AccountID + '\',' + row.IsEnable + ');">停用該帳號</button>';
+                        }
+                        else {
+                            button += '　<button type="button" id="btnEnable' + row.AccountID + '" class="btn btn-primary btn-success" onclick="DoAction(\'Delete\',\'' + row.AccountID + '\',' + row.IsEnable + ');">啟用該帳號</button>'
+                        }
+                        button += '</form>';
+                        return button;
                     }
                 }
             ],
@@ -152,12 +200,12 @@
                         <div class="col-xs-2">
                             <select name="ddlRole" id="ddlRole" class="form-control"></select>
                         </div>
-                        
+
                     </div>
                     <div class="row vertical-align">
                         <div class="col-xs-auto "><button type="button" class="btn btn-primary btn-space" onclick="QueryTable();">查 詢</button></div>
                         <div class="col-xs-auto"><button type="button" class="btn btn-primary btn-space" onclick="Reset();">重置</button></div>
-                        <div class="col-xs-auto"><button type="button" class="btn btn-primary btn-space" onclick="DoAction('Create', null);">新增</button></div>
+                        <div class="col-xs-auto"><button type="button" class="btn btn-primary btn-space" onclick="DoAction('Create', null,null);">新增帳號</button></div>
                     </div>
                 </div>
                 <!-- /.box-header -->

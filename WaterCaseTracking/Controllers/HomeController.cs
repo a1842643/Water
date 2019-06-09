@@ -140,6 +140,13 @@ namespace WaterCaseTracking.Controllers
             {
                 homeService.UpdateAccountErrorTimes(loginErrorTimesModel, true);
             }
+            //判斷是否停用
+            if(!accountsModel.IsEnable)
+            {
+                TempData["loginMsg"] = "該帳號已停用。";
+                return View();
+            }
+
             TimeSpan ts90day = new TimeSpan(DateTime.Now.Ticks - Convert.ToDateTime(accountsModel.UpdateDate).Ticks);
             //使用預設密碼登入或最後修改時間超過90天
             if (accountsModel.IsDefault || ts90day.TotalDays > 90)

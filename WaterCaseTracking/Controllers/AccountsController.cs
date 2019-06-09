@@ -15,6 +15,8 @@ namespace WaterCaseTracking.Controllers
     public class AccountsController : BaseController
     {
         string FuncName = "帳號管理";
+        string FuncNameC = "帳號管理-新增";
+        string FuncNameM = "帳號管理-修改";
         string FuncName1 = "修改密碼功能";
         // GET: BusinessUT
         public ActionResult Maintain()
@@ -48,6 +50,36 @@ namespace WaterCaseTracking.Controllers
 
         }
         #endregion 初始化-迄
+
+        #region 初始化-起
+        [HttpPost]
+        public ActionResult searchInitCM()
+        {
+            #region 參數宣告
+            DropDownListService dropDownListService = new DropDownListService();
+            SearchInitViewModel searchInitViewModel = new SearchInitViewModel();
+            #endregion
+
+            #region 流程	
+
+            try
+            {
+                //抓角色下拉選單
+                searchInitViewModel.ddlRole = dropDownListService.getddlRole();
+                //抓科室下拉選單
+                searchInitViewModel.ddlOrganizer = dropDownListService.getddlOrganizer();
+            }
+            catch (Exception ex)
+            {
+                searchInitViewModel.db_Result = "Fail , " + ex.Message;
+            }
+            //組Json格式回傳Models資料
+            return Json(searchInitViewModel, JsonRequestBehavior.AllowGet);
+            #endregion
+
+        }
+        #endregion 初始化-迄
+
         #region 查詢-起
         /// <summary>
         /// 查詢
@@ -67,7 +99,7 @@ namespace WaterCaseTracking.Controllers
             try
             {
                 //送參數進入Service層做商業邏輯
-                searchList = accountsService.QuerySearchList(searchInfo);
+                searchList = accountsService.QuerySearchList(searchInfo, roleName, Organizer);
             }
             catch (Exception ex)
             {
@@ -80,9 +112,166 @@ namespace WaterCaseTracking.Controllers
 
         }
         #endregion 查詢-訖
+        #region 啟用停用-起
+        [HttpPost]
+        public ActionResult Delete(string idx)
+        {
+            logging(FuncName, "啟用停用");
+            #region 參數宣告
+            AccountsService accountsService = new AccountsService();
+            string fail = "";
+            #endregion
+
+            #region 流程	
+            try
+            {
+                //送參數進入Service層做商業邏輯
+                accountsService.EnableAccount(idx, UserName);
+            }
+            catch (Exception ex)
+            {
+                fail = "Fail," + ex.Message;
+                errLogging(FuncName, ex.ToString());
+            }
+            
+
+            return Json("", JsonRequestBehavior.AllowGet);
+            #endregion
+        }
+        #endregion 啟用停用-迄
+
+        #region 進入新增-起
+        public ActionResult Create()
+        {
+            logging(FuncNameC, "進入功能-新增");
+            #region 參數宣告
+            AccountsService accountsService = new AccountsService();
+            AccountsModel accountsModel = new AccountsModel();
+            string fail = "";
+            #endregion
+
+            #region 流程	
+            
+            #endregion
+
+            return View("Create", accountsModel);
+        }
+
+        [HttpPost]
+        public ActionResult Create(AccountsModel accountsModel)
+        {
+            logging(FuncNameC, "新增");
+            #region 驗證
+            if (!ModelState.IsValid)
+            { return View("Create", accountsModel); }
+            #endregion
+            #region 參數宣告
+            AccountsService accountsService = new AccountsService();
+            string fail = "";
+            #endregion
+
+            #region 流程	
+            try
+            {
+                //送參數進入Service層做商業邏輯
+                accountsService.AddAccountsTable(accountsModel, UserName);
+            }
+            catch (Exception ex)
+            {
+                fail = "Fail," + ex.Message;
+                errLogging(FuncNameC, ex.ToString());
+            }
+            //成功的話返回主頁
+            if (string.IsNullOrEmpty(fail))
+            {
+                TempData["message"] = "新增成功";
+                return RedirectToAction("Maintain");
+            }
+            else
+            {
+                TempData["message"] = fail;
+            }
+
+            return View("Create", accountsModel);
+            #endregion
+        }
+        #endregion
+
+        #region 進入修改-起
+        [HttpPost]
+        public ActionResult Edit(string idx)
+        {
+            logging(FuncNameM, "進入功能-" + FuncNameM);
+            #region 參數宣告
+            AccountsService accountsService = new AccountsService();
+            AccountsModel accountsModel = new AccountsModel();
+            string fail = "";
+            #endregion
+
+            #region 流程	
+            try
+            {
+                //查詢有無資料
+                accountsModel = accountsService.QueryAccountInfo(idx);
+            }
+            catch (Exception ex)
+            {
+                fail = "Fail," + ex.Message;
+                errLogging(FuncNameM, ex.ToString());
+            }
+            #endregion
+
+            return View("Edit", accountsModel);
+        }
+
+        [HttpPost]
+        public ActionResult DoEdit(AccountsModel accountsModel)
+        {
+            logging(FuncNameM, "修改");
+            #region 驗證
+            if (!ModelState.IsValid)
+            { return View("Edit", accountsModel); }
+            #endregion
+            #region 參數宣告
+            AccountsService accountsService = new AccountsService();
+            string fail = "";
+            #endregion
+
+            #region 流程	
+            try
+            {
+                //送參數進入Service層做商業邏輯
+                accountsService.UpdateAccountsTable(accountsModel, UserName);
+            }
+            catch (Exception ex)
+            {
+                fail = "Fail," + ex.Message;
+                errLogging(FuncNameM, ex.ToString());
+            }
+            //成功的話返回主頁
+            if (string.IsNullOrEmpty(fail))
+            {
+                TempData["message"] = "修改成功";
+                return RedirectToAction("Maintain");
+            }
+            else
+            {
+                TempData["message"] = fail;
+            }
+
+            return View("Edit", accountsModel);
+            #endregion
+        }
+        #endregion
+
+
+
+
+
+
 
         #region 修改密碼-起
-        
+
         public ActionResult ChangePW(ChangePwViewModel changePwViewModel)
         {
             //判斷是否正確進入該頁面

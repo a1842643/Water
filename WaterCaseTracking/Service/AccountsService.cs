@@ -14,7 +14,7 @@ namespace WaterCaseTracking.Service
     public class AccountsService
     {
         #region 查詢 QuerySearchList()
-        public SearchListViewModel QuerySearchList(SearchInfoViewModel searchInfo)
+        public SearchListViewModel QuerySearchList(SearchInfoViewModel searchInfo, string roleName, string Organizer)
         {
             #region 參數宣告				
             SearchListViewModel searchList = new SearchListViewModel();
@@ -22,7 +22,7 @@ namespace WaterCaseTracking.Service
             #endregion
 
             #region 流程																
-            searchList = accountsDao.QuerySearchList(searchInfo); //將參數送入Dao層,組立SQL字串並連接資料庫
+            searchList = accountsDao.QuerySearchList(searchInfo, roleName, Organizer); //將參數送入Dao層,組立SQL字串並連接資料庫
 
             return searchList;
             #endregion
@@ -47,6 +47,19 @@ namespace WaterCaseTracking.Service
 
 
         #endregion
+        internal AccountsModel QueryAccountInfo(string AccountID)
+        {
+            #region 參數宣告				
+            AccountsModel accountsModel = new AccountsModel();
+            AccountsDao accountsDao = new AccountsDao();
+            #endregion
+
+            #region 流程																
+            accountsModel = accountsDao.QueryAccountInfo(AccountID); //將參數送入Dao層,組立SQL字串並連接資料庫
+
+            return accountsModel;
+            #endregion
+        }
 
         #region 修改密碼-起
         internal int ToChangePW(ChangePwViewModel changePwViewModel)
@@ -81,8 +94,49 @@ namespace WaterCaseTracking.Service
 
 
 
+
+        #endregion
+        #region 啟用/停用
+        internal void EnableAccount(string idx, string userName)
+        {
+            #region 參數宣告				
+            AccountsDao accountsDao = new AccountsDao();
+            AccountsModel accountsModel = new AccountsModel();
+            #endregion
+
+            #region 流程
+            //修改密碼
+            accountsDao.EnableAccount(idx, userName); //將參數送入Dao層,組立SQL字串並連接資料庫
+            #endregion
+        }
+
+        #endregion
+        #region 單筆修改
+        internal void UpdateAccountsTable(AccountsModel accountsModel, string userName)
+        {
+            #region 參數宣告				
+            AccountsDao accountsDao = new AccountsDao();
+            #endregion
+
+            #region 流程																
+            accountsDao.UpdateAccountsTable(accountsModel, userName);
+
+            #endregion
+        }
         #endregion
 
+        #region 單筆新增
+        internal void AddAccountsTable(AccountsModel accountsModel, string userName)
+        {
+            #region 參數宣告				
+            AccountsDao accountsDao = new AccountsDao();
+            #endregion
 
+            #region 流程																
+            accountsDao.AddAccountsTable(accountsModel, userName);
+
+            #endregion
+        }
+        #endregion
     }
 }

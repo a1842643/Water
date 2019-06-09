@@ -1,0 +1,113 @@
+﻿@model WaterCaseTracking.Models.AccountsModel
+
+@{
+    ViewBag.Title = "Edit";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<script>
+    //初始化
+    $.ajax({
+        type: 'POST',
+        data: '{}',
+        //async: false, //啟用同步請求
+        url: '@Url.Action("searchInitCM", "Accounts")',
+        contenType: "application/json; charset=utf-8",
+        dataType: "json",
+        success: function (result) {
+            //角色
+            var ddlRoleHtml = "<option value=''>全部</option>";
+            $.each(result.ddlRole.DropDownListLT, function (i, ddl) {
+                if ('@(Session["roleName"] as string)' == 'maintain') {
+                    if (ddl.Text == '一般使用者')
+                        ddlRoleHtml = '<option value="' + ddl.Values + '">' + ddl.Text + '</option>';
+                }
+                else {
+                    ddlRoleHtml += '<option value="' + ddl.Values + '">' + ddl.Text + '</option>';
+                }
+            });
+            $('#ddlRole').html(ddlRoleHtml);
+            $('#ddlRole').val('@Model.Role');
+            //科室下拉選單
+            var ddlOrganizer = "<option value=''>全部</option>";
+            $.each(result.ddlOrganizer.DropDownListLT, function (i, ddl) {
+                //判斷資料維護者或使用者就只能有自己科室
+                if ('@(Session["roleName"] as string)' == 'maintain' || '@(Session["roleName"] as string)' == 'user') {
+                    if (ddl.Values == '@(Session["Organizer"] as String)')
+                        ddlOrganizer = '<option value="' + ddl.Values + '">' + ddl.Text + '</option>';
+                }
+                else {
+                    ddlOrganizer += '<option value="' + ddl.Values + '">' + ddl.Text + '</option>';
+                }
+            });
+            $('#ddlOrganizer').html(ddlOrganizer);
+            $('#ddlOrganizer').val('@Model.Organizer');
+
+        }, fail: function () {
+            alert('匯入失敗!!');
+        }
+    })
+</script>
+
+@using (Html.BeginForm("DoEdit", "Accounts"))
+{
+    @*@Html.AntiForgeryToken()*@
+    <section class="content-header">
+        <h1>
+            帳號-修改
+        </h1>
+    </section>
+    <section class="content">
+        <div class="row">
+            <div class="col-xs-12">
+                <div class="box">
+                    <div class="box-body">
+                        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.AccountID, htmlAttributes: new { @class = "control-label col-md-2" })
+                            <div class="col-md-10">
+                                @Html.EditorFor(model => model.AccountID, new { htmlAttributes = new { @class = "form-control", @disabled = "disabled" } })
+                                <input type="hidden" name="AccountID" value="@Model.AccountID" />
+                                @*@Html.ValidationMessageFor(model => model.AccountID, "", new { @class = "text-danger" })*@
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.AccountName, htmlAttributes: new { @class = "control-label col-md-2" })
+                            <div class="col-md-10">
+                                @Html.EditorFor(model => model.AccountName, new { htmlAttributes = new { @class = "form-control" } })
+                                @Html.ValidationMessageFor(model => model.AccountName, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.Role, htmlAttributes: new { @class = "control-label col-md-2" })
+                            <div class="col-md-10">
+                                <select name="Role" id="ddlRole" class="form-control"></select>
+                                @Html.ValidationMessageFor(model => model.Role, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.Organizer, htmlAttributes: new { @class = "control-label col-md-2" })
+                            <div class="col-md-10">
+                                <select name="Organizer" id="ddlOrganizer" class="form-control"></select>
+                                @Html.ValidationMessageFor(model => model.Organizer, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+
+
+                        <div class="form-group">
+                            <div class="col-md-offset-2 col-md-10">
+                                <input type="submit" value="修改" class="btn btn-default" />
+                                @Html.ActionLink("返回", "Maintain", null, new { @class = "btn btn-default" })
+                            </div>
+                        </div>
+                        <input type="hidden" name="Types" value="0" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+}

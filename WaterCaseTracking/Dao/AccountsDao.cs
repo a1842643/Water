@@ -15,7 +15,7 @@ namespace WaterCaseTracking.Dao
     public class AccountsDao : _BaseDao
     {
         #region 查詢 QuerySearchList()
-        public SearchListViewModel QuerySearchList(SearchInfoViewModel searchInfo)
+        public SearchListViewModel QuerySearchList(SearchInfoViewModel searchInfo, string roleName, string Organizer)
         {
             //組立SQL字串並連接資料庫
             #region 參數告宣
@@ -35,7 +35,9 @@ namespace WaterCaseTracking.Dao
             _sqlStr.Append(@"select 
                                 AccountID                                             --帳號
                                 , AccountName                                         --姓名
+                                , Organizer                                         --科室
                                 , SC.ITEM_NAME as 'RoleName'                          --角色
+                                , IsEnable                                            --啟用停用
                                 ,CreateUserName                                       --新增人員 
                                 ,CreateDate                                           --新增時間
                                 ,UpdateUserName                                       --修改人員
@@ -59,6 +61,14 @@ namespace WaterCaseTracking.Dao
                 _sqlParams.Add("Role", searchInfo.ddlRole);
             }
 
+            //如果登入者角色是
+            if(roleName == "maintain")
+            {
+                _sqlParamStr.Append(" and Organizer = @Organizer ");
+                _sqlParams.Add("Organizer", Organizer);
+                _sqlParamStr.Append(" and Role = 'user' ");
+            }
+
             #region 條件、排序(起)
             _sqlStr.Append(_sqlParamStr);
             _sqlCountStr.Append(_sqlParamStr);
@@ -79,6 +89,8 @@ namespace WaterCaseTracking.Dao
             return result;
             #endregion
         }
+
+        
         #endregion
 
 
@@ -100,6 +112,7 @@ namespace WaterCaseTracking.Dao
                                 , Role                                              --角色
                                 , Organizer                                         --科室
                                 , IsDefault                                         --是否為預設密碼
+                                , IsEnable                                          --啟用停用
                                 , CreateUserName                                    --新增人員
                                 , CreateDate                                        --新增時間
                                 , UpdateUserName                                    --修改人員
@@ -117,7 +130,47 @@ namespace WaterCaseTracking.Dao
             return result;
             #endregion
         }
+
+        
         #endregion
+
+        #region 取得修改人員資訊
+        internal AccountsModel QueryAccountInfo(string AccountID)
+        {
+            //組立SQL字串並連接資料庫
+            #region 參數告宣
+            AccountsModel result = new AccountsModel();
+            #endregion
+
+            #region 流程
+
+            StringBuilder _sqlStr = new StringBuilder();
+            _sqlStr.Append(@"select 
+                                AccountID                                           --帳號
+                                , Password                                          --密碼
+                                , AccountName                                       --帳號名稱
+                                , Role                                              --角色
+                                , Organizer                                         --科室
+                                , IsDefault                                         --是否為預設密碼
+                                , IsEnable                                          --啟用停用
+                                , CreateUserName                                    --新增人員
+                                , CreateDate                                        --新增時間
+                                , UpdateUserName                                    --修改人員
+                                , UpdateDate                                        --修改時間
+                            from Accounts WHERE AccountID = @AccountID ");
+            _sqlParams = new Dapper.DynamicParameters();
+            _sqlParams.Add("AccountID", AccountID);
+
+            using (var cn = new SqlConnection(_dbConnPPP)) //連接資料庫
+            {
+                cn.Open();
+                result = cn.Query<AccountsModel>(_sqlStr.ToString(), _sqlParams).FirstOrDefault();
+            }
+            return result;
+            #endregion
+        }
+        #endregion
+
         #region 抓下拉選單(起)
         /// <summary>
         /// 抓地區別下拉選單
@@ -501,5 +554,129 @@ namespace WaterCaseTracking.Dao
             return result;
             #endregion
         }
+        #region 啟用/停用-起
+        internal int EnableAccount(string idx, string userName)
+        {
+            int ExecResult;
+            //組立SQL字串並連接資料庫
+            StringBuilder _sqlStr = new StringBuilder();
+            _sqlStr.Append(@"UPDATE Accounts SET                            
+                            IsEnable = case IsEnable when 1 then 0 else 1 end
+                            , UpdateUserName =@UpdateUserName            
+                            , UpdateDate = GetDate()                    
+                ");
+            _sqlStr.Append("WHERE AccountID = @AccountID ");
+
+            _sqlParams = new Dapper.DynamicParameters();
+            _sqlParams.Add("AccountID", idx);
+            _sqlParams.Add("UpdateUserName", userName);
+
+            try
+            {
+                using (var cn = new SqlConnection(_dbConnPPP))//連接資料庫
+                {
+                    cn.Open();
+                    ExecResult = cn.Execute(_sqlStr.ToString(), _sqlParams);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return ExecResult;
+        }
+        #endregion 啟用/停用-迄
+
+        #region 修改單筆資料
+        internal void UpdateAccountsTable(AccountsModel accountsModel, string userName)
+        {
+            //組立SQL字串並連接資料庫
+            StringBuilder _sqlStr = new StringBuilder();
+            _sqlStr.Append(@"UPDATE Accounts SET                            
+                            AccountName = @AccountName
+                            , Role = @Role
+                            , Organizer = @Organizer
+                            , UpdateUserName =@UpdateUserName            
+                            , UpdateDate = GetDate()                    
+                ");
+            _sqlStr.Append("WHERE AccountID = @AccountID ");
+
+            _sqlParams = new Dapper.DynamicParameters();
+            _sqlParams.Add("AccountID", accountsModel.AccountID);
+            _sqlParams.Add("AccountName", accountsModel.AccountName);
+            _sqlParams.Add("Role", accountsModel.Role);
+            _sqlParams.Add("Organizer", accountsModel.Organizer);
+            _sqlParams.Add("UpdateUserName", accountsModel.UpdateUserName);
+            _sqlParams.Add("UpdateUserName", userName);
+
+            try
+            {
+                using (var cn = new SqlConnection(_dbConnPPP))//連接資料庫
+                {
+                    cn.Open();
+                    cn.Execute(_sqlStr.ToString(), _sqlParams);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+        #endregion
+        #region 單筆新增
+        internal void AddAccountsTable(AccountsModel accountsModel, string userName)
+        {
+            //組立SQL字串並連接資料庫
+            StringBuilder _sqlStr = new StringBuilder();
+            _sqlStr.Append(@"Insert Into Accounts (
+                            AccountID                 
+                            , Password            
+                            , AccountName        
+                            , Role            
+                            , Organizer              
+                            , IsDefault                 
+                            , IsEnable                    
+                            , CreateUserName                  
+                            , CreateDate               
+                            , UpdateUserName                   
+                            , UpdateDate 
+                            )
+                            Values(     
+                            @AccountID                      
+                            , '12345678'  --目前寫死預設密碼                  
+                            , @AccountName                    
+                            , @Role                    
+                            , @Organizer                    
+                            , 1                    
+                            , 1                    
+                            , @CreateUserName                    
+                            , Getdate()                    
+                            , @UpdateUserName                    
+                            , Getdate()                     
+               ) ");
+            _sqlStr.Append("");
+
+            _sqlParams = new Dapper.DynamicParameters();
+            _sqlParams.Add("AccountID", accountsModel.AccountID);
+            _sqlParams.Add("AccountName", accountsModel.AccountName);
+            _sqlParams.Add("Role", accountsModel.Role);
+            _sqlParams.Add("Organizer", accountsModel.Organizer);
+            _sqlParams.Add("CreateUserName", userName);
+            _sqlParams.Add("UpdateUserName", userName);
+
+            try
+            {
+                using (var cn = new SqlConnection(_dbConnPPP))//連接資料庫
+                {
+                    cn.Open();
+                    cn.Execute(_sqlStr.ToString(), _sqlParams);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+        #endregion
     }
 }

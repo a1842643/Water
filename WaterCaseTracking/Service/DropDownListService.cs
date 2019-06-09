@@ -72,7 +72,7 @@ namespace WaterCaseTracking.Service
             #endregion
 
             #region 流程																
-            DropDownListViewModel ddlsStatus = sysCodeDao.getddlItem("Role");
+            DropDownListViewModel ddlsStatus = sysCodeDao.getddlItemValue("Roles");
 
             return ddlsStatus;
             #endregion

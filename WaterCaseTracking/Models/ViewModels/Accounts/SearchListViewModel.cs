@@ -26,6 +26,14 @@ namespace WaterCaseTracking.Models.ViewModels.Accounts
         /// </summary>
         public string RoleName { get; set; }
         /// <summary>
+        /// 科室
+        /// </summary>
+        public string Organizer { get; set; }
+        /// <summary>
+        /// 停用啟用
+        /// </summary>
+        public bool IsEnable { get; set; }
+        /// <summary>
         /// 新增人員
         /// </summary>
         public string CreateUserName { get; set; }

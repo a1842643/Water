@@ -8,5 +8,6 @@ namespace WaterCaseTracking.Models.ViewModels.Accounts
     public class SearchInitViewModel : _BaseRequestViewModel
     {
         public DropDownListViewModel ddlRole { get; set; }
+        public DropDownListViewModel ddlOrganizer { get; set; }
     }
 }

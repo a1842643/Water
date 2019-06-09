@@ -45,6 +45,34 @@ namespace WaterCaseTracking.Dao
             #endregion
         }
 
+        internal DropDownListViewModel getddlItemValue(string GroupCode)
+        {
+            //組立SQL字串並連接資料庫
+            #region 參數告宣
+            DropDownListViewModel result = new DropDownListViewModel();
+            #endregion
+
+            #region 流程
+
+            StringBuilder _sqlStr = new StringBuilder();
+            _sqlStr.Append(@"SELECT ITEM_CODE as 'Values', ITEM_NAME as 'Text'
+                             FROM Sys_Code 
+                             Where GROUP_CODE = @GROUP_CODE 
+                             Order by SORT ");
+            _sqlParams = new Dapper.DynamicParameters();
+
+            _sqlParams.Add("GROUP_CODE", GroupCode);
+
+            result.DropDownListLT = new List<DropDownListItem>();
+            using (var cn = new SqlConnection(_dbConnPPP)) //連接資料庫
+            {
+                cn.Open();
+                result.DropDownListLT = cn.Query<DropDownListItem>(_sqlStr.ToString(), _sqlParams).ToList();
+            }
+            return result;
+            #endregion
+        }
+
         #endregion 抓下拉選單(迄)
         #region 確認資料正確性
         internal bool CheckSysCode(string ITEM_NAME)

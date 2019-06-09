@@ -2101,6 +2101,9 @@
     <Content Include="Views\ProjectControll\Create0.cshtml" />
     <Content Include="Views\ProjectControll\Edit0.cshtml" />
     <Content Include="Views\ProjectControll\Maintain0.cshtml" />
+    <Content Include="Views\Accounts\Edit.cshtml" />
+    <Content Include="Views\Accounts\DoEdit.cshtml" />
+    <Content Include="Views\Accounts\Create.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
