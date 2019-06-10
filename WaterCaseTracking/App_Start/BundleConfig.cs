@@ -14,7 +14,8 @@ namespace WaterCaseTracking
                         "~/Content/dist/js/adminlte.min.js",
                         "~/Content/datatables.net/js/jquery.dataTables.min.js",
                         "~/Content/datatables.net-bs/js/dataTables.bootstrap.min.js",
-                        "~/Content/jquery-slimscroll/jquery.slimscroll.min.js"
+                        "~/Content/jquery-slimscroll/jquery.slimscroll.min.js",
+                        "~/Scripts/ckeditor/ckeditor.js"
                         ));
 
             bundles.Add(new StyleBundle("~/Content/css").Include(
