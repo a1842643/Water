@@ -111,6 +111,23 @@ namespace WaterCaseTracking.Service
         }
 
         #endregion
+        #region 重設回預設密碼
+        internal void pwToDefault(string idx, string userName)
+        {
+            #region 參數宣告				
+            AccountsDao accountsDao = new AccountsDao();
+            AccountsModel accountsModel = new AccountsModel();
+            #endregion
+
+            #region 流程
+            //修改密碼
+            accountsDao.pwToDefault(idx, userName); //將參數送入Dao層,組立SQL字串並連接資料庫
+            #endregion
+        }
+
+        #endregion
+
+
         #region 單筆修改
         internal void UpdateAccountsTable(AccountsModel accountsModel, string userName)
         {
@@ -137,6 +154,8 @@ namespace WaterCaseTracking.Service
 
             #endregion
         }
+
+        
         #endregion
     }
 }

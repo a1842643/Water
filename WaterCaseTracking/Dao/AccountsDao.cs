@@ -14,6 +14,7 @@ namespace WaterCaseTracking.Dao
 {
     public class AccountsDao : _BaseDao
     {
+        string DefaultPW = "12345678";
         #region 查詢 QuerySearchList()
         public SearchListViewModel QuerySearchList(SearchInfoViewModel searchInfo, string roleName, string Organizer)
         {
@@ -587,6 +588,41 @@ namespace WaterCaseTracking.Dao
         }
         #endregion 啟用/停用-迄
 
+        #region 重設回預設密碼
+        internal int pwToDefault(string idx, string userName)
+        {
+            int ExecResult;
+            //組立SQL字串並連接資料庫
+            StringBuilder _sqlStr = new StringBuilder();
+            _sqlStr.Append(@"UPDATE Accounts SET                            
+                            IsDefault = 1
+                            , Password = @DefaultPW
+                            , UpdateUserName =@UpdateUserName            
+                            , UpdateDate = GetDate()                    
+                ");
+            _sqlStr.Append("WHERE AccountID = @AccountID ");
+
+            _sqlParams = new Dapper.DynamicParameters();
+            _sqlParams.Add("DefaultPW", DefaultPW);
+            _sqlParams.Add("AccountID", idx);
+            _sqlParams.Add("UpdateUserName", userName);
+
+            try
+            {
+                using (var cn = new SqlConnection(_dbConnPPP))//連接資料庫
+                {
+                    cn.Open();
+                    ExecResult = cn.Execute(_sqlStr.ToString(), _sqlParams);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return ExecResult;
+        }
+        #endregion 重設回預設密碼-迄
+
         #region 修改單筆資料
         internal void UpdateAccountsTable(AccountsModel accountsModel, string userName)
         {
@@ -643,7 +679,7 @@ namespace WaterCaseTracking.Dao
                             )
                             Values(     
                             @AccountID                      
-                            , '12345678'  --目前寫死預設密碼                  
+                            , @DefaultPW  --目前寫死預設密碼                  
                             , @AccountName                    
                             , @Role                    
                             , @Organizer                    
@@ -658,6 +694,7 @@ namespace WaterCaseTracking.Dao
 
             _sqlParams = new Dapper.DynamicParameters();
             _sqlParams.Add("AccountID", accountsModel.AccountID);
+            _sqlParams.Add("DefaultPW", DefaultPW);
             _sqlParams.Add("AccountName", accountsModel.AccountName);
             _sqlParams.Add("Role", accountsModel.Role);
             _sqlParams.Add("Organizer", accountsModel.Organizer);

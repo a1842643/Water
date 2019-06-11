@@ -78,6 +78,22 @@
             })
         if (ActionName == 'Create')
             document.location.replace('@Url.Action("Create", "Accounts")');
+        if (ActionName == 'pwToDefault')
+            if (confirm('確定重設回預設密碼?')) {
+                $.ajax({
+                    type: 'POST',
+                    data: { 'idx': idx },
+                    async: false, //啟用同步請求
+                    url: '@Url.Action("pwToDefault", "Accounts")',
+                    contenType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function (result) {
+                        alert('密碼重設成功');
+                    }, fail: function () {
+                        alert('密碼重設成功');
+                    }
+                })
+            }
         if (ActionName == 'Delete') {
             if (confirm(confirmTxt)) {
                 $.ajax({
@@ -150,8 +166,10 @@
                 { "title": "修改人員", "data": "UpdateUserName" },
                 { "title": "修改時間", "data": "UpdateDate" },
                 {
-                    "title": "操作", "orderable": false, render: function (data, type, row) {
-                        var button = '<form action="/Accounts/Edit" method="post"><input type="submit" value="修改" class="btn btn-primary btn-flat"><input name="idx" type="hidden" value="' + row.AccountID + '">';
+                    "title": "操作", "width": 350, "orderable": false, render: function (data, type, row) {
+                        var button = '<form action="/Accounts/Edit" method="post"><input type="submit" value="修改" class="btn btn-primary btn-flat"><input name="idx" type="hidden" value="' + row.AccountID + '/">';
+                        button += '　<button type="button" class="btn btn-primary btn-flat" onclick="DoAction(\'pwToDefault\',\'' + row.AccountID + '\',null);">重設回預設密碼</button>';
+                        //button += '<form action="/Accounts/pwToDefault" method="post"><input type="submit" value="重設回預設密碼" onclick="return confirm("確定重設回預設密碼?")" class="btn btn-primary btn-flat"><input name="idx" type="hidden" value="' + row.AccountID + '">';
                         if (row.IsEnable) {
                             button += '　<button type="button" id="btnEnable' + row.AccountID + '" class="btn btn-primary btn-danger" onclick="DoAction(\'Delete\',\'' + row.AccountID + '\',' + row.IsEnable + ');">停用該帳號</button>';
                         }
@@ -166,7 +184,7 @@
             "columnDefs": [
                 {
                     "targets": "_all", //针对所有列
-                    "render": "$.fn.dataTable.render.text()", //都使用render函数编码
+                    "render": $.fn.dataTable.render.text(), //都使用render函数编码
                 }
             ],
             "fnServerData": function (sSource, aoData, fnCallback) {

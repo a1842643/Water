@@ -62,6 +62,7 @@
     function Reset() {
         $('#txtProjectName').val('');
         $('#ddlOrganizer').val('');
+        $('#files').val('');
     }
 
     //匯出範例檔
@@ -207,6 +208,12 @@
                         return button;
                     }
                 }
+            ],
+            "columnDefs": [
+               {
+                   "targets": "_all", //针对所有列
+                   "render": $.fn.dataTable.render.text(), //都使用render函数编码
+               }
             ],
             "fnServerData": function (sSource, aoData, fnCallback) {
                 $.ajax({

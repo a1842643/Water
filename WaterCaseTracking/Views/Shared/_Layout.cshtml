@@ -230,6 +230,9 @@
                             <li>
                                 <a><i class="fa fa-address-book-o"></i> 登入人員: @sUserModel (@sUser)</a>
                             </li>
+                            <li>
+                                <a id="modifyPW" href="#"><i class="fa fa-gears"></i> 修改密碼</a>
+                            </li>
                             
                             <li>
                                 <a id="exit" href="#"><i class="fa fa-gears"></i> 登出帳號</a>
@@ -309,5 +312,8 @@
         if (confirm("您正在離開營業單位營運資訊管理系統。\n按下確定後登出。")) {
             document.location.replace('@Url.Action("login", "Home")');
         }
+    });
+    $('#modifyPW').on('click', function () {
+            document.location.replace('@Url.Action("ChangePW", "Home")');
     });
 </script>

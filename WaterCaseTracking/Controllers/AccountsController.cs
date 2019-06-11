@@ -167,12 +167,20 @@ namespace WaterCaseTracking.Controllers
             #endregion
             #region 參數宣告
             AccountsService accountsService = new AccountsService();
+            AccountsModel checkAccountID = new AccountsModel();
             string fail = "";
             #endregion
 
             #region 流程	
             try
             {
+                //判斷是否已有帳號
+                checkAccountID = accountsService.QueryAccountInfo(accountsModel.AccountID);
+                if(checkAccountID != null)
+                {
+                    TempData["message"] = "該帳號已註冊，請使用其他帳號";
+                    return View("Create", accountsModel);
+                }
                 //送參數進入Service層做商業邏輯
                 accountsService.AddAccountsTable(accountsModel, UserName);
             }
@@ -264,7 +272,33 @@ namespace WaterCaseTracking.Controllers
         }
         #endregion
 
+        #region 重設回預設密碼-起
+        [HttpPost]
+        public ActionResult pwToDefault(string idx)
+        {
+            logging(FuncName, "啟用停用");
+            #region 參數宣告
+            AccountsService accountsService = new AccountsService();
+            string fail = "";
+            #endregion
 
+            #region 流程	
+            try
+            {
+                //送參數進入Service層做商業邏輯
+                accountsService.pwToDefault(idx, UserName);
+            }
+            catch (Exception ex)
+            {
+                fail = "Fail," + ex.Message;
+                errLogging(FuncName, ex.ToString());
+            }
+
+
+            return Json("", JsonRequestBehavior.AllowGet);
+            #endregion
+        }
+        #endregion
 
 
 
@@ -374,6 +408,8 @@ namespace WaterCaseTracking.Controllers
             Session["UserID"] = accountsModel.AccountID;
             //登入者姓名
             Session["UserName"] = accountsModel.AccountName;
+            //登入者科室
+            Session["Organizer"] = accountsModel.Organizer;
             //登入者角色
             Session["roleName"] = accountsModel.Role;
             //角色代碼清單
@@ -402,11 +438,15 @@ namespace WaterCaseTracking.Controllers
             //Response.Cookies.Clear();
             Response.Cookies[FormsAuthentication.FormsCookieName].Value = encryptedTicket;
 
+            TempData["message"] = "密碼修改成功";
             return RedirectToAction("Maintain0", "MCAsk");
             #endregion
 
         }
         #endregion 修改密碼-迄
+
+        
+
         #region 取得功能列表 GetOperating()
         public string GetOperating(string searchInfo)
         {

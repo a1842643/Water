@@ -247,6 +247,22 @@ namespace WaterCaseTracking.Controllers
         #endregion
 
         #region 取得角色下拉選單清單
+        public ActionResult ChangePW()
+        {
+            #region 參數宣告
+            Models.ViewModels.Accounts.ChangePwViewModel changePwViewModel = new Models.ViewModels.Accounts.ChangePwViewModel();
+            #endregion
+
+            #region 流程	
+
+            changePwViewModel.AccountID = UserID;
+            changePwViewModel.UpdateUserName = UserName;
+            return View(@"~\Views\Accounts\ChangePW.cshtml", changePwViewModel);
+            #endregion
+        }
+        #endregion
+
+        #region 取得角色下拉選單清單
         public ActionResult roleList()
         {
             #region 參數宣告
