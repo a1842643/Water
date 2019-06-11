@@ -157,7 +157,14 @@
             //MenuOperating();
             SetMenu('@Session["Menu"]');
             @*手機模式不擋Menu*@
-            
+
+            //排除中風險
+            if($_SERVER['REMOTE_ADDR'] !== $_SESSION['LAST_REMOTE_ADDR'] || $_SERVER['HTTP_USER_AGENT'] !== $_SESSION['LAST_USER_AGENT']) {
+                session_destroy();
+            }
+            session_regenerate_id();
+            $_SESSION['LAST_REMOTE_ADDR'] = $_SERVER['REMOTE_ADDR'];
+            $_SESSION['LAST_USER_AGENT'] = $_SERVER['HTTP_USER_AGENT'];
         });
 
         //function MenuOperating() {
@@ -178,6 +185,7 @@
                 $('#' + menu[index]).show();
             });
         }
+
     </script>
     <style>
         .vertical-align {
@@ -200,7 +208,7 @@
         <!-- Main Header -->
         <header class="main-header">
             <!-- Logo -->
-            <a href="/" class="logo">
+            <a href="@Url.Content("~/MCAsk/Maintain0")" class="logo">
                 <!-- mini logo for sidebar mini 50x50 pixels -->
                 <span class="logo-mini"><b></b></span>
                 <!-- logo for regular state and mobile devices -->
