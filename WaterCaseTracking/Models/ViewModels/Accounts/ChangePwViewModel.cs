@@ -12,7 +12,7 @@ namespace WaterCaseTracking.Models.ViewModels.Accounts
         [MinLength(8)]
         [MaxLength(20)]
         [RegularExpression(@"(?=.{8,})((?=.*\d)(?=.*[a-z])(?=.*[A-Z])|(?=.*\d)(?=.*[a-zA-Z])(?=.*[\W_])|(?=.*[a-z])(?=.*[A-Z])(?=.*[\W_])).*",ErrorMessage = "密碼需包含英文大寫小寫、特殊符號或數字三種以上")]
-        public string password1 { get; set; }
+        public string alienSecurity1 { get; set; }
         public string UpdateUserName { get; set; }
     }
 }

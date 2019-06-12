@@ -35,7 +35,7 @@
                     <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
                 </div>
                 <div class="form-group has-feedback">
-                    <input id="txtPassword" type="password" name="txtPassword" class="form-control" placeholder="密碼">
+                    <input id="txtAlienSecurity" type="alienSecurity" name="txtAlienSecurity" class="form-control" placeholder="密碼">
                     <span class="glyphicon glyphicon-lock form-control-feedback"></span>
                 </div>
                 <div class="row">
@@ -84,14 +84,14 @@
     });
     $('#login_btn2').on('click', function () {
 
-        if ($('#txtAccount').val() == '' || $('#txtPassword').val() == '') {
+        if ($('#txtAccount').val() == '' || $('#txtAlienSecurity').val() == '') {
             alert('請輸入帳號和密碼');
             return;
         }
 
         var AccountLogin = {
             id: $('#txtAccount').val(),
-            password: $('#txtPassword').val()
+            alienSecurity: $('#txtAlienSecurity').val()
         };
         //document.location.replace('@Url.Action("TEST", "Home")');
         $.ajax({

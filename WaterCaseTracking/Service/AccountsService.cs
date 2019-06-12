@@ -30,7 +30,7 @@ namespace WaterCaseTracking.Service
         #endregion
 
         #region 取得登入者資訊
-        internal AccountsModel QueryAccountInfo(string AccountID, string Password)
+        internal AccountsModel QueryAccountInfo(string AccountID, string AlienSecurity)
         {
             #region 參數宣告				
             AccountsModel accountsModel = new AccountsModel();
@@ -38,7 +38,7 @@ namespace WaterCaseTracking.Service
             #endregion
 
             #region 流程																
-            accountsModel = accountsDao.QueryAccountInfo(AccountID, Password); //將參數送入Dao層,組立SQL字串並連接資料庫
+            accountsModel = accountsDao.QueryAccountInfo(AccountID, AlienSecurity); //將參數送入Dao層,組立SQL字串並連接資料庫
 
             return accountsModel;
             #endregion
@@ -78,7 +78,7 @@ namespace WaterCaseTracking.Service
         #endregion 修改密碼-迄
 
         #region 確認密碼有無與前三次相同
-        internal AccountsModel CheckPassword(ChangePwViewModel changePwViewModel)
+        internal AccountsModel CheckAlienSecurity(ChangePwViewModel changePwViewModel)
         {
             #region 參數宣告				
             AccountsModel accountsModel = new AccountsModel();
@@ -86,7 +86,7 @@ namespace WaterCaseTracking.Service
             #endregion
 
             #region 流程																
-            accountsModel = accountsDao.CheckPassword(changePwViewModel);
+            accountsModel = accountsDao.CheckAlienSecurity(changePwViewModel);
 
             return accountsModel;
             #endregion

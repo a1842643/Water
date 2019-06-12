@@ -12,14 +12,14 @@
     <title>修改密碼</title>
     <script>
         $(document).ready(function () {
-            $("#oldpassword").blur(function () {
-                var param = $("#oldpassword").val();
+            $("#oldalienSecurity").blur(function () {
+                var param = $("#oldalienSecurity").val();
                 $.ajax({
                     type: 'POST',
-                    url: '@Url.Action("CheckOldpassword", "Accounts")',
+                    url: '@Url.Action("CheckOldalienSecurity", "Accounts")',
                     data: {
                         AccountID: '@Model.AccountID',
-                        oldpassword: param
+                        oldalienSecurity: param
                     },
                     contenType: "application/json; charset=utf-8",
                     dataType: "json",
@@ -33,25 +33,25 @@
                     }
                 });
             });
-            $("#password1").blur(function () {
-                var num = $("#password1").val().length;
+            $("#alienSecurity1").blur(function () {
+                var num = $("#alienSecurity1").val().length;
                 if (num < 8) {
                     $("#tip2").html("<font color=\"red\" size=\"2\">太短</font>");
                 }
                 else if (num > 18) {
                     $("#tip2").html("<font color=\"red\" size=\"2\">太長</font>");
                 }
-                else if ($("#password1").val() == $("#oldpassword").val()) {
+                else if ($("#alienSecurity1").val() == $("#oldalienSecurity").val()) {
                     $("#tip2").html("<font color=\"green\" size=\"2\">新密碼不得與原密碼相同</font>");
                 }
                 else {
                     $("#tip2").html("<font color=\"green\" size=\"2\">通過</font>");
                 }
             });
-            $("#password2").blur(function () {
-                var tmp = $("#password1").val();
-                var num = $("#password2").val().length;
-                if ($("#password2").val() != tmp) {
+            $("#alienSecurity2").blur(function () {
+                var tmp = $("#alienSecurity1").val();
+                var num = $("#alienSecurity2").val().length;
+                if ($("#alienSecurity2").val() != tmp) {
                     $("#tip3").html("<font color=\"red\" size=\"2\">第二次輸入的新密碼必須與第一次相同</font>");
                 }
                 else {
@@ -66,11 +66,11 @@
         });
         function ToChangePW() {
             var flag = true;
-            var old = $("#oldpassword").val();
-            var pass = $("#password1").val();
-            var pass2 = $("#password2").val();
-            var num1 = $("#password1").val().length;
-            var num2 = $("#password2").val().length;
+            var old = $("#oldalienSecurity").val();
+            var pass = $("#alienSecurity1").val();
+            var pass2 = $("#alienSecurity2").val();
+            var num1 = $("#alienSecurity1").val().length;
+            var num2 = $("#alienSecurity2").val().length;
             if (num1 != num2 || num1 < 8 || num2 < 8 || num1 > 20 || num2 > 20 || pass != pass2) {
                 flag = false;
             }
@@ -94,7 +94,7 @@
                         <tr>
                             <td class='form-label'>原密碼 :　　　　　　　　　</td>
                             <td class='form-input'>
-                                <input type='password' id="oldpassword" name="oldpassword" />
+                                <input type='password' id="oldalienSecurity" name="oldalienSecurity" />
                             </td>
                             <td>
                                 <div style="display: inline" id="tip1"></div>
@@ -103,18 +103,18 @@
                         <tr>
                             <td class='form-label'>新密碼 :　　　　　　　　　</td>
                             <td class='form-input'>
-                                <input type='password' id="password1" name="password1" placeholder="長度 8-20" />
+                                <input type='password' id="alienSecurity1" name="alienSecurity1" placeholder="長度 8-20" />
                             </td>
                             <td>
                                 <div style="display: inline" id="tip2">
-                                @Html.ValidationMessageFor(model => model.password1, "", new { @class = "text-danger" })
+                                @Html.ValidationMessageFor(model => model.alienSecurity1, "", new { @class = "text-danger" })
                                 </div>
                             </td>
                         </tr>
                         <tr>
                             <td class='form-label'>再輸入一次新密碼 :　　　　</td>
                             <td class='form-input'>
-                                <input type='password' id="password2" name="password2" placeholder="必須與第一次相同" />
+                                <input type='password' id="alienSecurity2" name="alienSecurity2" placeholder="必須與第一次相同" />
                             </td>
                             <td>
                                 <div style="display: inline" id="tip3">

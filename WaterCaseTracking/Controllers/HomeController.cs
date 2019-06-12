@@ -83,14 +83,14 @@ namespace WaterCaseTracking.Controllers
 
         [HttpPost]
         [AllowAnonymous]
-        public ActionResult login(string txtAccount, string txtPassword)
+        public ActionResult login(string txtAccount, string txtAlienSecurity)
         {
-            if (string.IsNullOrEmpty(txtAccount) || string.IsNullOrEmpty(txtPassword))
+            if (string.IsNullOrEmpty(txtAccount) || string.IsNullOrEmpty(txtAlienSecurity))
             {
                 TempData["loginMsg"] = "請填帳號及密碼";
                 return View();
             }
-            if (txtPassword.Length < 0)
+            if (txtAlienSecurity.Length < 0)
             {
                 TempData["loginMsg"] = "密碼需8個字以上";
                 return View();
@@ -115,7 +115,7 @@ namespace WaterCaseTracking.Controllers
                 }
             }
 
-            accountsModel = homeService.QueryAccountInfo(txtAccount, txtPassword);
+            accountsModel = homeService.QueryAccountInfo(txtAccount, txtAlienSecurity);
             if (accountsModel == null)
             {
                 TempData["loginMsg"] = "帳號或密碼錯誤，請重新輸入";

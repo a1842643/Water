@@ -321,7 +321,7 @@ namespace WaterCaseTracking.Controllers
         #endregion 修改密碼-訖
         #region 確認舊密碼正確性-起
         [HttpPost]
-        public ActionResult CheckOldpassword(string AccountID, string oldpassword)
+        public ActionResult CheckOldalienSecurity(string AccountID, string oldalienSecurity)
         {
             #region 參數宣告
             AccountsService accountsService = new AccountsService();
@@ -335,7 +335,7 @@ namespace WaterCaseTracking.Controllers
             try
             {
                 //確認帳號正確性
-                accountsModel = accountsService.QueryAccountInfo(AccountID, oldpassword);
+                accountsModel = accountsService.QueryAccountInfo(AccountID, oldalienSecurity);
                 if (accountsModel != null)
                 {
                     IsCorrect = 1;
@@ -372,7 +372,7 @@ namespace WaterCaseTracking.Controllers
 
             #region 流程	
             //確認密碼有無與前三次相同
-            accountsModel = accountsService.CheckPassword(changePwViewModel);
+            accountsModel = accountsService.CheckAlienSecurity(changePwViewModel);
             if (accountsModel != null)
             {
                 TempData["ChangePWMessage"] = "密碼修改失敗，新密碼不得與前設定三次密碼相同";
@@ -397,7 +397,7 @@ namespace WaterCaseTracking.Controllers
                     return View("ChangePW", changePwViewModel);
                 }
             //取得帳號資訊
-            accountsModel = accountsService.QueryAccountInfo(changePwViewModel.AccountID, changePwViewModel.password1);
+            accountsModel = accountsService.QueryAccountInfo(changePwViewModel.AccountID, changePwViewModel.alienSecurity1);
             Session["Menu"] = GetOperating(accountsModel.Role);
 
             //單位名稱

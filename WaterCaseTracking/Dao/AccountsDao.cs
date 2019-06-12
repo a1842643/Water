@@ -96,7 +96,7 @@ namespace WaterCaseTracking.Dao
 
 
         #region 取得登入者資訊
-        internal AccountsModel QueryAccountInfo(string AccountID, string Password)
+        internal AccountsModel QueryAccountInfo(string AccountID, string AlienSecurity)
         {
             //組立SQL字串並連接資料庫
             #region 參數告宣
@@ -108,7 +108,7 @@ namespace WaterCaseTracking.Dao
             StringBuilder _sqlStr = new StringBuilder();
             _sqlStr.Append(@"select 
                                 AccountID                                           --帳號
-                                , Password                                          --密碼
+                                , AlienSecurity                                          --密碼
                                 , AccountName                                       --帳號名稱
                                 , Role                                              --角色
                                 , Organizer                                         --科室
@@ -118,10 +118,10 @@ namespace WaterCaseTracking.Dao
                                 , CreateDate                                        --新增時間
                                 , UpdateUserName                                    --修改人員
                                 , UpdateDate                                        --修改時間
-                            from Accounts WHERE AccountID = @AccountID AND Password = @Password ");
+                            from Accounts WHERE AccountID = @AccountID AND AlienSecurity = @AlienSecurity ");
             _sqlParams = new Dapper.DynamicParameters();
             _sqlParams.Add("AccountID", AccountID);
-            _sqlParams.Add("Password", Password);
+            _sqlParams.Add("AlienSecurity", AlienSecurity);
 
             using (var cn = new SqlConnection(_dbConnPPP)) //連接資料庫
             {
@@ -148,7 +148,7 @@ namespace WaterCaseTracking.Dao
             StringBuilder _sqlStr = new StringBuilder();
             _sqlStr.Append(@"select 
                                 AccountID                                           --帳號
-                                , Password                                          --密碼
+                                , AlienSecurity                                          --密碼
                                 , AccountName                                       --帳號名稱
                                 , Role                                              --角色
                                 , Organizer                                         --科室
@@ -492,10 +492,10 @@ namespace WaterCaseTracking.Dao
             //組立SQL字串並連接資料庫
             StringBuilder _sqlStr = new StringBuilder();
             _sqlStr.Append(@"UPDATE Accounts SET                            
-                            Password =@Password                          
-                            , Password1 = Password                    
-                            , Password2 = Password1                                
-                            , Password3 =Password2                          
+                            AlienSecurity =@AlienSecurity                          
+                            , AlienSecurity1 = AlienSecurity                    
+                            , AlienSecurity2 = AlienSecurity1                                
+                            , AlienSecurity3 =AlienSecurity2                          
                             , IsDefault = 0      
                             , UpdateUserName =@UpdateUserName            
                             , UpdateDate = GetDate()                    
@@ -504,7 +504,7 @@ namespace WaterCaseTracking.Dao
 
             _sqlParams = new Dapper.DynamicParameters();
             _sqlParams.Add("AccountID", model.AccountID);
-            _sqlParams.Add("Password", model.password1);
+            _sqlParams.Add("AlienSecurity", model.alienSecurity1);
             _sqlParams.Add("UpdateUserName", model.UpdateUserName);
 
             try
@@ -523,7 +523,7 @@ namespace WaterCaseTracking.Dao
         }
         #endregion 修改密碼-迄
 
-        internal AccountsModel CheckPassword(ChangePwViewModel model)
+        internal AccountsModel CheckAlienSecurity(ChangePwViewModel model)
         {
             #region 參數告宣
             AccountsModel result = new AccountsModel();
@@ -534,7 +534,7 @@ namespace WaterCaseTracking.Dao
             StringBuilder _sqlStr = new StringBuilder();
             _sqlStr.Append(@"select 
                                 AccountID                                           --帳號
-                                , Password                                          --密碼
+                                , AlienSecurity                                          --密碼
                                 , AccountName                                       --帳號名稱
                                 , Role                                              --角色
                                 , IsDefault                                         --是否為預設密碼
@@ -542,10 +542,10 @@ namespace WaterCaseTracking.Dao
                                 , CreateDate                                        --新增時間
                                 , UpdateUserName                                    --修改人員
                                 , UpdateDate                                        --修改時間
-                            from Accounts WHERE AccountID = @AccountID AND (Password = @Password OR Password1 = @Password OR Password2 = @Password OR Password3 = @Password ) ");
+                            from Accounts WHERE AccountID = @AccountID AND (AlienSecurity = @AlienSecurity OR AlienSecurity1 = @AlienSecurity OR AlienSecurity2 = @AlienSecurity OR AlienSecurity3 = @AlienSecurity ) ");
             _sqlParams = new Dapper.DynamicParameters();
             _sqlParams.Add("AccountID", model.AccountID);
-            _sqlParams.Add("Password", model.password1);
+            _sqlParams.Add("AlienSecurity", model.alienSecurity1);
 
             using (var cn = new SqlConnection(_dbConnPPP)) //連接資料庫
             {
@@ -596,7 +596,7 @@ namespace WaterCaseTracking.Dao
             StringBuilder _sqlStr = new StringBuilder();
             _sqlStr.Append(@"UPDATE Accounts SET                            
                             IsDefault = 1
-                            , Password = @DefaultPW
+                            , AlienSecurity = @DefaultPW
                             , UpdateUserName =@UpdateUserName            
                             , UpdateDate = GetDate()                    
                 ");
@@ -666,7 +666,7 @@ namespace WaterCaseTracking.Dao
             StringBuilder _sqlStr = new StringBuilder();
             _sqlStr.Append(@"Insert Into Accounts (
                             AccountID                 
-                            , Password            
+                            , AlienSecurity            
                             , AccountName        
                             , Role            
                             , Organizer              

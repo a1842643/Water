@@ -13,7 +13,7 @@ namespace WaterCaseTracking.Models
         [MaxLength(20)]
         [DisplayName("帳號")]
         public string AccountID { get; set; }
-        public string Password { get; set; }
+        public string AlienSecurity { get; set; }
         [Required]
         [MaxLength(100)]
         [DisplayName("帳號姓名")]
