@@ -54,7 +54,7 @@
 
     //重置查詢條件
     function Reset() {
-        $('#txtAccountName').val('');
+        $('#txtSecurityMena').val('');
         $('#ddlRole').val('');
     }
 
@@ -153,7 +153,7 @@
             "sAjaxSource": "GetoTable",
             "deferLoading": 0,
             "fnServerParams": function (aoData) {
-                aoData.push({ "name": "txtAccountName", "value": $('#txtAccountName').val() });
+                aoData.push({ "name": "txtSecurityMena", "value": $('#txtSecurityMena').val() });
                 aoData.push({ "name": "ddlRole", "value": $('#ddlRole').val() });
             },
             "columns": [
@@ -218,7 +218,7 @@
                     <div class="row vertical-align">
                         <div class="col-xs-auto">姓名:</div>
                         <div class="col-xs-2">
-                            <input type="text" id="txtAccountName" />
+                            <input type="text" id="txtSecurityMena" />
                         </div>
                         <div class="col-xs-auto">角色:</div>
                         <div class="col-xs-2">

@@ -28,12 +28,12 @@ namespace WaterCaseTracking.Dao
             StringBuilder _sqlCountStr = new StringBuilder();
             _sqlCountStr.Append("select count(1) from Logg WHERE 1 = 1 ");
             _sqlStr.Append(@"  SELECT 
-                                       ID									   --流水號
-                                      ,UserID								   --操作員ID
+                                      UserID								   --操作員ID
                                       ,UserName						           --操作員Name
                                       ,FuncName						           --動作名稱
                                       ,Status								   --狀態
                                       ,Message						           --內容
+                                      ,ID									   --流水號
                                       ,CONVERT(varchar(100), logged, 121) as   logged    --紀錄時間
                                   FROM Logg WHERE 1 = 1 ");
             //,CONVERT(varchar(100), logged, 121)--紀錄時間

@@ -50,10 +50,10 @@ namespace WaterCaseTracking.Dao
 
             _sqlParams = new Dapper.DynamicParameters();
             //姓名
-            if (!string.IsNullOrEmpty(searchInfo.txtAccountName))
+            if (!string.IsNullOrEmpty(searchInfo.txtSecurityMena))
             {
                 _sqlParamStr.Append(" and AccountName like @AccountName ");
-                _sqlParams.Add("AccountName", "%" + searchInfo.txtAccountName + "%");
+                _sqlParams.Add("AccountName", "%" + searchInfo.txtSecurityMena + "%");
             }
             //角色
             if (!string.IsNullOrEmpty(searchInfo.ddlRole))
