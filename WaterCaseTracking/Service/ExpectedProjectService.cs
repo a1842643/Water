@@ -40,6 +40,34 @@ namespace WaterCaseTracking.Service
 
             #region 流程																
             dt = expectedProjectDao.getExportData(exportViewModel, UserName, roleName, Organizer); //將參數送入Dao層,組立SQL字串並連接資料庫
+            if (dt.Rows.Count == 0)
+            {
+                foreach (DataColumn col in dt.Columns)
+                {
+                    col.AllowDBNull = true;
+                }
+                DataRow row = dt.NewRow();
+                dt.Rows.Add(row);
+                //dt = new DataTable();
+                //dt.Columns.Add("項次(不可修改，若要新增資料則留空白)");
+                //dt.Columns.Add("工程名稱");
+                //dt.Columns.Add("成案預計完成日期");
+                //dt.Columns.Add("成案實際完成日期");
+                //dt.Columns.Add("規劃預計完成日期");
+                //dt.Columns.Add("規劃實際完成日期");
+                //dt.Columns.Add("基本設計預計完成日期");
+                //dt.Columns.Add("基本設計實際完成日期");
+                //dt.Columns.Add("細部設計預計完成日期");
+                //dt.Columns.Add("細部設計實際完成日期");
+                //dt.Columns.Add("上網發包預計完成日期");
+                //dt.Columns.Add("上網發包實際完成日期");
+                //dt.Columns.Add("評選預計完成日期");
+                //dt.Columns.Add("評選實際完成日期");
+                //dt.Columns.Add("決標時間預計完成日期");
+                //dt.Columns.Add("決標時間實際完成日期");
+                //dt.Columns.Add("承辦單位(若角色是一般使用者或資料維護者，科室預設自己的科室)");
+                //dt.Columns.Add("承辦人員");
+            }
 
             return dt;
             #endregion

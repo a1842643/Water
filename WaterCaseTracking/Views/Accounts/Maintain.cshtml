@@ -166,16 +166,16 @@
                 { "title": "修改人員", "data": "UpdateUserName" },
                 { "title": "修改時間", "data": "UpdateDate" },
                 {
-                    "title": "操作", "width": 350, "orderable": false, render: function (data, type, row) {
-                        var button = '<form action="/Accounts/Edit" method="post"><input type="submit" value="修改" class="btn btn-primary btn-flat"><input name="idx" type="hidden" value="' + row.AccountID + '/">';
-                        button += '　<button type="button" class="btn btn-primary btn-flat" onclick="DoAction(\'pwToDefault\',\'' + row.AccountID + '\',null);">重設回預設密碼</button>';
-                        //button += '<form action="/Accounts/pwToDefault" method="post"><input type="submit" value="重設回預設密碼" onclick="return confirm("確定重設回預設密碼?")" class="btn btn-primary btn-flat"><input name="idx" type="hidden" value="' + row.AccountID + '">';
+                    "title": "操作", "width": 360, "orderable": false, render: function (data, type, row) {
+                        var button = '<form action="/Accounts/Edit" method="post"><input type="submit" value="修改帳號資訊" class="btn btn-primary btn-flat"><input name="idx" type="hidden" value="' + row.AccountID + '"/>';
                         if (row.IsEnable) {
                             button += '　<button type="button" id="btnEnable' + row.AccountID + '" class="btn btn-primary btn-danger" onclick="DoAction(\'Delete\',\'' + row.AccountID + '\',' + row.IsEnable + ');">停用該帳號</button>';
                         }
                         else {
                             button += '　<button type="button" id="btnEnable' + row.AccountID + '" class="btn btn-primary btn-success" onclick="DoAction(\'Delete\',\'' + row.AccountID + '\',' + row.IsEnable + ');">啟用該帳號</button>'
                         }
+                        button += '　<button type="button" class="btn btn-primary btn-flat" onclick="DoAction(\'pwToDefault\',\'' + row.AccountID + '\',null);">重設回預設密碼</button>';
+                        //button += '<form action="/Accounts/pwToDefault" method="post"><input type="submit" value="重設回預設密碼" onclick="return confirm("確定重設回預設密碼?")" class="btn btn-primary btn-flat"><input name="idx" type="hidden" value="' + row.AccountID + '">';
                         button += '</form>';
                         return button;
                     }

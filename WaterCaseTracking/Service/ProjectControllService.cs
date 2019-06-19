@@ -40,6 +40,27 @@ namespace WaterCaseTracking.Service
 
             #region 流程																
             dt = projectControllDao.getExportData(exportViewModel, UserName, roleName, Organizer); //將參數送入Dao層,組立SQL字串並連接資料庫
+            if (dt.Rows.Count == 0)
+            {
+                foreach (DataColumn col in dt.Columns)
+                {
+                    col.AllowDBNull = true;
+                }
+                DataRow row = dt.NewRow();
+                dt.Rows.Add(row);
+                //dt = new DataTable();
+                //dt.Columns.Add("項次(不可修改，若要新增資料則留空白)");
+                //dt.Columns.Add("工程名稱");
+                //dt.Columns.Add("契約金額");
+                //dt.Columns.Add("開工日期");
+                //dt.Columns.Add("預訂完工日期");
+                //dt.Columns.Add("預定進度");
+                //dt.Columns.Add("實際進度");
+                //dt.Columns.Add("承辦單位(若角色是一般使用者或資料維護者，科室預設自己的科室)");
+                //dt.Columns.Add("承辦人員");
+                //dt.Columns.Add("備註");
+            }
+
 
             return dt;
             #endregion
