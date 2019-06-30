@@ -73,7 +73,7 @@ namespace WaterCaseTracking.Dao
             //登入角色若是User則只能查詢到自己的
             if (roleName == "user")
             {
-                _sqlParamStr.Append(" and CreateUserName = @UserName ");
+                _sqlParamStr.Append(" and OrganizerMan = @UserName ");
                 _sqlParams.Add("UserName", UserName);
             }
             //登入角色若是maintain則只能查詢到自己的
@@ -188,7 +188,7 @@ namespace WaterCaseTracking.Dao
             //登入角色若是User則只能查詢到自己的
             if (roleName == "user")
             {
-                _sqlStr.Append(" and CreateUserName = @UserName ");
+                _sqlStr.Append(" and OrganizerMan = @UserName ");
                 _sqlParams.Add("UserName", UserName);
             }
             //登入角色若是maintain則只能查詢到自己的
