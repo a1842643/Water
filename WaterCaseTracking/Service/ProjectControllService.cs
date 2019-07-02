@@ -153,6 +153,16 @@ namespace WaterCaseTracking.Service
                 //先初始化值
                 projectControllDao.defaultSqlP(out sqlConn, out sqlTrans);
                 List<ProjectControllModel> listModel = new List<ProjectControllModel>();
+                if (roleName == "user")
+                {
+                    for (int i = 0; i < orgDt.Rows.Count; i++)
+                    {
+                        if (string.IsNullOrEmpty(orgDt.Rows[i][0].ToString()))
+                        {
+                            throw new Exception("一般使用者只能修改");
+                        }
+                    }
+                }
                 for (int i = 0; i < orgDt.Rows.Count; i++)
                 {
                     try

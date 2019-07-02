@@ -40,9 +40,9 @@ namespace WaterCaseTracking.Service
 
             #region 流程																
             dt = mcaskDao.getExportData(exportViewModel, UserName, roleName, Organizer); //將參數送入Dao層,組立SQL字串並連接資料庫
-            if(dt.Rows.Count == 0)
+            if (dt.Rows.Count == 0)
             {
-                foreach(DataColumn col in dt.Columns)
+                foreach (DataColumn col in dt.Columns)
                 {
                     col.AllowDBNull = true;
                 }
@@ -134,6 +134,7 @@ namespace WaterCaseTracking.Service
             #endregion
 
             #region 流程	
+
             //存Xls轉的DataTable
             DataTable orgDt = new DataTable();
 
@@ -152,6 +153,16 @@ namespace WaterCaseTracking.Service
                 //先初始化值
                 mcaskDao.defaultSqlP(out sqlConn, out sqlTrans);
                 List<MCAskModel> listModel = new List<MCAskModel>();
+                if (roleName == "user")
+                {
+                    for (int i = 0; i < orgDt.Rows.Count; i++)
+                    {
+                        if (string.IsNullOrEmpty(orgDt.Rows[i][0].ToString()))
+                        {
+                            throw new Exception("一般使用者只能修改");
+                        }
+                    }
+                }
                 for (int i = 0; i < orgDt.Rows.Count; i++)
                 {
                     try

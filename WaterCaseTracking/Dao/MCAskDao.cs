@@ -139,9 +139,16 @@ namespace WaterCaseTracking.Dao
             #region 流程
             //查詢SQL
             StringBuilder _sqlStr = new StringBuilder();
-            _sqlStr.Append(@"SELECT
-                                NGuid + CONVERT(varchar,ID)                           as '項次(不可修改，若要新增資料則留空白)'
-                                ,CONVERT(VARCHAR,AskDate, 111)                        as '詢問日期'
+            _sqlStr.Append(@"SELECT ");
+            if (roleName != "user")
+            {
+                _sqlStr.Append(@" NGuid + CONVERT(varchar,ID)                           as '項次(不可修改，若要新增資料則留空白)' ");
+            }
+            else
+            {
+                _sqlStr.Append(@" NGuid + CONVERT(varchar,ID)                           as '項次(不可修改)' ");
+            }
+            _sqlStr.Append(@" ,CONVERT(VARCHAR,AskDate, 111)                        as '詢問日期'
                                 ,Area                                                 as '地區'
                                 ,MemberName                                           as '議員姓名'
                                 ,Inquiry                                              as '詢問事項'
