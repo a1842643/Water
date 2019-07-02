@@ -41,12 +41,17 @@
                 $('#ddlOrganizer').html(ddlOrganizer);
 
             }, fail: function () {
-                alert('匯入失敗!!');
+                alert('系統錯誤!!');
             }
         })
         //載入Table
         //oTableSetting();
     });
+
+    //全選
+    function CheckAll() {
+        $('input[name=otCB]').attr('checked', $('#cbCheckAll').prop('checked'));
+    }
 
     //查詢
     function QueryTable() {
@@ -59,7 +64,7 @@
         oTable.ajax.reload(null, false);
         //判斷是否可以新增跟修改跟刪除
         if ('@(Session["roleName"] as string)' == 'supervisor') {
-            oTable.columns([0, 1, 2, 6, 7, 8, 9, 10, 11, 12, 13, 14]).visible(false);
+            oTable.columns([0, 1, 2, 3, 7, 8, 9, 10, 11, 12, 13, 14, 15]).visible(false);
         }
     }
 
@@ -122,8 +127,37 @@
         if (ActionName == 'Create')
             document.location.replace('@Url.Action("Create0", "MCAsk")');
         if (ActionName == 'Delete') {
-            if (confirm('確認刪除'))
-                document.location.replace('@Url.Action("Delete0", "MCAsk")' + '?ID=' + IDX);
+            if (confirm('確認刪除')) {
+                var list = [];
+                $('input[name=otCB]:checked').each(function (index, value) {
+                    //var detail = { idx: value.value };
+                    list.push(value.value);
+                });
+                if (list.length == 0)
+                {
+                    alert("請勾選要刪除項目");
+                    return;
+                }
+                var data = { ID: list };
+                //console.log(list);
+                //document.location.replace('@Url.Action("Delete0", "MCAsk")' + '?ID=' + IDX);
+                $.ajax({
+                    type: 'POST',
+                    data: data,
+                    async: false, //啟用同步請求
+                    url: '@Url.Action("Delete0", "MCAsk")',
+                    contenType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function (result) {
+                        alert(result);
+                        if (result == "刪除成功") {
+                            QueryTable();
+                        }
+                    }, fail: function () {
+                        alert('系統錯誤!!');
+                    }
+                })
+            }
         }
     }
 
@@ -176,6 +210,7 @@
             },
             "bLengthChange": false,
             "ordering": true,
+            "order": [1, 'asc'],
             "async": true,
             "searching": false,
             "iDisplayLength": 10,
@@ -196,6 +231,11 @@
                 aoData.push({ "name": "Types", "value": '0' });
             },
             "columns": [
+                {
+                    "title": "<input id='cbCheckAll' type='checkbox' onclick='CheckAll();' ></input>", "orderable": false, render: function (data, type, row) {
+                        return "<input type='checkbox' value='" + row.HID + "' name='otCB' ></input>";
+                    }
+                },
                 { "title": "項次", "data": "ID" },
                 { "title": "詢問日期", "data": "AskDate" },
                 { "title": "地區", "data": "Area" },
@@ -213,10 +253,7 @@
                 {
                     "title": "操作", "orderable": false, render: function (data, type, row) {
                         var button = '<button type="button" class="btn btn-primary btn-space" onclick="DoAction(\'Modify\',\'' + row.HID + '\')">修改</button>';
-                        if ('@(Session["roleName"] as string)' != "user")
-                        {
-                            button += '<button name="btnDtl" type="button" class="btn btn-primary btn-space btnDtl" onclick="DoAction(\'Delete\',\'' + row.HID + '\')">刪除</button>';
-                        }
+
                         return button;
                     }
                 }
@@ -285,7 +322,7 @@
                             <input type="text" id="txtMemberName" />
                         </div>
                     </div>
-                    @if ((Session["roleName"] as string) != "supervisor" )
+                    @if ((Session["roleName"] as string) != "supervisor")
                     {
                         <div class="row vertical-align">
                             <div class="col-xs-auto">地區:</div>
@@ -304,6 +341,7 @@
                         @if ((Session["roleName"] as string) != "supervisor" && (Session["roleName"] as string) != "user")
                         {
                             <div class="col-xs-auto"><button type="button" class="btn btn-primary btn-space" onclick="DoAction('Create', null);">新增</button></div>
+                            <div class="col-xs-auto"><button name="btnDtl" type="button" class="btn btn-primary btn-space btnDtl" onclick="DoAction('Delete',null)" >刪除</button></div>
                         }
 
                     </div>

@@ -232,12 +232,13 @@ namespace WaterCaseTracking.Controllers
         #endregion 修改-迄
 
         #region 刪除-起
-        public ActionResult Delete0(string ID)
+        public ActionResult Delete0(List<string> ID)
         {
             logging(FuncName0D, "刪除");
             #region 參數宣告
             ExpectedProjectService expectedProjectService = new ExpectedProjectService();
             string fail = "";
+            string rtnMessage = "";
             #endregion
 
             #region 流程	
@@ -254,15 +255,14 @@ namespace WaterCaseTracking.Controllers
             //成功的話返回主頁
             if (string.IsNullOrEmpty(fail))
             {
-                TempData["message"] = "刪除成功";
-                return RedirectToAction("Maintain0");
+                rtnMessage = "刪除成功";
             }
             else
             {
-                TempData["message"] = fail;
+                rtnMessage = "刪除失敗" + fail;
             }
 
-            return View();
+            return Json(rtnMessage, JsonRequestBehavior.AllowGet);
             #endregion
         }
         #endregion 刪除-迄

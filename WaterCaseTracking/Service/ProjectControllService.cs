@@ -96,7 +96,7 @@ namespace WaterCaseTracking.Service
         #endregion 單筆修改ProjectControllTable-迄
 
         #region 單筆刪除ProjectControllTable-起
-        internal void DeleteProjectControllTable(string ID)
+        internal void DeleteProjectControllTable(List<string> ID)
         {
             #region 參數宣告				
             ProjectControllDao projectControllDao = new ProjectControllDao();

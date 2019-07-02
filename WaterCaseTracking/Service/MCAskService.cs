@@ -94,7 +94,7 @@ namespace WaterCaseTracking.Service
         #endregion 單筆修改MCAskTable-迄
 
         #region 單筆刪除MCAskTable-起
-        internal void DeleteMCAskTable(string ID, string Types, string UserName)
+        internal void DeleteMCAskTable(List<string> ID, string Types, string UserName)
         {
             #region 參數宣告				
             MCAskDao mcaskDao = new MCAskDao();

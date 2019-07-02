@@ -31,7 +31,8 @@ namespace WaterCaseTracking.Dao
             StringBuilder _sqlCountStr = new StringBuilder();
             _sqlCountStr.Append("select count(1) from ProjectControll WHERE 1 = 1 ");
             _sqlStr.Append(@"SELECT
-                                ROW_NUMBER() OVER(ORDER BY ID ASC) as 'ID'            --編碼
+                                '' as 'nothing'                                        --checkbox排序用
+                                ,ROW_NUMBER() OVER(ORDER BY ID ASC) as 'ID'            --編碼
                                 ,NGuid + CONVERT(varchar,ID) as 'HID'                  --項次
                                 ,ProjectName                                                 --工程名稱
                                 ,ContractAmount                                                 --契約金額
@@ -54,7 +55,7 @@ namespace WaterCaseTracking.Dao
             if (!string.IsNullOrEmpty(searchInfo.txtProjectName))
             {
                 _sqlParamStr.Append(" and ProjectName like @ProjectName ");
-                _sqlParams.Add("Inquiry", "%" + searchInfo.txtProjectName + "%");
+                _sqlParams.Add("ProjectName", "%" + searchInfo.txtProjectName + "%");
             }
             //承辦單位
             if (!string.IsNullOrEmpty(searchInfo.ddlOrganizer))
@@ -315,14 +316,19 @@ namespace WaterCaseTracking.Dao
         }
         #endregion 單筆修改ProjectControllTable-迄
         #region 單筆刪除ProjectControllTable-起
-        internal void DeleteProjectControllTable(string ID)
+        internal void DeleteProjectControllTable(List<string> ID)
         {
             //組立SQL字串並連接資料庫
             StringBuilder _sqlStr = new StringBuilder();
             _sqlStr.Append(@"Delete from ProjectControll WHERE NGuid + CONVERT(varchar,ID) = @ID  ");
 
-            _sqlParams = new Dapper.DynamicParameters();
-            _sqlParams.Add("ID", ID);
+            _sqlParamsList = new List<DynamicParameters>();
+            foreach (var idx in ID)
+            {
+                _sqlParams = new Dapper.DynamicParameters();
+                _sqlParams.Add("ID", idx);
+                _sqlParamsList.Add(_sqlParams);
+            }
 
 
             try
@@ -330,7 +336,7 @@ namespace WaterCaseTracking.Dao
                 using (var cn = new SqlConnection(_dbConnPPP))//連接資料庫
                 {
                     cn.Open();
-                    var ExecResult = cn.Execute(_sqlStr.ToString(), _sqlParams);
+                    var ExecResult = cn.Execute(_sqlStr.ToString(), _sqlParamsList);
                 }
             }
             catch (Exception ex)

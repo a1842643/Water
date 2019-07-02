@@ -103,7 +103,7 @@ namespace WaterCaseTracking.Service
         #endregion 單筆修改ExpectedProjectTable-迄
 
         #region 單筆刪除ExpectedProjectTable-起
-        internal void DeleteExpectedProjectTable(string ID)
+        internal void DeleteExpectedProjectTable(List<string> ID)
         {
             #region 參數宣告				
             ExpectedProjectDao expectedProjectDao = new ExpectedProjectDao();

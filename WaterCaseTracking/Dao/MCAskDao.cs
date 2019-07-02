@@ -31,7 +31,8 @@ namespace WaterCaseTracking.Dao
             StringBuilder _sqlCountStr = new StringBuilder();
             _sqlCountStr.Append("select count(1) from MCAsk WHERE 1 = 1 ");
             _sqlStr.Append(@"SELECT
-                                ROW_NUMBER() OVER(ORDER BY ID ASC) as 'ID'            --編碼
+                                '' as 'nothing'                                        --checkbox排序用
+                                ,ROW_NUMBER() OVER(ORDER BY ID ASC) as 'ID'            --編碼
                                 ,NGuid + CONVERT(varchar,ID) as 'HID'                  --項次
                                 ,CONVERT(VARCHAR,AskDate, 111) as 'AskDate'           --詢問日期
                                 ,Area                                                 --地區
@@ -347,23 +348,26 @@ namespace WaterCaseTracking.Dao
         }
         #endregion 單筆修改MCAskTable-迄
         #region 單筆刪除MCAskTable-起
-        internal void DeleteMCAskTable(string ID, string Types, string UserName)
+        internal void DeleteMCAskTable(List<string> ID, string Types, string UserName)
         {
             //組立SQL字串並連接資料庫
             StringBuilder _sqlStr = new StringBuilder();
             _sqlStr.Append(@"Delete from MCAsk WHERE NGuid + CONVERT(varchar,ID) = @ID AND Types = @Types  ");
-
-            _sqlParams = new Dapper.DynamicParameters();
-            _sqlParams.Add("ID", ID);
-            _sqlParams.Add("Types", Types);
-
+            _sqlParamsList = new List<DynamicParameters>();
+            foreach (var idx in ID)
+            {
+                _sqlParams = new Dapper.DynamicParameters();
+                _sqlParams.Add("ID", idx);
+                _sqlParams.Add("Types", Types);
+                _sqlParamsList.Add(_sqlParams);
+            }
 
             try
             {
                 using (var cn = new SqlConnection(_dbConnPPP))//連接資料庫
                 {
                     cn.Open();
-                    var ExecResult = cn.Execute(_sqlStr.ToString(), _sqlParams);
+                    var ExecResult = cn.Execute(_sqlStr.ToString(), _sqlParamsList);
                 }
             }
             catch (Exception ex)

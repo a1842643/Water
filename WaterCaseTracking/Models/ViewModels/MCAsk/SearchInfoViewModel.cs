@@ -10,27 +10,33 @@ namespace WaterCaseTracking.Models.ViewModels.MCAsk
         /// <summary>
         /// 詢問事項
         /// </summary>
-        public string txtInquiry { get; set; }
+        string _txtInquiry;
+        public string txtInquiry { get { return _txtInquiry; } set { _txtInquiry = HttpUtility.HtmlEncode(value); } }
         /// <summary>
         /// 辦理情形
         /// </summary>
-        public string txtHandlingSituation { get; set; }
+        string _txtHandlingSituation;
+        public string txtHandlingSituation { get { return _txtHandlingSituation; } set { _txtHandlingSituation = HttpUtility.HtmlEncode(value); } }
         /// <summary>
         /// 議員姓名
         /// </summary>
-        public string txtMemberName { get; set; }
+        string _txtMemberName;
+        public string txtMemberName { get { return _txtMemberName; } set { _txtMemberName = HttpUtility.HtmlEncode(value); } }
         /// <summary>
         /// 地區
         /// </summary>
-        public string ddlArea { get; set; }
+        string _ddlArea;
+        public string ddlArea { get { return _ddlArea; } set { _ddlArea = HttpUtility.HtmlEncode(value); } }
         /// <summary>
         /// 承辦單位
         /// </summary>
-        public string ddlOrganizer { get; set; }
+        string _ddlOrganizer;
+        public string ddlOrganizer { get { return _ddlOrganizer; } set { _ddlOrganizer = HttpUtility.HtmlEncode(value); } }
         /// <summary>
         /// 0:市政總質詢事項
         /// 1:議會案件
         /// </summary>
-        public string Types { get; set; }
+        string _Types;
+        public string Types { get { return _Types; } set { _Types = HttpUtility.HtmlEncode(value); } }
     }
 }
