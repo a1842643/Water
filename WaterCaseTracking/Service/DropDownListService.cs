@@ -14,7 +14,7 @@ namespace WaterCaseTracking.Service
         /// 抓地區別下拉選單
         /// </summary>
         /// <returns></returns>
-        internal DropDownListViewModel getddlArea()
+        public DropDownListViewModel getddlArea()
         {
             #region 參數宣告				
             SysCodeDao sysCodeDao = new SysCodeDao();

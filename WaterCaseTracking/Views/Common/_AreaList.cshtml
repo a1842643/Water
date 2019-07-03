@@ -1,0 +1,86 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    @*@Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/js")
+    @Styles.Render("~/Content/jqueryui")
+    @Scripts.Render("~/bundles/jqueryui")*@
+    <title>_AreaList</title>
+    <style>
+        td {
+            width: 46%;
+            height: 20px;
+            font-size: large;
+        }
+    </style>
+    <script>
+        $(document).ready(function () {
+            $('#divSlowSelected').html('@Server.UrlDecode(Request.QueryString["Area"])');
+        });
+        function ToSelected(aHref) {
+            var txt = $('#divSlowSelected').html();
+            if (txt == '') {
+                txt += aHref;
+            }
+            else {
+                if (txt.indexOf(aHref) > -1) {
+                    txt = txt.replace(aHref, '');
+                }
+                else {
+                    txt += '、' + aHref;
+                }
+
+                if (txt.indexOf('、、') > -1) {
+                    txt = txt.replace('、、', '、');
+                }
+                if (txt.substr(0, 1) == '、') {
+                    txt = txt.substr(1);
+                }
+                if (txt.substr(txt.length - 1, 1) == '、') {
+                    txt = txt.substr(0, txt.length - 1);
+                }
+            }
+
+            $('#divSlowSelected').html(txt);
+        }
+    </script>
+</head>
+<body>
+    <div style="height:260px">
+        <p><b>點第一下即可選取，點第兩下即可取消選取</b></p>
+        <h1 id="divSlowSelected"></h1>
+    </div>
+    <hr />
+    <table>
+        @{
+            WaterCaseTracking.Service.DropDownListService dropDownListService = new WaterCaseTracking.Service.DropDownListService();
+            WaterCaseTracking.Models.ViewModels.DropDownListViewModel ddlArea = new WaterCaseTracking.Models.ViewModels.DropDownListViewModel();
+            ddlArea = dropDownListService.getddlArea();
+            for (int i = 0; i < ddlArea.DropDownListLT.Count; i += 3)
+            {
+                <tr>
+                    <td><a href="#" onclick="ToSelected('@ddlArea.DropDownListLT[i].Text');"><b>@ddlArea.DropDownListLT[i].Text</b></a></td>
+                    @if (i + 1 < ddlArea.DropDownListLT.Count)
+                {
+                        <td><a href="#" onclick="ToSelected('@ddlArea.DropDownListLT[i+1].Text');"><b>@ddlArea.DropDownListLT[i + 1].Text</b></a></td>
+                    }
+                    @if (i + 2 < ddlArea.DropDownListLT.Count)
+                {
+                        <td><a href="#" onclick="ToSelected('@ddlArea.DropDownListLT[i+2].Text');"><b>@ddlArea.DropDownListLT[i + 2].Text</b></a></td>
+                    }
+                </tr>
+            }
+        }
+    </table>
+</body>
+</html>

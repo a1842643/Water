@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web;
+using System.Web.Mvc;
 
 namespace WaterCaseTracking.Models
 {
@@ -17,7 +18,7 @@ namespace WaterCaseTracking.Models
         [DisplayName("詢問日期")]
         public string AskDate { get; set; }
         [Required]
-        [StringLength(20)]
+        [DataType(DataType.MultilineText)]
         [DisplayName("地區")]
         public string Area { get; set; }
         [Required]
@@ -29,6 +30,7 @@ namespace WaterCaseTracking.Models
         public string Inquiry { get; set; }
         [Required]
         [DataType(DataType.MultilineText)]
+        [AllowHtml]
         [DisplayName("辦理情形")]
         public string HandlingSituation { get; set; }
         [Required]
