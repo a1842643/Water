@@ -179,7 +179,10 @@
     });
     }
 
-
+    //全選
+    function CheckAll() {
+        $('input[name=otCB]').attr('checked', $('#cbCheckAll').prop('checked'));
+    }
 
     //查詢Table設定
     function oTableSetting() {

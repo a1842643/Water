@@ -42,7 +42,10 @@
         //載入Table
         //oTableSetting();
     });
-
+    //全選
+    function CheckAll() {
+        $('input[name=otCB]').attr('checked', $('#cbCheckAll').prop('checked'));
+    }
     //查詢
     function QueryTable() {
         //判斷有無設定過
