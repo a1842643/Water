@@ -160,7 +160,7 @@ namespace WaterCaseTracking.Controllers
                 }
                 else
                 {
-                    TempData["ChangePWMessage"] = "已超過90天未登入，請先修改密碼";
+                    TempData["ChangePWMessage"] = "已超過90天未修改密碼，請先修改密碼";
                 }
                 return View(@"~\Views\Accounts\ChangePW.cshtml", changePwViewModel);
             }

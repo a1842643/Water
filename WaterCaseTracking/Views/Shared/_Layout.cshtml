@@ -56,6 +56,9 @@
 
     </script>
     <script type="text/javascript">
+        $(window).resize(function () {
+            $('.main-sidebar').css('padding-top', $('.navbar-static-top').height() +45);
+        });
         //(function (factory) {
         //    if (typeof define === "function" && define.amd) {
 
@@ -149,6 +152,7 @@
         //    else return padLeft(sign + str, length, sign);
         //}
         $(document).ready(function () {
+            $('.main-sidebar').css('padding-top', $('.navbar-static-top').height() +45);
             $(".datepicker").datepicker({
                 //yearRange: "-100:+0",
                 dateFormat: "yy/mm/dd"
@@ -273,7 +277,7 @@
             <!-- sidebar: style can be found in sidebar.less -->
             <section class="sidebar">
                 <!-- Sidebar Menu -->
-                <ul id="TreeViewMenuList" class="sidebar-menu" data-widget="tree">
+                <ul id="TreeViewMenuList" style="" class="sidebar-menu" data-widget="tree">
                     <li class="treeview">
                         <a id="A" href="#" style="display:none">
                             @*<a href="#">*@
