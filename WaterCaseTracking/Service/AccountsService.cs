@@ -154,8 +154,43 @@ namespace WaterCaseTracking.Service
 
             #endregion
         }
-
-        
         #endregion
+
+        #region 匯出範例檔-起
+        internal DataTable getExportData(string UserName, string roleName, string Organizer)
+        {
+            #region 參數宣告				
+            AccountsDao accountsDao = new AccountsDao();
+            DataTable dt = new DataTable();
+            #endregion
+
+            #region 流程																
+            dt = accountsDao.getExportData(UserName, roleName, Organizer); //將參數送入Dao層,組立SQL字串並連接資料庫
+            if (dt.Rows.Count == 0)
+            {
+                foreach (DataColumn col in dt.Columns)
+                {
+                    col.AllowDBNull = true;
+                }
+                DataRow row = dt.NewRow();
+                dt.Rows.Add(row);
+                //dt = new DataTable();
+                //dt.Columns.Add("項次(不可修改，若要新增資料則留空白)");
+                //dt.Columns.Add("詢問日期");
+                //dt.Columns.Add("地區");
+                //dt.Columns.Add("議員姓名");
+                //dt.Columns.Add("詢問事項");
+                //dt.Columns.Add("辦理情形");
+                //dt.Columns.Add("承辦單位(若角色是一般使用者或資料維護者，科室預設自己的科室)");
+                //dt.Columns.Add("承辦人員");
+                //dt.Columns.Add("狀態");
+            }
+
+            return dt;
+            #endregion
+        }
+        #endregion
+
+
     }
 }

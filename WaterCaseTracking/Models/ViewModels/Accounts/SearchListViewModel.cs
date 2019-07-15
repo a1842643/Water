@@ -20,7 +20,7 @@ namespace WaterCaseTracking.Models.ViewModels.Accounts
         /// <summary>
         /// 姓名
         /// </summary>
-        public string AccountName { get; set; }
+        public string SecurityMena { get; set; }
         /// <summary>
         /// 角色
         /// </summary>

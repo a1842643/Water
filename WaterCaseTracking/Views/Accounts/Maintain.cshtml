@@ -126,6 +126,31 @@
         }
     }
 
+    function Export() {
+
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("Export", "Accounts")',
+            data: { fileExtension: $('#ddlFileExtension').val() },
+            contenType: "application/json; charset=utf-8",
+        })
+    .done(function (result) {
+        var a = document.createElement('a');
+        a.setAttribute('href', result);
+        a.setAttribute('target', '_self');
+        a.setAttribute('download', result);
+        a.style.display = 'none';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+
+        //window.open(result, null);
+    })
+    .fail(function () {
+        alert("匯入失敗");
+    })
+    }
+
     //查詢Table設定
     function oTableSetting() {
 
@@ -158,7 +183,7 @@
             },
             "columns": [
                 { "title": "帳號", "data": "AccountID" },
-                { "title": "姓名", "data": "AccountName" },
+                { "title": "姓名", "data": "SecurityMena" },
                 { "title": "角色", "data": "RoleName" },
                 { "title": "科室", "data": "Organizer" },
                 { "title": "新增人員", "data": "CreateUserName" },
@@ -215,6 +240,19 @@
         <div class="col-xs-12">
             <div class="box">
                 <div class="box-header">
+                    @if ((Session["roleName"] as string) != "supervisor")
+                    {
+                        <div class="row vertical-align">
+                            <div class="col-xs-auto"><button type="button" class="btn btn-primary btn-space" onclick="Export();">匯出範本</button></div>
+                            <div class="col-xs-auto">檔案類型:</div>
+                            <div class="col-xs-auto">
+                                <select name="ddlFileExtension" id="ddlFileExtension" class="form-control">
+                                    <option value="xlsx">xlsx</option>
+                                    <option value="ODF">ODF</option>
+                                </select>
+                            </div>
+                        </div>
+                    }
                     <div class="row vertical-align">
                         <div class="col-xs-auto">姓名:</div>
                         <div class="col-xs-2">

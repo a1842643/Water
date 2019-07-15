@@ -35,14 +35,14 @@ namespace WaterCaseTracking.Dao
                             WHERE 1 = 1  ");
             _sqlStr.Append(@"select 
                                 AccountID                                             --帳號
-                                , AccountName                                         --姓名
-                                , Organizer                                         --科室
+                                , SecurityMena                                         --姓名
                                 , SC.ITEM_NAME as 'RoleName'                          --角色
-                                , IsEnable                                            --啟用停用
+                                , Organizer                                         --科室
                                 ,CreateUserName                                       --新增人員 
                                 ,CreateDate                                           --新增時間
                                 ,UpdateUserName                                       --修改人員
                                 ,UpdateDate                                           --修改時間  
+                                , IsEnable                                            --啟用停用
                             from Accounts A 
                             Left join Sys_Code SC ON A.Role = SC.ITEM_CODE
                             WHERE 1 = 1 
@@ -52,8 +52,8 @@ namespace WaterCaseTracking.Dao
             //姓名
             if (!string.IsNullOrEmpty(searchInfo.txtSecurityMena))
             {
-                _sqlParamStr.Append(" and AccountName like @AccountName ");
-                _sqlParams.Add("AccountName", "%" + searchInfo.txtSecurityMena + "%");
+                _sqlParamStr.Append(" and SecurityMena like @SecurityMena ");
+                _sqlParams.Add("SecurityMena", "%" + searchInfo.txtSecurityMena + "%");
             }
             //角色
             if (!string.IsNullOrEmpty(searchInfo.ddlRole))
@@ -109,7 +109,7 @@ namespace WaterCaseTracking.Dao
             _sqlStr.Append(@"select 
                                 AccountID                                           --帳號
                                 , AlienSecurity                                          --密碼
-                                , AccountName                                       --帳號名稱
+                                , SecurityMena                                       --帳號名稱
                                 , Role                                              --角色
                                 , Organizer                                         --科室
                                 , IsDefault                                         --是否為預設密碼
@@ -132,7 +132,8 @@ namespace WaterCaseTracking.Dao
             #endregion
         }
 
-        
+
+
         #endregion
 
         #region 取得修改人員資訊
@@ -149,7 +150,7 @@ namespace WaterCaseTracking.Dao
             _sqlStr.Append(@"select 
                                 AccountID                                           --帳號
                                 , AlienSecurity                                          --密碼
-                                , AccountName                                       --帳號名稱
+                                , SecurityMena                                       --帳號名稱
                                 , Role                                              --角色
                                 , Organizer                                         --科室
                                 , IsDefault                                         --是否為預設密碼
@@ -535,7 +536,7 @@ namespace WaterCaseTracking.Dao
             _sqlStr.Append(@"select 
                                 AccountID                                           --帳號
                                 , AlienSecurity                                          --密碼
-                                , AccountName                                       --帳號名稱
+                                , SecurityMena                                       --帳號名稱
                                 , Role                                              --角色
                                 , IsDefault                                         --是否為預設密碼
                                 , CreateUserName                                    --新增人員
@@ -629,7 +630,7 @@ namespace WaterCaseTracking.Dao
             //組立SQL字串並連接資料庫
             StringBuilder _sqlStr = new StringBuilder();
             _sqlStr.Append(@"UPDATE Accounts SET                            
-                            AccountName = @AccountName
+                            SecurityMena = @SecurityMena
                             , Role = @Role
                             , Organizer = @Organizer
                             , UpdateUserName =@UpdateUserName            
@@ -639,7 +640,7 @@ namespace WaterCaseTracking.Dao
 
             _sqlParams = new Dapper.DynamicParameters();
             _sqlParams.Add("AccountID", accountsModel.AccountID);
-            _sqlParams.Add("AccountName", accountsModel.AccountName);
+            _sqlParams.Add("SecurityMena", accountsModel.SecurityMena);
             _sqlParams.Add("Role", accountsModel.Role);
             _sqlParams.Add("Organizer", accountsModel.Organizer);
             _sqlParams.Add("UpdateUserName", accountsModel.UpdateUserName);
@@ -667,7 +668,7 @@ namespace WaterCaseTracking.Dao
             _sqlStr.Append(@"Insert Into Accounts (
                             AccountID                 
                             , AlienSecurity            
-                            , AccountName        
+                            , SecurityMena        
                             , Role            
                             , Organizer              
                             , IsDefault                 
@@ -680,7 +681,7 @@ namespace WaterCaseTracking.Dao
                             Values(     
                             @AccountID                      
                             , @DefaultPW  --目前寫死預設密碼                  
-                            , @AccountName                    
+                            , @SecurityMena                    
                             , @Role                    
                             , @Organizer                    
                             , 1                    
@@ -695,7 +696,7 @@ namespace WaterCaseTracking.Dao
             _sqlParams = new Dapper.DynamicParameters();
             _sqlParams.Add("AccountID", accountsModel.AccountID);
             _sqlParams.Add("DefaultPW", DefaultPW);
-            _sqlParams.Add("AccountName", accountsModel.AccountName);
+            _sqlParams.Add("SecurityMena", accountsModel.SecurityMena);
             _sqlParams.Add("Role", accountsModel.Role);
             _sqlParams.Add("Organizer", accountsModel.Organizer);
             _sqlParams.Add("CreateUserName", userName);
@@ -713,6 +714,48 @@ namespace WaterCaseTracking.Dao
             {
                 throw ex;
             }
+        }
+        #endregion
+        #region 取得範例檔資料-起
+        internal DataTable getExportData(string UserName, string roleName, string Organizer)
+        {
+            //組立SQL字串並連接資料庫
+            #region 參數告宣
+            DataTable dt = new DataTable();
+            #endregion
+
+            #region 流程
+            //查詢SQL
+            StringBuilder _sqlStr = new StringBuilder();
+            _sqlStr.Append(@" Select AccountID                  as '帳號'
+                                ,SecurityMena                   as '帳號名稱'
+                                ,SC.ITEM_NAME                   as '帳號角色'
+                                ,Organizer                      as '帳號科室'
+                                  from Accounts A 
+                            Left join Sys_Code SC ON A.Role = SC.ITEM_CODE                                    
+                            WHERE 1 = 1 ");
+
+            _sqlParams = new Dapper.DynamicParameters();
+            
+            
+            //登入角色若是maintain則只能查詢到自己的
+            if (roleName == "maintain")
+            {
+                _sqlStr.Append(" and Organizer = @Organizer ");
+                _sqlParams.Add("Organizer", Organizer);
+            }
+
+
+            //排序
+            _sqlStr.Append(" order by AccountID ");
+
+            using (var cn = new SqlConnection(_dbConnPPP)) //連接資料庫
+            {
+                cn.Open();
+                dt.Load(cn.ExecuteReader(_sqlStr.ToString(), _sqlParams));
+            }
+            return dt;
+            #endregion
         }
         #endregion
     }

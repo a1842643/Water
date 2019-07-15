@@ -17,7 +17,7 @@ namespace WaterCaseTracking.Models
         [Required]
         [MaxLength(100)]
         [DisplayName("帳號姓名")]
-        public string AccountName { get; set; }
+        public string SecurityMena { get; set; }
         [Required]
         [DisplayName("角色")]
         public string Role { get; set; }

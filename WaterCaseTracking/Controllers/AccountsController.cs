@@ -407,7 +407,7 @@ namespace WaterCaseTracking.Controllers
             //登入者ID
             Session["UserID"] = accountsModel.AccountID;
             //登入者姓名
-            Session["UserName"] = accountsModel.AccountName;
+            Session["UserName"] = accountsModel.SecurityMena;
             //登入者科室
             Session["Organizer"] = accountsModel.Organizer;
             //登入者角色
@@ -462,6 +462,35 @@ namespace WaterCaseTracking.Controllers
             return searchList.UserModel[0].PROID.ToString();
             #endregion
         }
+        #region 匯出範例檔-起
+        [HttpPost]
+        public ActionResult Export(string fileExtension)
+        {
+            logging(FuncName, "匯出範例檔");
+            #region 參數宣告
+            AccountsService accountsService = new AccountsService();
+            DataTable dt = new DataTable();
+            string fileNamePath = "";
+            #endregion
+
+            #region 流程	
+            try
+            {
+                //查詢修改資料
+                dt = accountsService.getExportData(UserName, roleName, Organizer);
+                
+                fileNamePath = ExportFunction.ExportDataTableTo(dt, fileExtension, FuncName + "範例檔");
+            }
+            catch (Exception ex)
+            {
+                errLogging(FuncName, ex.ToString());
+            }
+            return Json(fileNamePath, JsonRequestBehavior.AllowGet);
+
+            #endregion
+
+        }
+        #endregion 匯出範例檔-迄
         #endregion
     }
 }

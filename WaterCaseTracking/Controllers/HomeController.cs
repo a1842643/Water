@@ -153,7 +153,7 @@ namespace WaterCaseTracking.Controllers
             {
                 Models.ViewModels.Accounts.ChangePwViewModel changePwViewModel = new Models.ViewModels.Accounts.ChangePwViewModel();
                 changePwViewModel.AccountID = accountsModel.AccountID;
-                changePwViewModel.UpdateUserName = accountsModel.AccountName;
+                changePwViewModel.UpdateUserName = accountsModel.SecurityMena;
                 if (accountsModel.IsDefault)
                 {
                     TempData["ChangePWMessage"] = "使用預設密碼登入，請先修改密碼";
@@ -174,7 +174,7 @@ namespace WaterCaseTracking.Controllers
             //登入者ID
             Session["UserID"] = accountsModel.AccountID;
             //登入者姓名
-            Session["UserName"] = accountsModel.AccountName;
+            Session["UserName"] = accountsModel.SecurityMena;
             //登入者科室
             Session["Organizer"] = accountsModel.Organizer;
             //登入者角色
