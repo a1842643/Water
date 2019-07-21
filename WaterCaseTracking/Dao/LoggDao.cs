@@ -55,14 +55,26 @@ namespace WaterCaseTracking.Dao
             }
 
             //紀錄時間(區間)
-            
-            if (!(string.IsNullOrEmpty(searchInfo.ddlloggedStart) || string.IsNullOrEmpty(searchInfo.ddlloggedEnd))) {
-                searchInfo.ddlloggedStart = DateTime.Parse(searchInfo.ddlloggedStart).AddYears(1911).ToString("yyyy-MM-dd");
-                searchInfo.ddlloggedEnd = DateTime.Parse(searchInfo.ddlloggedEnd).AddYears(1911).ToString("yyyy-MM-dd");
-                _sqlParamStr.Append(" and logged BETWEEN CONVERT(varchar(100),@loggedStart, 121) AND CONVERT(varchar(100),@loggedEnd, 121) ");
-                _sqlParams.Add("loggedStart", searchInfo.ddlloggedStart + " 00:00:00.000");
-                _sqlParams.Add("loggedEnd", searchInfo.ddlloggedEnd + " 23:59:59.999");
+            if (!string.IsNullOrEmpty(searchInfo.ddlloggedStart))
+            {
+                _sqlParams.Add("loggedStart", searchInfo.ddlloggedStart);
+                _sqlParamStr.Append(" and logged >= @loggedStart");
             }
+            if (!string.IsNullOrEmpty(searchInfo.ddlloggedEnd))
+            {
+                _sqlParams.Add("loggedEnd", searchInfo.ddlloggedEnd);
+                _sqlParamStr.Append(" and logged < DateAdd(Day,1,@loggedEnd)");
+            }
+
+            
+
+            //if (!(string.IsNullOrEmpty(searchInfo.ddlloggedStart) || string.IsNullOrEmpty(searchInfo.ddlloggedEnd))) {
+            //    searchInfo.ddlloggedStart = DateTime.Parse(searchInfo.ddlloggedStart).AddYears(1911).ToString("yyyy-MM-dd");
+            //    searchInfo.ddlloggedEnd = DateTime.Parse(searchInfo.ddlloggedEnd).AddYears(1911).ToString("yyyy-MM-dd");
+            //    _sqlParamStr.Append(" and logged BETWEEN CONVERT(varchar(100),@loggedStart, 121) AND CONVERT(varchar(100),@loggedEnd, 121) ");
+            //    _sqlParams.Add("loggedStart", searchInfo.ddlloggedStart + " 00:00:00.000");
+            //    _sqlParams.Add("loggedEnd", searchInfo.ddlloggedEnd + " 23:59:59.999");
+            //}
 
             #region 條件、排序(起)
             _sqlStr.Append(_sqlParamStr);

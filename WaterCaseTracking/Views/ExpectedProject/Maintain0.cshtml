@@ -53,7 +53,10 @@
         oTable.ajax.reload(null, false);
         //判斷是否可以新增跟修改跟刪除
         if ('@(Session["roleName"] as string)' == 'supervisor') {
-            oTable.columns([23]).visible(false);
+            oTable.columns([0,23]).visible(false);
+        }
+        if ('@(Session["roleName"] as string)' == 'user') {
+            oTable.columns([0]).visible(false);
         }
     }
 

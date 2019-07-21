@@ -83,6 +83,7 @@ namespace WaterCaseTracking.Controllers
 
         [HttpPost]
         [AllowAnonymous]
+        [ValidateAntiForgeryToken]
         public ActionResult login(string txtAccount, string txtAlienSecurity)
         {
             if (string.IsNullOrEmpty(txtAccount) || string.IsNullOrEmpty(txtAlienSecurity))

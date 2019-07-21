@@ -181,7 +181,7 @@
                                 @Html.ValidationMessageFor(model => model.Organizer, "", new { @class = "text-danger" })
                             </div>
                         </div>
-
+                        @*style="@(Session["roleName"] as string == "user" ? "display:none" : "")"*@
                         <div class="form-group">
                             @Html.LabelFor(model => model.OrganizerMan, htmlAttributes: new { @class = "control-label col-md-2" })
                             <div class="col-md-10">
