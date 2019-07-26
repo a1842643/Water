@@ -29,7 +29,7 @@
         <div class="login-box-body">
             <p class="login-box-msg"><b>新北市政府水利局案件追蹤管理系統</b></p>
 
-            <form action="login" method="post">
+            <form  method="post">
                 @Html.AntiForgeryToken()
                 <div class="form-group has-feedback">
                     <input id="txtAccount" type="text" name="txtAccount" class="form-control" placeholder="帳號" />
@@ -62,53 +62,5 @@
 <script type="text/javascript">
     $(document).ready(function () {
 
-    });
-</script>
-<script>
-    $('#login_btn').on('click', function () {
-
-        $.ajax({
-            type: 'POST',
-            data: {},
-            //async: false, //啟用同步請求
-            url: '@Url.Action("TEST", "Home")',
-            contenType: "application/json; charset=utf-8",
-            dataType: "json",
-            success: function (result) {
-                console.log(result);
-                alert("成功");
-
-            }, fail: function () {
-                alert('匯入失敗!!');
-            }
-        })
-    });
-    $('#login_btn2').on('click', function () {
-
-        if ($('#txtAccount').val() == '' || $('#txtAlienSecurity').val() == '') {
-            alert('請輸入帳號和密碼');
-            return;
-        }
-
-        var AccountLogin = {
-            id: $('#txtAccount').val(),
-            alienSecurity: $('#txtAlienSecurity').val()
-        };
-        //document.location.replace('@Url.Action("TEST", "Home")');
-        $.ajax({
-            type: 'POST',
-            data: '{}',
-            //async: false, //啟用同步請求
-            url: '@Url.Action("TEST2", "Home")',
-            contenType: "application/json; charset=utf-8",
-            dataType: "json",
-            success: function (result) {
-                console.log(result);
-                alert("成功");
-
-            }, fail: function () {
-                alert('匯入失敗!!');
-            }
-        })
     });
 </script>

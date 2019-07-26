@@ -23,7 +23,7 @@ namespace WaterCaseTracking.Controllers
     public class HomeController : BaseController
     {
         private string strBasicPath;//限定SERVER檔管路徑
-        private string funcName = "首頁公告";
+        private string funcName = "登入登出";
         private string funcNameDelete = "刪除";
         private string funcNameModify = "修改";
         private string funcNameCreate = "新增";
@@ -36,7 +36,6 @@ namespace WaterCaseTracking.Controllers
 
         public ActionResult Index()
         {
-            logging(funcName, "進入功能-" + funcName);
             return View();
         }
 
@@ -209,7 +208,7 @@ namespace WaterCaseTracking.Controllers
 
             //string account = new AccountService().GetValue();
 
-            logging(funcName, UserID + "登入成功");
+            logging(funcName, UserID + UserName + "登入成功");
             //判斷工作事項是否有需要提醒的
 
 

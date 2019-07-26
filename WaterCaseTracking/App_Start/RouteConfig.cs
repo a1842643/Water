@@ -16,7 +16,7 @@ namespace WaterCaseTracking
             routes.MapRoute(
                 name: "Default",
                 url: "{controller}/{action}/{id}",
-                defaults: new { controller = "Home", action = "Index", id = UrlParameter.Optional }
+                defaults: new { controller = "MCAsk", action = "Maintain0", id = UrlParameter.Optional }
             );
         }
     }

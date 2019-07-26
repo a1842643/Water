@@ -15,16 +15,16 @@
 <head>
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
 
-    @{
-        //Session是否消失
-        if (string.IsNullOrEmpty(Session["UserID"] as String))
-        {
-            <script type="text/javascript">
-                alert("登入逾時，請重新登入");
-                document.location.replace('@Url.Action("login", "Home")');
-            </script>
-        }
-    }
+    @*@{
+            //Session是否消失
+            if (string.IsNullOrEmpty(Session["UserID"] as String))
+            {
+                <script type="text/javascript">
+                    alert("登入逾時，請重新登入");
+                    document.location.replace('@Url.Action("login", "Home")');
+                </script>
+            }
+        }*@
 
     @if (TempData["message"] != null)
     {
@@ -59,99 +59,9 @@
         $(window).resize(function () {
             $('.main-sidebar').css('padding-top', $('.navbar-static-top').height() +45);
         });
-        //(function (factory) {
-        //    if (typeof define === "function" && define.amd) {
 
-        //        // AMD. Register as an anonymous module.
-        //        define(["../widgets/datepicker"], factory);
-        //    } else {
-
-        //        // Browser globals
-        //        factory(jQuery.datepicker);
-        //    }
-
-        //}(function (datepicker) {
-        //    var old_generateMonthYearHeader = $.datepicker._generateMonthYearHeader;
-        //    var old_get = $.datepicker._get;
-        //    var old_CloseFn = $.datepicker._updateDatepicker;
-        //    $.extend($.datepicker, {
-        //        _generateMonthYearHeader: function (inst, drawMonth, drawYear, minDate, maxDate, secondary, monthNames, monthNamesShort) {
-        //            var htmlYearMonth = old_generateMonthYearHeader.apply(this, [inst, drawMonth, drawYear, minDate, maxDate, secondary, monthNames, monthNamesShort]);
-        //            if ($(htmlYearMonth).find(".ui-datepicker-year").length > 0) {
-        //                htmlYearMonth = $(htmlYearMonth).find(".ui-datepicker-year").find("option").each(function (i, e) {
-        //                    if (Number(e.value) - 1911 > 0) $(e).text("民國" + (Number(e.innerText) - 1911) + "年");
-        //                }).end().end().get(0).outerHTML;
-        //            }
-        //            return htmlYearMonth;
-        //        },
-        //        _get: function (a, b) {
-        //            a.selectedYear = a.selectedYear - 1911 < 0 ? a.selectedYear + 1911 : a.selectedYear;
-        //            a.drawYear = a.drawYear - 1911 < 0 ? a.drawYear + 1911 : a.drawYear;
-        //            a.curreatYear = a.curreatYear - 1911 < 0 ? a.curreatYear + 1911 : a.curreatYear;
-        //            return old_get.apply(this, [a, b]);
-        //        },
-        //        _updateDatepicker: function (inst) {
-        //            old_CloseFn.call(this, inst);
-        //            $(this).datepicker("widget").find(".ui-datepicker-buttonpane").children(":last")
-        //                   .click(function (e) {
-        //                       inst.input.val("");
-        //                   });
-        //        },
-        //        _setDateDatepicker: function (a, b) {
-        //            if (a = this._getInst(a)) { this._setDate(a, b); this._updateDatepicker(a); this._updateAlternate(a) }
-        //        },
-        //        _widgetDatepicker: function () {
-        //            return this.dpDiv
-        //        }
-
-        //    });
-
-        //    datepicker.regional["zh-TW"] = {
-        //        closeText: "關閉",
-        //        prevText: "<上個月",
-        //        nextText: "下個月>",
-        //        currentText: "今天",
-        //        monthNames: ["一月", "二月", "三月", "四月", "五月", "六月",
-        //        "七月", "八月", "九月", "十月", "十一月", "十二月"],
-        //        monthNamesShort: ["一月", "二月", "三月", "四月", "五月", "六月",
-        //        "七月", "八月", "九月", "十月", "十一月", "十二月"],
-        //        dayNames: ["星期日", "星期一", "星期二", "星期三", "星期四", "星期五", "星期六"],
-        //        dayNamesShort: ["週日", "週一", "週二", "週三", "週四", "週五", "週六"],
-        //        dayNamesMin: ["日", "一", "二", "三", "四", "五", "六"],
-        //        weekHeader: "週",
-        //        dateFormat: "yymmdd",
-        //        firstDay: 1,
-        //        isRTL: false,
-        //        changeYear: true,
-        //        changeMonth: true,
-        //        showMonthAfterYear: true,
-        //        onSelect: function (dateText, inst) {
-        //            var dateFormate = inst.settings.dateFormat == null ? "yymmdd" : inst.settings.dateFormat; //取出格式文字
-        //            var reM = /m+/g;
-        //            var reD = /d+/g;
-        //            var objDate = {
-        //                y: inst.selectedYear - 1911 < 0 ? inst.selectedYear : padLeft((inst.selectedYear - 1911).toString(),3,"0"),
-        //                m: padLeft(String(inst.selectedMonth + 1),2,"0"),
-        //                d: padLeft(String(inst.selectedDay),2,"0")
-        //            };
-        //            $.each(objDate, function (k, v) {
-        //                var re = new RegExp(k + "+");
-        //                dateFormate = dateFormate.replace(re, v);
-        //            });
-        //            inst.input.val(dateFormate);
-        //        }
-        //    };
-        //    datepicker.setDefaults(datepicker.regional["zh-TW"]);
-
-        //    return datepicker.regional["zh-TW"];
-
-        //}));
-
-        //function padLeft(str, length, sign) {
-        //    if (str.length >= length) return str;
-        //    else return padLeft(sign + str, length, sign);
-        //}
         $(document).ready(function () {
+            checkLoginInfo();
             $('.main-sidebar').css('padding-top', $('.navbar-static-top').height() +45);
             $(".datepicker").datepicker({
                 //yearRange: "-100:+0",
@@ -160,40 +70,28 @@
             yearPadZero: false
             //MenuOperating();
             SetMenu('@Session["Menu"]');
-            @*手機模式不擋Menu*@
 
-            ////排除中風險
-            //if($_SERVER['REMOTE_ADDR'] !== $_SESSION['LAST_REMOTE_ADDR'] || $_SERVER['HTTP_USER_AGENT'] !== $_SESSION['LAST_USER_AGENT']) {
-            //    session_destroy();
-            //}
-            //session_regenerate_id();
-            //$_SESSION['LAST_REMOTE_ADDR'] = $_SERVER['REMOTE_ADDR'];
-            //$_SESSION['LAST_USER_AGENT'] = $_SERVER['HTTP_USER_AGENT'];
-            //if (strpos($_SERVER['HTTP_REFERER'], 'http://vulnerable/') !== 0) {
-            //    session_destroy(); // destroy all data in session
-            //}
-            //session_regenerate_id();
-        });
-        ////排除中風險
-        //if($_SERVER['REMOTE_ADDR'] !== $_SESSION['LAST_REMOTE_ADDR'] || $_SERVER['HTTP_USER_AGENT'] !== $_SESSION['LAST_USER_AGENT']) {
-        //    session_destroy();
-        //}
-        //session_regenerate_id();
-        //$_SESSION['LAST_REMOTE_ADDR'] = $_SERVER['REMOTE_ADDR'];
-        //$_SESSION['LAST_USER_AGENT'] = $_SERVER['HTTP_USER_AGENT'];
-        //if (strpos($_SERVER['HTTP_REFERER'], 'http://vulnerable/') !== 0) {
-        //    session_destroy(); // destroy all data in session
-        //}
-        //session_regenerate_id();
-        //function MenuOperating() {
-        //    for (var i = 65; i < 90; i++) {
-        //        var id = String.fromCharCode(i);
-        //        $('#' + id).hide();
-        //        for (var j = 0; j < 10; j++) {
-        //            $('#' + id + "0" + j).hide();
-        //        }
-        //    }
-        //}
+        }); 
+        //檢查登入資訊
+        function checkLoginInfo(){
+            $.ajax({
+                type: 'POST',
+                data: '{}',
+                async: false,
+                url: '@Url.Action("checkLoginInfo", "Common")',
+                contenType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (result) {
+                    if(result =="登入逾時")
+                    {
+                        alert("登入逾時，請重新登入");
+                        document.location.replace('@Url.Action("login", "Home")');
+                        return;
+                    }
+                }
+            })
+        }
+
 
         function SetMenu(StrMenu) {
             var menu = StrMenu.split(',');
@@ -219,9 +117,10 @@
         .box {
             margin-bottom: 0px !important;
         }
-        .ui-dialog{
-            position:fixed;
-            z-index:1000000;
+
+        .ui-dialog {
+            position: fixed;
+            z-index: 1000000;
         }
     </style>
 </head>
@@ -255,7 +154,7 @@
                             <li>
                                 <a id="modifyPW" href="#"><i class="fa fa-gears"></i> 修改密碼</a>
                             </li>
-                            
+
                             <li>
                                 <a id="exit" href="#"><i class="fa fa-gears"></i> 登出帳號</a>
                             </li>
@@ -332,10 +231,22 @@
 <script>
     $('#exit').on('click', function () {
         if (confirm("您正在離開營業單位營運資訊管理系統。\n按下確定後登出。")) {
-            document.location.replace('@Url.Action("login", "Home")');
+            $.ajax({
+                type: 'POST',
+                data: '{}',
+                async: false,
+                url: '@Url.Action("Logout", "Common")',
+                contenType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function () {
+                    document.location.replace('@Url.Action("login", "Home")');
+    document.location.replace('@Url.Action("login", "Home")');
+                    return;
+                }
+            })
         }
     });
     $('#modifyPW').on('click', function () {
-            document.location.replace('@Url.Action("ChangePW", "Home")');
+        document.location.replace('@Url.Action("ChangePW", "Home")');
     });
 </script>
