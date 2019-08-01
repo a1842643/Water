@@ -28,6 +28,7 @@ namespace WaterCaseTracking.Controllers
 
         #region 初始化-起
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public ActionResult searchInit()
         {
 
@@ -55,6 +56,8 @@ namespace WaterCaseTracking.Controllers
         #endregion 初始化-迄
 
         #region 取得表單oTable資料-起
+        [HttpPost]
+        [ValidateAntiForgeryToken]
         public ActionResult GetoTable(SearchInfoViewModel searchInfo)
         {
             logging(FuncName0, "取得表單資料");
@@ -302,6 +305,7 @@ namespace WaterCaseTracking.Controllers
 
         #region 匯入
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public JsonResult Upload0()
         {
             try

@@ -132,7 +132,14 @@ namespace WaterCaseTracking.Controllers
             #region 驗證
             if (!ModelState.IsValid)
             { return View(projectControllModel); }
-            projectControllModel.ContractAmount = Convert.ToDecimal(projectControllModel.SContractAmount);
+            if (projectControllModel.SContractAmount == null)
+            {
+                projectControllModel.ContractAmount = null;
+            }
+            else
+            {
+                projectControllModel.ContractAmount = Convert.ToDecimal(projectControllModel.SContractAmount);
+            }
             #endregion
             #region 參數宣告
             ProjectControllService projectControllService = new ProjectControllService();
@@ -199,7 +206,14 @@ namespace WaterCaseTracking.Controllers
             #region 驗證
             if (!ModelState.IsValid)
             { return View(projectControllModel); }
-            projectControllModel.ContractAmount = Convert.ToDecimal(projectControllModel.SContractAmount);
+            if (projectControllModel.SContractAmount == null)
+            {
+                projectControllModel.ContractAmount = null;
+            }
+            else
+            {
+                projectControllModel.ContractAmount = Convert.ToDecimal(projectControllModel.SContractAmount);
+            }
             #endregion
             #region 參數宣告
             ProjectControllService projectControllService = new ProjectControllService();
@@ -221,7 +235,7 @@ namespace WaterCaseTracking.Controllers
             if (string.IsNullOrEmpty(fail))
             {
                 TempData["message"] = "修改成功";
-                return RedirectToAction("Maintain0");
+                return RedirectToAction("Maintain0", "ProjectControll");
             }
             else
             {

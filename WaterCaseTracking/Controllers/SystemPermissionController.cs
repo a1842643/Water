@@ -22,6 +22,7 @@ namespace WaterCaseTracking.Controllers
         }
 
         #region 設定角色權限 SetPrograms()
+        [ValidateAntiForgeryToken]
         public ActionResult SetPrograms(SearchInfoViewModel searchInfo)
         {
             #region 參數宣告

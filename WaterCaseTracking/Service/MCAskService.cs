@@ -157,7 +157,7 @@ namespace WaterCaseTracking.Service
                 {
                     for (int i = 0; i < orgDt.Rows.Count; i++)
                     {
-                        if (string.IsNullOrEmpty(orgDt.Rows[i][0].ToString()))
+                        if (string.IsNullOrEmpty(orgDt.Rows[i][0].ToString().Replace("\n", "").Trim()))
                         {
                             throw new Exception("一般使用者只能修改");
                         }
@@ -168,11 +168,11 @@ namespace WaterCaseTracking.Service
                     try
                     {
                         mcaskModel = new MCAskModel();
-                        mcaskModel.ID = orgDt.Rows[i][0].ToString();
-                        mcaskModel.AskDate = orgDt.Rows[i][1].ToString();
-                        mcaskModel.Area = orgDt.Rows[i][2].ToString();
-                        mcaskModel.MemberName = orgDt.Rows[i][3].ToString();
-                        mcaskModel.Inquiry = orgDt.Rows[i][4].ToString();
+                        mcaskModel.ID = orgDt.Rows[i][0].ToString().Replace("\n","").Trim();
+                        mcaskModel.AskDate = orgDt.Rows[i][1].ToString().Replace("\n", "").Trim() == ""? null: orgDt.Rows[i][1].ToString().Replace("\n", "").Trim();
+                        mcaskModel.Area = orgDt.Rows[i][2].ToString().Replace("\n", "").Trim();
+                        mcaskModel.MemberName = orgDt.Rows[i][3].ToString().Replace("\n", "").Trim();
+                        mcaskModel.Inquiry = orgDt.Rows[i][4].ToString().Replace("\n", "").Trim();
                         mcaskModel.HandlingSituation = orgDt.Rows[i][5].ToString();
                         //如果是資料維護者或是一般使用者只能是自己的科室
                         if (roleName == "maintain" || roleName == "user")
@@ -181,15 +181,15 @@ namespace WaterCaseTracking.Service
                         }
                         else
                         {
-                            mcaskModel.Organizer = orgDt.Rows[i][6].ToString();
+                            mcaskModel.Organizer = orgDt.Rows[i][6].ToString().Replace("\n", "").Trim();
                             //判斷科室有無正確
                             if (!sysCodeDao.CheckSysCode(mcaskModel.Organizer))
                             {
                                 throw new Exception("查無此科室");
                             }
                         }
-                        mcaskModel.OrganizerMan = orgDt.Rows[i][7].ToString();
-                        mcaskModel.sStatus = orgDt.Rows[i][8].ToString();
+                        mcaskModel.OrganizerMan = orgDt.Rows[i][7].ToString().Replace("\n", "").Trim();
+                        mcaskModel.sStatus = orgDt.Rows[i][8].ToString().Replace("\n", "").Trim();
                         mcaskModel.Types = Types;
                         //listModel.Add(mcaskModel);
                         //判斷無ID則新增，有ID正確就修改

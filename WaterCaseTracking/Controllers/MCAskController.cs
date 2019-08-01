@@ -38,6 +38,7 @@ namespace WaterCaseTracking.Controllers
 
         #region 初始化-起
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public ActionResult searchInit()
         {
 
@@ -67,6 +68,8 @@ namespace WaterCaseTracking.Controllers
         #endregion 初始化-迄
 
         #region 取得表單oTable資料-起
+        [HttpPost]
+        [ValidateAntiForgeryToken]
         public ActionResult GetoTable(SearchInfoViewModel searchInfo)
         {
             string FuncName = searchInfo.Types == "0" ? FuncName0 : FuncName1;
@@ -98,6 +101,7 @@ namespace WaterCaseTracking.Controllers
 
         #region 匯出範例檔-起
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public ActionResult Export(ExportViewModel exportViewModel)
         {
             string FuncName = exportViewModel.Types == "0" ? FuncName0 : FuncName1;
@@ -478,6 +482,7 @@ namespace WaterCaseTracking.Controllers
 
         #region 匯入
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public JsonResult Upload0()
         {
             try
@@ -510,7 +515,7 @@ namespace WaterCaseTracking.Controllers
                 return Json(ex.Message);
             }
         }
-
+        [ValidateAntiForgeryToken]
         public JsonResult Upload1()
         {
             try

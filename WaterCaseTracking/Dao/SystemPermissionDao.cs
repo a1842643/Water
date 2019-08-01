@@ -96,7 +96,7 @@ namespace WaterCaseTracking.Dao
             #region 流程
 
             StringBuilder _sqlStr = new StringBuilder();
-            _sqlStr.Append("SELECT SID, PID, NAME, MailAddress FROM Permission WHERE PID != @PID ORDER BY SID ");
+            _sqlStr.Append("SELECT SID, PID, NAME FROM Permission WHERE PID != @PID ORDER BY SID ");
             //_sqlStr.Append("SELECT SID, PID, NAME FROM Permission ");
 
             _sqlParams = new Dapper.DynamicParameters();

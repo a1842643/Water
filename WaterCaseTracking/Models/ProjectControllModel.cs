@@ -15,12 +15,11 @@ namespace WaterCaseTracking.Models
         [StringLength(100)]
         [DisplayName("工程名稱")]
         public string ProjectName { get; set; }
-        [Required]
         [DisplayName("契約金額")]
         [MaxLength(18)]
         [RegularExpression(@"\d+(\.\d{1,2})?", ErrorMessage = "請輸入金額")]
         public string SContractAmount { get; set; }
-        public decimal ContractAmount { get; set; }
+        public decimal? ContractAmount { get; set; }
         [StringLength(10)]
         [DisplayName("開工日期")]
         public string BeginDate { get; set; }

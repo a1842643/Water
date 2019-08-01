@@ -327,6 +327,7 @@
 
         if ($("#Permission").val() != 0 && TchkId.length > 0) {
             var data = {
+                __RequestVerificationToken: $('input[name=__RequestVerificationToken]').val(),
                 ID: $("#Permission :selected").val(),
                 PROID: TchkId.substr(1)
             };

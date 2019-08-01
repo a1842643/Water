@@ -157,7 +157,7 @@ namespace WaterCaseTracking.Service
                 {
                     for (int i = 0; i < orgDt.Rows.Count; i++)
                     {
-                        if (string.IsNullOrEmpty(orgDt.Rows[i][0].ToString()))
+                        if (string.IsNullOrEmpty(orgDt.Rows[i][0].ToString().Replace("\n","").Trim()))
                         {
                             throw new Exception("一般使用者只能修改");
                         }
@@ -168,13 +168,20 @@ namespace WaterCaseTracking.Service
                     try
                     {
                         projectControllModel = new ProjectControllModel();
-                        projectControllModel.ID = orgDt.Rows[i][0].ToString();                     //項次
-                        projectControllModel.ProjectName = orgDt.Rows[i][1].ToString();            //工程名稱
-                        projectControllModel.ContractAmount = Convert.ToDecimal(orgDt.Rows[i][2]); //契約金額
-                        projectControllModel.BeginDate = orgDt.Rows[i][3].ToString();              //開工日期
-                        projectControllModel.PlanFinishDate = orgDt.Rows[i][4].ToString();         //預訂完工日期   
-                        projectControllModel.PlanScheduleExpDate = orgDt.Rows[i][5].ToString();    //預定進度        
-                        projectControllModel.PlanScheduleReaDate = orgDt.Rows[i][6].ToString();    //實際進度        
+                        projectControllModel.ID = orgDt.Rows[i][0].ToString().Replace("\n","").Trim();                     //項次
+                        projectControllModel.ProjectName = orgDt.Rows[i][1].ToString().Replace("\n","").Trim();            //工程名稱
+                        if (orgDt.Rows[i][2].ToString() == "")
+                        {
+                            projectControllModel.ContractAmount = null; //契約金額
+                        }
+                        else
+                        {
+                            projectControllModel.ContractAmount = Convert.ToDecimal(orgDt.Rows[i][2]); //契約金額
+                        }
+                        projectControllModel.BeginDate = orgDt.Rows[i][3].ToString().Replace("\n", "").Trim() == "" ? null : orgDt.Rows[i][3].ToString().Replace("\n", "").Trim();              //開工日期
+                        projectControllModel.PlanFinishDate = orgDt.Rows[i][4].ToString().Replace("\n","").Trim() == "" ? null : orgDt.Rows[i][4].ToString().Replace("\n", "").Trim();         //預訂完工日期   
+                        projectControllModel.PlanScheduleExpDate = orgDt.Rows[i][5].ToString().Replace("\n","").Trim() == "" ? null : orgDt.Rows[i][5].ToString().Replace("\n", "").Trim();    //預定進度        
+                        projectControllModel.PlanScheduleReaDate = orgDt.Rows[i][6].ToString().Replace("\n","").Trim() == "" ? null : orgDt.Rows[i][6].ToString().Replace("\n", "").Trim();    //實際進度        
 
                         //如果是資料維護者或是一般使用者只能是自己的科室
                         if (roleName == "maintain" || roleName == "user")
@@ -183,14 +190,14 @@ namespace WaterCaseTracking.Service
                         }
                         else
                         {
-                            projectControllModel.Organizer = orgDt.Rows[i][7].ToString();              //科室
+                            projectControllModel.Organizer = orgDt.Rows[i][7].ToString().Replace("\n","").Trim();              //科室
                             //判斷科室有無正確
                             if (!sysCodeDao.CheckSysCode(projectControllModel.Organizer))
                             {
                                 throw new Exception("查無此科室");
                             }
                         }
-                        projectControllModel.OrganizerMan = orgDt.Rows[i][8].ToString();           //承辦人 
+                        projectControllModel.OrganizerMan = orgDt.Rows[i][8].ToString().Replace("\n","").Trim();           //承辦人 
                         projectControllModel.Remark = orgDt.Rows[i][9].ToString();                 //備註
 
                         //判斷無ID則新增，有ID正確就修改

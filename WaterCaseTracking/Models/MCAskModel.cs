@@ -28,7 +28,6 @@ namespace WaterCaseTracking.Models
         [Required]
         [DisplayName("詢問事項")]
         public string Inquiry { get; set; }
-        [Required]
         [DataType(DataType.MultilineText)]
         [AllowHtml]
         [DisplayName("辦理情形")]

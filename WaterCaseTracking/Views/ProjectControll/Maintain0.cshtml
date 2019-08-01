@@ -9,7 +9,7 @@
         //初始化
         $.ajax({
             type: 'POST',
-            data: '{}',
+            data: { "__RequestVerificationToken": $('input[name=__RequestVerificationToken]').val() },
             //async: false, //啟用同步請求
             url: '@Url.Action("searchInit", "ProjectControll")',
             contenType: "application/json; charset=utf-8",

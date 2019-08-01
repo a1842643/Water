@@ -9,7 +9,7 @@
         //初始化
         $.ajax({
             type: 'POST',
-            data: '{}',
+            data: { __RequestVerificationToken: $('input[name=__RequestVerificationToken]').val() },
             //async: false, //啟用同步請求
             url: '@Url.Action("searchInit", "MCAsk")',
             contenType: "application/json; charset=utf-8",
@@ -91,6 +91,7 @@
         //}
 
         var ExportViewModel = {
+            __RequestVerificationToken: $('input[name=__RequestVerificationToken]').val(),
             txtInquiry: $('#txtInquiry').val(),
             txtHandlingSituation: $('#txtHandlingSituation').val(),
             txtMemberName: $('#txtMemberName').val(),
@@ -119,7 +120,7 @@
         //window.open(result, null);
     })
     .fail(function () {
-        alert("匯入失敗");
+        alert("發生錯誤");
     })
     }
 
@@ -171,6 +172,7 @@
         //## 將檔案append FormData
         var files = $("#files").get(0).files;
         if (files.length > 0) {
+            data.append("__RequestVerificationToken", $('input[name=__RequestVerificationToken]').val());
             data.append("UploadedFile", files[0]);
         }
         else {
@@ -192,7 +194,7 @@
         //document.location.replace('@Url.Action("Maintain0", "MCAsk")');
     })
     .fail(function () {
-        alert("匯入失敗");
+        alert("發生錯誤");
     });
     }
 
@@ -226,6 +228,7 @@
             "sAjaxSource": "McAsk/GetoTable",
             "deferLoading": 0,
             "fnServerParams": function (aoData) {
+                aoData.push({ "name": "__RequestVerificationToken", "value": $('input[name=__RequestVerificationToken]').val() });
                 aoData.push({ "name": "txtInquiry", "value": $('#txtInquiry').val() });
                 aoData.push({ "name": "txtHandlingSituation", "value": $('#txtHandlingSituation').val() });
                 aoData.push({ "name": "txtMemberName", "value": $('#txtMemberName').val() });
@@ -270,8 +273,7 @@
             "fnServerData": function (sSource, aoData, fnCallback) {
                 $.ajax({
                     "dataType": 'json',
-                    "contentType": "application/json; charset=utf-8",
-                    "type": "GET",
+                    "type": "POST",
                     "url": sSource,
                     "data": aoData,
                     "success":
