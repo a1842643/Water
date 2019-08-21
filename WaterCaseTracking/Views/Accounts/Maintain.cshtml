@@ -131,7 +131,10 @@
         $.ajax({
             type: "POST",
             url: '@Url.Action("Export", "Accounts")',
-            data: { fileExtension: $('#ddlFileExtension').val() },
+            data: {
+                fileExtension: $('#ddlFileExtension').val(),
+                __RequestVerificationToken: $('input[name=__RequestVerificationToken]').val()
+            },
             contenType: "application/json; charset=utf-8",
         })
     .done(function (result) {

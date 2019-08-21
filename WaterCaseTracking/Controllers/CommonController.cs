@@ -18,6 +18,7 @@ namespace WaterCaseTracking.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public ActionResult checkLoginInfo()
         {
             string error = "";

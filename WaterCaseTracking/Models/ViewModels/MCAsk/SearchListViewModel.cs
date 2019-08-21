@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Web;
 
 namespace WaterCaseTracking.Models.ViewModels.MCAsk
@@ -21,7 +22,8 @@ namespace WaterCaseTracking.Models.ViewModels.MCAsk
         public string Area { get; set; }
         public string MemberName { get; set; }
         public string Inquiry { get; set; }
-        public string HandlingSituation { get; set; }
+        string _HandlingSituation;
+        public string HandlingSituation { get { return _HandlingSituation; } set { _HandlingSituation = Regex.Replace(value, "<.*?>", string.Empty); } }
         public string Organizer { get; set; }
         public string OrganizerMan { get; set; }
         public string sStatus { get; set; }

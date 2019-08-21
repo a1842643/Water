@@ -76,7 +76,7 @@
         function checkLoginInfo(){
             $.ajax({
                 type: 'POST',
-                data: '{}',
+                data: { __RequestVerificationToken: $('input[name=__RequestVerificationToken]').val() },
                 async: false,
                 url: '@Url.Action("checkLoginInfo", "Common")',
                 contenType: "application/json; charset=utf-8",

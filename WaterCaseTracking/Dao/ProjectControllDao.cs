@@ -38,8 +38,8 @@ namespace WaterCaseTracking.Dao
                                 ,ContractAmount                                                 --契約金額
                                 ,CONVERT(VARCHAR,BeginDate, 111) as 'BeginDate'           --開工日期 
                                 ,CONVERT(VARCHAR,PlanFinishDate, 111) as 'PlanFinishDate'           --預訂完工日期
-                                ,CONVERT(VARCHAR,PlanScheduleExpDate, 111) as 'PlanScheduleExpDate'           --預定進度
-                                ,CONVERT(VARCHAR,PlanScheduleReaDate, 111) as 'PlanScheduleReaDate'           --實際進度
+                                ,PlanScheduleExpDate            --預定進度
+                                ,PlanScheduleReaDate            --實際進度
                                 ,Organizer                                            --承辦單位
                                 ,OrganizerMan                                         --承辦人員
                                 ,Remark                                               --備註
@@ -126,8 +126,8 @@ namespace WaterCaseTracking.Dao
                                 ,ContractAmount                                                 as '契約金額'
                                 ,CONVERT(VARCHAR,BeginDate, 111)          as '開工日期 '
                                 ,CONVERT(VARCHAR,PlanFinishDate, 111)           as '預訂完工日期'
-                                ,CONVERT(VARCHAR,PlanScheduleExpDate, 111)            as '預定進度'
-                                ,CONVERT(VARCHAR,PlanScheduleReaDate, 111)           as '實際進度'
+                                ,PlanScheduleExpDate            as '預定進度'
+                                ,PlanScheduleReaDate           as '實際進度'
                                 ,Organizer                                            as '承辦單位(若角色是一般使用者或資料維護者，科室預設自己的科室)'
                                 ,OrganizerMan                                         as '承辦人員'
                                 ,Remark                                               as '備註'
@@ -369,8 +369,8 @@ namespace WaterCaseTracking.Dao
                                 ,ContractAmount as 'SContractAmount'                                                --契約金額
                                 ,CONVERT(VARCHAR,BeginDate, 111) as 'BeginDate'           --開工日期 
                                 ,CONVERT(VARCHAR,PlanFinishDate, 111) as 'PlanFinishDate'           --預訂完工日期
-                                ,CONVERT(VARCHAR,PlanScheduleExpDate, 111) as 'PlanScheduleExpDate'           --預定進度
-                                ,CONVERT(VARCHAR,PlanScheduleReaDate, 111) as 'PlanScheduleReaDate'           --實際進度
+                                ,PlanScheduleExpDate           --預定進度
+                                ,PlanScheduleReaDate           --實際進度
                                 ,Organizer                                            --承辦單位
                                 ,OrganizerMan                                         --承辦人員
                                 ,Remark                                               --備註
@@ -415,8 +415,8 @@ namespace WaterCaseTracking.Dao
                                 ,ContractAmount as 'SContractAmount'                                                --契約金額
                                 ,CONVERT(VARCHAR,BeginDate, 111) as 'BeginDate'           --開工日期 
                                 ,CONVERT(VARCHAR,PlanFinishDate, 111) as 'PlanFinishDate'           --預訂完工日期
-                                ,CONVERT(VARCHAR,PlanScheduleExpDate, 111) as 'PlanScheduleExpDate'           --預定進度
-                                ,CONVERT(VARCHAR,PlanScheduleReaDate, 111) as 'PlanScheduleReaDate'           --實際進度
+                                ,PlanScheduleExpDate           --預定進度
+                                ,PlanScheduleReaDate           --實際進度
                                 ,Organizer                                            --承辦單位
                                 ,OrganizerMan                                         --承辦人員
                                 ,Remark                                               --備註

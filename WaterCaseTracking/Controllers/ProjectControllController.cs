@@ -28,6 +28,7 @@ namespace WaterCaseTracking.Controllers
 
         #region 初始化-起
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public ActionResult searchInit()
         {
 

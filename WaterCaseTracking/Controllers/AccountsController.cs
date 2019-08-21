@@ -464,6 +464,7 @@ namespace WaterCaseTracking.Controllers
         }
         #region 匯出範例檔-起
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public ActionResult Export(string fileExtension)
         {
             logging(FuncName, "匯出範例檔");

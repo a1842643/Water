@@ -63,20 +63,23 @@ namespace WaterCaseTracking.Controllers
         [AllowAnonymous]
         public ActionResult login()
         {
-            var ALL_HTTP = Request.ServerVariables["ALL_HTTP"];
-            ViewData["ALL_HTTP"] = ALL_HTTP;
-            var HTTP_LOGUID = Request.ServerVariables["HTTP_LOGUID"];
-            ViewData["HTTP_LOGUID"] = HTTP_LOGUID;
+            //清除Sission
+            Session.Clear();
+
+            //var ALL_HTTP = Request.ServerVariables["ALL_HTTP"];
+            //ViewData["ALL_HTTP"] = ALL_HTTP;
+            //var HTTP_LOGUID = Request.ServerVariables["HTTP_LOGUID"];
+            //ViewData["HTTP_LOGUID"] = HTTP_LOGUID;
 
 
             FormsAuthentication.SignOut();
 
-            HttpCookie cookie1 = new HttpCookie(FormsAuthentication.FormsCookieName, "");
-            cookie1.Expires = DateTime.Now.AddYears(-1);
-            Response.Cookies.Add(cookie1);
-            HttpCookie cookie2 = new HttpCookie("ASP.NET_SessionId", "");
-            cookie2.Expires = DateTime.Now.AddYears(-1);
-            Response.Cookies.Add(cookie2);
+            //HttpCookie cookie1 = new HttpCookie(FormsAuthentication.FormsCookieName, "");
+            //cookie1.Expires = DateTime.Now.AddYears(-1);
+            //Response.Cookies.Add(cookie1);
+            //HttpCookie cookie2 = new HttpCookie("ASP.NET_SessionId", "");
+            //cookie2.Expires = DateTime.Now.AddYears(-1);
+            //Response.Cookies.Add(cookie2);
             return View();
         }
 
