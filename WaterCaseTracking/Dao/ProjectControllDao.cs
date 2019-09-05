@@ -32,7 +32,7 @@ namespace WaterCaseTracking.Dao
             _sqlCountStr.Append("select count(1) from ProjectControll WHERE 1 = 1 ");
             _sqlStr.Append(@"SELECT
                                 '' as 'nothing'                                        --checkbox排序用
-                                ,ROW_NUMBER() OVER(ORDER BY ID ASC) as 'ID'            --編碼
+                                ,ROW_NUMBER() OVER(ORDER BY ID DESC) as 'ID'            --編碼
                                 ,NGuid + CONVERT(varchar,ID) as 'HID'                  --項次
                                 ,ProjectName                                                 --工程名稱
                                 ,ContractAmount                                                 --契約金額

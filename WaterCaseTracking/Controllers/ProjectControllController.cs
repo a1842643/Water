@@ -56,7 +56,7 @@ namespace WaterCaseTracking.Controllers
         #endregion 初始化-迄
 
         #region 取得表單oTable資料-起
-        public ActionResult GetoTable(SearchInfoViewModel searchInfo)
+        public ActionResult GetoTable(SearchInfoViewModel searchInfo, string hidIsEdit)
         {
             logging(FuncName0, "取得表單資料");
             #region 參數宣告
@@ -69,6 +69,19 @@ namespace WaterCaseTracking.Controllers
 
             try
             {
+                if (hidIsEdit == "0")
+                {
+                    Session["ProjectControllQueryParam"] = searchInfo;
+                }
+                else
+                {
+                    if (Session["ProjectControllQueryParam"] != null)
+                    {
+                        searchInfo = (SearchInfoViewModel)Session["ProjectControllQueryParam"];
+                    }
+                }
+
+
                 //送參數進入Service層做商業邏輯
                 searchList = projectControllService.QuerySearchList(searchInfo, UserName, roleName, Organizer);
             }
@@ -236,7 +249,7 @@ namespace WaterCaseTracking.Controllers
             if (string.IsNullOrEmpty(fail))
             {
                 TempData["message"] = "修改成功";
-                return RedirectToAction("Maintain0", "ProjectControll");
+                return RedirectToAction("Maintain0", new { IsEdit = "1" });
             }
             else
             {

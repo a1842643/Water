@@ -70,7 +70,7 @@ namespace WaterCaseTracking.Controllers
         #region 取得表單oTable資料-起
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult GetoTable(SearchInfoViewModel searchInfo)
+        public ActionResult GetoTable(SearchInfoViewModel searchInfo, string hidIsEdit)
         {
             string FuncName = searchInfo.Types == "0" ? FuncName0 : FuncName1;
             logging(FuncName, "取得表單資料");
@@ -84,6 +84,19 @@ namespace WaterCaseTracking.Controllers
 
             try
             {
+                if (hidIsEdit == "0")
+                {
+                    Session["MCAsk" + searchInfo.Types + "QueryParam"] = searchInfo;
+                }
+                else
+                {
+                    if (Session["MCAsk" + searchInfo.Types + "QueryParam"] != null)
+                    {
+                        searchInfo = (SearchInfoViewModel)Session["MCAsk" + searchInfo.Types + "QueryParam"];
+                    }
+                }
+
+
                 //送參數進入Service層做商業邏輯
                 searchList = mcaskService.QuerySearchList(searchInfo, UserName, roleName, Organizer);
             }
@@ -248,7 +261,7 @@ namespace WaterCaseTracking.Controllers
             if (string.IsNullOrEmpty(fail))
             {
                 TempData["message"] = "修改成功";
-                return RedirectToAction("Maintain0");
+                return RedirectToAction("Maintain0", new { IsEdit = "1" });
             }
             else
             {
@@ -401,7 +414,7 @@ namespace WaterCaseTracking.Controllers
             if (string.IsNullOrEmpty(fail))
             {
                 TempData["message"] = "修改成功";
-                return RedirectToAction("Maintain1");
+                return RedirectToAction("Maintain1", new { IsEdit = "1" });
             }
             else
             {

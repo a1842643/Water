@@ -33,6 +33,8 @@
                     }
                 });
                 $('#ddlOrganizer').html(ddlOrganizer);
+                $('#hidIsEdit').val('@(Request.QueryString["IsEdit"] as String)');
+                QueryTable();
 
             }, fail: function () {
                 alert('發生錯誤!!');
@@ -202,7 +204,7 @@
                 "sUrl": "../Content/datatables.net/tw.txt"
             },
             "bLengthChange": false,
-            "ordering": true,
+            "ordering": false,
             "order": [1, 'asc'],
             "async": true,
             "searching": false,
@@ -213,12 +215,13 @@
             "scrollX": true,
             "bProcessing": true,
             "bServerSide": true,
-            "sAjaxSource": "GetoTable",
+            "sAjaxSource": "@Url.Action("GetoTable", "ExpectedProject")",
             "deferLoading": 0,
             "fnServerParams": function (aoData) {
                 aoData.push({ "name": "__RequestVerificationToken", "value": $('input[name=__RequestVerificationToken]').val() });
                 aoData.push({ "name": "txtProjectName", "value": $('#txtProjectName').val() });
                 aoData.push({ "name": "ddlOrganizer", "value": $('#ddlOrganizer').val() });
+                aoData.push({ "name": "hidIsEdit", "value": $('#hidIsEdit').val() });
             },
             "columns": [
                 {
@@ -273,6 +276,7 @@
                         function (msg) {
                             fnCallback(msg);
 
+                            $('#hidIsEdit').val('0');
                         }
                 });
             }
@@ -336,7 +340,7 @@
                 </div>
                 <!-- /.box-body -->
             </div>
-
+            <input  type="hidden" id="hidIsEdit" value="0" />
         </div>
         <!-- /.col -->
     </div>
