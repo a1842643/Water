@@ -126,6 +126,10 @@ namespace WaterCaseTracking.Controllers
                 {
                     Name = "議會案件";
                 }
+                for(int i = 0; i < dt.Rows.Count;i++)
+                {
+                    dt.Rows[i][5] = System.Text.RegularExpressions.Regex.Replace(dt.Rows[i][5].ToString(),"<.*?>", string.Empty);
+                }
                 fileNamePath = ExportFunction.ExportDataTableTo(dt, exportViewModel.fileExtension, Name + "範例檔");
             }
             catch (Exception ex)
