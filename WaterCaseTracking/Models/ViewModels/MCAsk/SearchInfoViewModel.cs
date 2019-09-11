@@ -33,8 +33,8 @@ namespace WaterCaseTracking.Models.ViewModels.MCAsk
         string _ddlOrganizer;
         public string ddlOrganizer { get { return _ddlOrganizer; } set { _ddlOrganizer = HttpUtility.HtmlEncode(value); } }
         /// <summary>
-        /// 0:市政總質詢事項
-        /// 1:議會案件
+        /// 0:議會模擬問答事項
+        /// 1:議員詢問事項
         /// </summary>
         string _Types;
         public string Types { get { return _Types; } set { _Types = HttpUtility.HtmlEncode(value); } }

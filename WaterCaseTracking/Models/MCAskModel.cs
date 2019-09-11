@@ -47,8 +47,8 @@ namespace WaterCaseTracking.Models
         /// </summary>
         public string NGuid { get; set; }
         /// <summary>
-        /// 0:市政總質詢事項
-        /// 1:議會案件
+        /// 0:議會模擬問答事項
+        /// 1:議員詢問事項
         /// </summary>
         public string Types { get; set; }
     }

@@ -13,14 +13,14 @@ namespace WaterCaseTracking.Controllers
     [Authorize]
     public class MCAskController : BaseController
     {
-        string FuncName0 = "市政總質詢事項";
-        string FuncName0C = "市政總質詢事項-新增";
-        string FuncName0M = "市政總質詢事項-修改";
-        string FuncName0D = "市政總質詢事項-刪除";
-        string FuncName1 = "議會案件";
-        string FuncName1C = "議會案件-新增";
-        string FuncName1M = "議會案件-修改";
-        string FuncName1D = "議會案件-刪除";
+        string FuncName0 = "議會模擬問答事項";
+        string FuncName0C = "議會模擬問答事項-新增";
+        string FuncName0M = "議會模擬問答事項-修改";
+        string FuncName0D = "議會模擬問答事項-刪除";
+        string FuncName1 = "議員詢問事項";
+        string FuncName1C = "議員詢問事項-新增";
+        string FuncName1M = "議員詢問事項-修改";
+        string FuncName1D = "議員詢問事項-刪除";
         // GET: MCAsk
         public ActionResult Maintain0()
         {
@@ -133,11 +133,11 @@ namespace WaterCaseTracking.Controllers
                 string Name = "";
                 if (exportViewModel.Types == "0")
                 {
-                    Name = "市政總質詢事項";
+                    Name = "議會模擬問答事項";
                 }
                 else
                 {
-                    Name = "議會案件";
+                    Name = "議員詢問事項";
                 }
                 for(int i = 0; i < dt.Rows.Count;i++)
                 {

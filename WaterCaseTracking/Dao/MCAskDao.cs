@@ -202,8 +202,8 @@ namespace WaterCaseTracking.Dao
             //    _sqlStr.Append(" and Organizer = @Organizer ");
             //    _sqlParams.Add("Organizer", model.ddlOrganizer);
             //}
-            // 0:市政總質詢事項
-            // 1:議會案件
+            // 0:議會模擬問答事項
+            // 1:議員詢問事項
             if (!string.IsNullOrEmpty(model.Types))
             {
                 _sqlStr.Append(" and Types = @Types ");
@@ -403,7 +403,7 @@ namespace WaterCaseTracking.Dao
                                 , Organizer                          --承辦單位
                                 , OrganizerMan                       --承辦人員
                                 , sStatus                            --狀態
-                                , Types                              --0:市政總質詢事項, 議會案件
+                                , Types                              --0:議會模擬問答事項, 議員詢問事項
                                 , CreateUserName                     --新增人員
                                 , CreateDate                         --新增時間
                                 , UpdateUserName                     --修改人員
@@ -443,7 +443,7 @@ namespace WaterCaseTracking.Dao
                                 , Organizer                          --承辦單位
                                 , OrganizerMan                       --承辦人員
                                 , sStatus                            --狀態
-                                , Types                              --0:市政總質詢事項, 議會案件
+                                , Types                              --0:議會模擬問答事項, 議員詢問事項
                                 , CreateUserName                     --新增人員
                                 , CreateDate                         --新增時間
                                 , UpdateUserName                     --修改人員
