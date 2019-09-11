@@ -55,7 +55,7 @@
         oTable.ajax.reload(null, false);
         //判斷是否可以新增跟修改跟刪除
         if ('@(Session["roleName"] as string)' == 'supervisor') {
-            oTable.columns([0,23]).visible(false);
+            oTable.columns([0,3,12,13,19,20,21,22,23,24,25,26,27,28]).visible(false);
         }
         if ('@(Session["roleName"] as string)' == 'user') {
             oTable.columns([0]).visible(false);
@@ -231,20 +231,25 @@
                 },
                 { "title": "項次", "data": "ID" },
                 { "title": "工程名稱", "data": "ProjectName" },
+                { "title": "長官交辦日期", "data": "ChiefExecutiveDate" },
                 { "title": "成案預計完成日期", "data": "CrProExpDate" },
                 { "title": "成案實際完成日期", "data": "CrProReaDate" },
-                { "title": "規劃預計完成日期", "data": "PlanExpDate" },
-                { "title": "規劃實際完成日期", "data": "PlanReaDate" },
+                { "title": "設計發包預計完成評選日期", "data": "PlanExpDate" },
+                { "title": "設計發包實際完成評選日期", "data": "PlanReaDate" },
                 { "title": "基本設計預計完成日期", "data": "BasDesExpDate" },
                 { "title": "基本設計實際完成日期", "data": "BasDesReaDate" },
                 { "title": "細部設計預計完成日期", "data": "DetailDesExpDate" },
                 { "title": "細部設計實際完成日期", "data": "DetailDesReaDate" },
+                { "title": "發包簽准預計日期", "data": "SentAllowExpDate" },
+                { "title": "發包簽准實際日期", "data": "SentAllowRelDate" },
                 { "title": "上網發包預計完成日期", "data": "OnlineExpDate" },
                 { "title": "上網發包實際完成日期", "data": "OnlineReaDate" },
-                { "title": "評選預計完成日期", "data": "SelectionExpDate" },
-                { "title": "評選實際完成日期", "data": "SelectionReaDate" },
+                { "title": "評選日期", "data": "SelectionDate" },
                 { "title": "決標時間預計完成日期", "data": "AwardExpDate" },
                 { "title": "決標時間實際完成日期", "data": "AwardReaDate" },
+                { "title": "訂約日期", "data": "ContractDate" },
+                { "title": "前次辦理情形", "data": "PreSituation" },
+                { "title": "目前辦理情形", "data": "HandlingSituation" },
                 { "title": "科室", "data": "Organizer" },
                 { "title": "承辦人", "data": "OrganizerMan" },
                 { "title": "新增人員", "data": "CreateUserName" },

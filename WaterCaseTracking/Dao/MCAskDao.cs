@@ -224,7 +224,7 @@ namespace WaterCaseTracking.Dao
 
 
             //排序
-            _sqlStr.Append(" order by ID ");
+            _sqlStr.Append(" order by ID desc ");
 
             using (var cn = new SqlConnection(_dbConnPPP)) //連接資料庫
             {

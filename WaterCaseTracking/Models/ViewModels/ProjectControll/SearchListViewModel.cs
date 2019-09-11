@@ -18,6 +18,12 @@ namespace WaterCaseTracking.Models.ViewModels.ExpectedProject
         /// </summary>
         public string HID { get; set; }
         public string ProjectName { get; set; }
+        public string ChiefExecutiveDate { get; set; }
+        public string SentAllowExpDate { get; set; }
+        public string SentAllowRelDate { get; set; }
+        public string ContractDate { get; set; }
+        public string PreSituation { get; set; }
+        public string HandlingSituation { get; set; }
         public string CrProExpDate { get; set; }
         public string CrProReaDate { get; set; }
         public string PlanExpDate { get; set; }
@@ -28,8 +34,7 @@ namespace WaterCaseTracking.Models.ViewModels.ExpectedProject
         public string DetailDesReaDate { get; set; }
         public string OnlineExpDate { get; set; }
         public string OnlineReaDate { get; set; }
-        public string SelectionExpDate { get; set; }
-        public string SelectionReaDate { get; set; }
+        public string SelectionDate { get; set; }
         public string AwardExpDate { get; set; }
         public string AwardReaDate { get; set; }
         public string Organizer { get; set; }

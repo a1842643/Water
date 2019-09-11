@@ -32,23 +32,28 @@ namespace WaterCaseTracking.Dao
             _sqlCountStr.Append("select count(1) from ExpectedProject WHERE 1 = 1 ");
             _sqlStr.Append(@"SELECT
                                 '' as 'nothing'                                        --checkbox排序用
-                                ,ROW_NUMBER() OVER(ORDER BY ID DESC) as 'ID'            --編碼
+                                ,ROW_NUMBER() OVER(ORDER BY ID) as 'ID'            --編碼
                                 ,NGuid + CONVERT(varchar,ID) as 'HID'                  --項次
                                 ,ProjectName                                                 --工程名稱
-                                ,CONVERT(VARCHAR,CrProExpDate, 111) as 'CrProExpDate'           --成案預計完成日期 
-                                ,CONVERT(VARCHAR,CrProReaDate, 111) as 'CrProReaDate'           --成案實際完成日期
-                                ,CONVERT(VARCHAR,PlanExpDate, 111) as 'PlanExpDate'           --規劃預計完成日期
-                                ,CONVERT(VARCHAR,PlanReaDate, 111) as 'PlanReaDate'           --規劃實際完成日期
-                                ,CONVERT(VARCHAR,BasDesExpDate, 111) as 'BasDesExpDate'           --基本設計預計完成日期
-                                ,CONVERT(VARCHAR,BasDesReaDate, 111) as 'BasDesReaDate'           --基本設計實際完成日期
-                                ,CONVERT(VARCHAR,DetailDesExpDate, 111) as 'DetailDesExpDate'           --細部設計預計完成日期
-                                ,CONVERT(VARCHAR,DetailDesReaDate, 111) as 'DetailDesReaDate'           --細部設計實際完成日期
-                                ,CONVERT(VARCHAR,OnlineExpDate, 111) as 'OnlineExpDate'           --上網發包預計完成日期
-                                ,CONVERT(VARCHAR,OnlineReaDate, 111) as 'OnlineReaDate'           --上網發包實際完成日期
-                                ,CONVERT(VARCHAR,SelectionExpDate, 111) as 'SelectionExpDate'           --評選預計完成日期
-                                ,CONVERT(VARCHAR,SelectionReaDate, 111) as 'SelectionReaDate'           --評選實際完成日期
-                                ,CONVERT(VARCHAR,AwardExpDate, 111) as 'AwardExpDate'           --決標時間預計完成日期
-                                ,CONVERT(VARCHAR,AwardReaDate, 111) as 'AwardReaDate'           --決標時間實際完成日期
+                                ,ChiefExecutiveDate                                                 --長官交辦日期
+                                ,SentAllowExpDate                                                 --發包簽准預計日期
+                                ,SentAllowRelDate                                                 --發包簽准實際日期
+                                ,ContractDate                                                 --訂約日期
+                                ,PreSituation                                                 --前次辦理情形
+                                ,HandlingSituation                                                 --目前辦理情形
+                                ,CrProExpDate       --成案預計完成日期 
+                                ,CrProReaDate           --成案實際完成日期
+                                ,PlanExpDate          --規劃預計完成日期
+                                ,PlanReaDate           --規劃實際完成日期
+                                ,BasDesExpDate           --基本設計預計完成日期
+                                ,BasDesReaDate         --基本設計實際完成日期
+                                ,DetailDesExpDate           --細部設計預計完成日期
+                                ,DetailDesReaDate          --細部設計實際完成日期
+                                ,OnlineExpDate          --上網發包預計完成日期
+                                ,OnlineReaDate           --上網發包實際完成日期
+                                ,SelectionDate           --評選預計完成日期
+                                ,AwardExpDate          --決標時間預計完成日期
+                                ,AwardReaDate           --決標時間實際完成日期
                                 ,Organizer                                            --承辦單位
                                 ,OrganizerMan                                         --承辦人員
                                 ,CreateUserName                                       --新增人員 
@@ -130,21 +135,27 @@ namespace WaterCaseTracking.Dao
             {
                 _sqlStr.Append(@" NGuid + CONVERT(varchar,ID)                           as '項次(不可修改)' ");
             }
-            _sqlStr.Append(@" ,ProjectName                                                 as '工程名稱'
-                                ,CONVERT(VARCHAR,CrProExpDate, 111)           as '成案預計完成日期 '
-                                ,CONVERT(VARCHAR,CrProReaDate, 111)            as '成案實際完成日期'
-                                ,CONVERT(VARCHAR,PlanExpDate, 111)            as '規劃預計完成日期'
-                                ,CONVERT(VARCHAR,PlanReaDate, 111)            as '規劃實際完成日期'
-                                ,CONVERT(VARCHAR,BasDesExpDate, 111)            as '基本設計預計完成日期'
-                                ,CONVERT(VARCHAR,BasDesReaDate, 111)            as '基本設計實際完成日期'
-                                ,CONVERT(VARCHAR,DetailDesExpDate, 111)            as '細部設計預計完成日期'
-                                ,CONVERT(VARCHAR,DetailDesReaDate, 111)            as '細部設計實際完成日期'
-                                ,CONVERT(VARCHAR,OnlineExpDate, 111)             as '上網發包預計完成日期'
-                                ,CONVERT(VARCHAR,OnlineReaDate, 111)            as '上網發包實際完成日期'
-                                ,CONVERT(VARCHAR,SelectionExpDate, 111)            as '評選預計完成日期'
-                                ,CONVERT(VARCHAR,SelectionReaDate, 111)            as '評選實際完成日期'
-                                ,CONVERT(VARCHAR,AwardExpDate, 111)            as '決標時間預計完成日期'
-                                ,CONVERT(VARCHAR,AwardReaDate, 111)            as '決標時間實際完成日期'
+            _sqlStr.Append(@" 
+                                ,ProjectName                                                 as '工程名稱'
+                                ,ChiefExecutiveDate                                                 as '長官交辦日期'
+                                ,CrProExpDate           as '成案預計完成日期 '
+                                ,CrProReaDate            as '成案實際完成日期'
+                                ,PlanExpDate            as '設計發包預計完成評選日期'
+                                ,PlanReaDate            as '設計發包實際完成評選日期'
+                                ,BasDesExpDate            as '基本設計預計完成日期'
+                                ,BasDesReaDate            as '基本設計實際完成日期'
+                                ,DetailDesExpDate            as '細部設計預計完成日期'
+                                ,DetailDesReaDate            as '細部設計實際完成日期'
+                                ,SentAllowExpDate                                                 as '發包簽准預計日期'
+                                ,SentAllowRelDate                                                 as '發包簽准實際日期'
+                                ,OnlineExpDate             as '上網發包預計完成日期'
+                                ,OnlineReaDate            as '上網發包實際完成日期'
+                                ,SelectionDate            as '評選日期'
+                                ,AwardExpDate            as '決標時間預計完成日期'
+                                ,AwardReaDate            as '決標時間實際完成日期'
+                                ,ContractDate                                                 as '訂約日期'
+                                ,PreSituation                                                 as '前次辦理情形'
+                                ,HandlingSituation                                                 as '目前辦理情形'
                                 ,Organizer                                            as '承辦單位(若角色是一般使用者或資料維護者，科室預設自己的科室)'
                                 ,OrganizerMan                                         as '承辦人員'
                                   FROM ExpectedProject                                          
@@ -233,6 +244,12 @@ namespace WaterCaseTracking.Dao
             _sqlStr.Append(@"Insert Into ExpectedProject ( 
                                  NGuid
                                 , ProjectName
+                                , ChiefExecutiveDate
+                                , SentAllowExpDate
+                                , SentAllowRelDate
+                                , ContractDate
+                                , PreSituation
+                                , HandlingSituation
                                 , CrProExpDate
                                 , CrProReaDate
                                 , PlanExpDate
@@ -243,8 +260,7 @@ namespace WaterCaseTracking.Dao
                                 , DetailDesReaDate
                                 , OnlineExpDate
                                 , OnlineReaDate
-                                , SelectionExpDate
-                                , SelectionReaDate
+                                , SelectionDate
                                 , AwardExpDate
                                 , AwardReaDate
                                 , Organizer
@@ -257,6 +273,12 @@ namespace WaterCaseTracking.Dao
                             Values(
                                  NEWID()
                                 , @ProjectName
+                                , @ChiefExecutiveDate
+                                , @SentAllowExpDate
+                                , @SentAllowRelDate
+                                , @ContractDate
+                                , @PreSituation
+                                , @HandlingSituation
                                 , @CrProExpDate
                                 , @CrProReaDate  
                                 , @PlanExpDate
@@ -267,8 +289,7 @@ namespace WaterCaseTracking.Dao
                                 , @DetailDesReaDate
                                 , @OnlineExpDate
                                 , @OnlineReaDate
-                                , @SelectionExpDate
-                                , @SelectionReaDate
+                                , @SelectionDate
                                 , @AwardExpDate
                                 , @AwardReaDate
                                 , @Organizer
@@ -282,6 +303,12 @@ namespace WaterCaseTracking.Dao
             _sqlParamsList = new List<DynamicParameters>();
             _sqlParams = new Dapper.DynamicParameters();
             _sqlParams.Add("ProjectName", model.ProjectName);
+            _sqlParams.Add("ChiefExecutiveDate", model.ChiefExecutiveDate);
+            _sqlParams.Add("SentAllowExpDate", model.SentAllowExpDate);
+            _sqlParams.Add("SentAllowRelDate", model.SentAllowRelDate);
+            _sqlParams.Add("ContractDate", model.ContractDate);
+            _sqlParams.Add("PreSituation", model.PreSituation);
+            _sqlParams.Add("HandlingSituation", model.HandlingSituation);
             _sqlParams.Add("CrProExpDate", model.CrProExpDate);
             _sqlParams.Add("CrProReaDate", model.CrProReaDate);
             _sqlParams.Add("PlanExpDate", model.PlanExpDate);
@@ -292,8 +319,7 @@ namespace WaterCaseTracking.Dao
             _sqlParams.Add("DetailDesReaDate", model.DetailDesReaDate);
             _sqlParams.Add("OnlineExpDate", model.OnlineExpDate);
             _sqlParams.Add("OnlineReaDate", model.OnlineReaDate);
-            _sqlParams.Add("SelectionExpDate", model.SelectionExpDate);
-            _sqlParams.Add("SelectionReaDate", model.SelectionReaDate);
+            _sqlParams.Add("SelectionDate", model.SelectionDate);
             _sqlParams.Add("AwardExpDate", model.AwardExpDate);
             _sqlParams.Add("AwardReaDate", model.AwardReaDate);
             _sqlParams.Add("Organizer", model.Organizer);
@@ -322,6 +348,12 @@ namespace WaterCaseTracking.Dao
             StringBuilder _sqlStr = new StringBuilder();
             _sqlStr.Append(@"UPDATE ExpectedProject SET                            
                             ProjectName       = @ProjectName                 --工程名稱
+                           , ChiefExecutiveDate      = @ChiefExecutiveDate                --長官交辦日期 
+                           , SentAllowExpDate      = @SentAllowExpDate                --發包簽准預計日期 
+                           , SentAllowRelDate      = @SentAllowRelDate                --發包簽准實際日期 
+                           , ContractDate      = @ContractDate                --訂約日期 
+                           , PreSituation      = @PreSituation                --前次辦理情形 
+                           , HandlingSituation      = @HandlingSituation                --目前辦理情形 
                            , CrProExpDate      = @CrProExpDate                --成案預計完成日期 
                            , CrProReaDate      = @CrProReaDate                --成案實際完成日期
                            , PlanExpDate       = @PlanExpDate                 --規劃預計完成日期
@@ -332,8 +364,7 @@ namespace WaterCaseTracking.Dao
                            , DetailDesReaDate  = @DetailDesReaDate            --細部設計實際完成日期
                            , OnlineExpDate     = @OnlineExpDate               --上網發包預計完成日期
                            , OnlineReaDate     = @OnlineReaDate               --上網發包實際完成日期
-                           , SelectionExpDate  = @SelectionExpDate            --評選預計完成日期
-                           , SelectionReaDate  = @SelectionReaDate            --評選實際完成日期
+                           , SelectionDate  = @SelectionDate            --評選預計完成日期
                            , AwardExpDate      = @AwardExpDate                --決標時間預計完成日期
                            , AwardReaDate      = @AwardReaDate                --決標時間實際完成日期
                            , Organizer         = @Organizer                   --科室
@@ -346,6 +377,12 @@ namespace WaterCaseTracking.Dao
             _sqlParams = new Dapper.DynamicParameters();
             _sqlParams.Add("ID", model.ID);
             _sqlParams.Add("ProjectName", model.ProjectName);
+            _sqlParams.Add("ChiefExecutiveDate", model.ChiefExecutiveDate);
+            _sqlParams.Add("SentAllowExpDate", model.SentAllowExpDate);
+            _sqlParams.Add("SentAllowRelDate", model.SentAllowRelDate);
+            _sqlParams.Add("ContractDate", model.ContractDate);
+            _sqlParams.Add("PreSituation", model.PreSituation);
+            _sqlParams.Add("HandlingSituation", model.HandlingSituation);
             _sqlParams.Add("CrProExpDate", model.CrProExpDate);
             _sqlParams.Add("CrProReaDate", model.CrProReaDate);
             _sqlParams.Add("PlanExpDate", model.PlanExpDate);
@@ -356,8 +393,7 @@ namespace WaterCaseTracking.Dao
             _sqlParams.Add("DetailDesReaDate", model.DetailDesReaDate);
             _sqlParams.Add("OnlineExpDate", model.OnlineExpDate);
             _sqlParams.Add("OnlineReaDate", model.OnlineReaDate);
-            _sqlParams.Add("SelectionExpDate", model.SelectionExpDate);
-            _sqlParams.Add("SelectionReaDate", model.SelectionReaDate);
+            _sqlParams.Add("SelectionDate", model.SelectionDate);
             _sqlParams.Add("AwardExpDate", model.AwardExpDate);
             _sqlParams.Add("AwardReaDate", model.AwardReaDate);
             _sqlParams.Add("Organizer", model.Organizer);
@@ -421,20 +457,25 @@ namespace WaterCaseTracking.Dao
             _sqlStr.Append(@"select 
                                 ID                                   --項次
                                 , ProjectName                                                   --工程名稱
-                                ,CONVERT(VARCHAR,CrProExpDate, 111) as 'CrProExpDate'           --成案預計完成日期 
-                                ,CONVERT(VARCHAR,CrProReaDate, 111) as 'CrProReaDate'           --成案實際完成日期
-                                ,CONVERT(VARCHAR,PlanExpDate, 111) as 'PlanExpDate'           --規劃預計完成日期
-                                ,CONVERT(VARCHAR,PlanReaDate, 111) as 'PlanReaDate'           --規劃實際完成日期
-                                ,CONVERT(VARCHAR,BasDesExpDate, 111) as 'BasDesExpDate'           --基本設計預計完成日期
-                                ,CONVERT(VARCHAR,BasDesReaDate, 111) as 'BasDesReaDate'           --基本設計實際完成日期
-                                ,CONVERT(VARCHAR,DetailDesExpDate, 111) as 'DetailDesExpDate'           --細部設計預計完成日期
-                                ,CONVERT(VARCHAR,DetailDesReaDate, 111) as 'DetailDesReaDate'           --細部設計實際完成日期
-                                ,CONVERT(VARCHAR,OnlineExpDate, 111) as 'OnlineExpDate'           --上網發包預計完成日期
-                                ,CONVERT(VARCHAR,OnlineReaDate, 111) as 'OnlineReaDate'           --上網發包實際完成日期
-                                ,CONVERT(VARCHAR,SelectionExpDate, 111) as 'SelectionExpDate'           --評選預計完成日期
-                                ,CONVERT(VARCHAR,SelectionReaDate, 111) as 'SelectionReaDate'           --評選實際完成日期
-                                ,CONVERT(VARCHAR,AwardExpDate, 111) as 'AwardExpDate'           --決標時間預計完成日期
-                                ,CONVERT(VARCHAR,AwardReaDate, 111) as 'AwardReaDate'           --決標時間實際完成日期
+                                , ChiefExecutiveDate                                                   --長官交辦日期
+                                , SentAllowExpDate                                                   --發包簽准預計日期
+                                , SentAllowRelDate                                                   --發包簽准實際日期
+                                , ContractDate                                                   --訂約日期
+                                , PreSituation                                                   --前次辦理情形
+                                , HandlingSituation                                                   --目前辦理情形
+                                ,CrProExpDate         --成案預計完成日期 
+                                ,CrProReaDate         --成案實際完成日期
+                                ,PlanExpDate          --規劃預計完成日期
+                                ,PlanReaDate          --規劃實際完成日期
+                                ,BasDesExpDate          --基本設計預計完成日期
+                                ,BasDesReaDate          --基本設計實際完成日期
+                                ,DetailDesExpDate         --細部設計預計完成日期
+                                ,DetailDesReaDate         --細部設計實際完成日期
+                                ,OnlineExpDate           --上網發包預計完成日期
+                                ,OnlineReaDate           --上網發包實際完成日期
+                                ,SelectionDate         --評選預計完成日期
+                                ,AwardExpDate         --決標時間預計完成日期
+                                ,AwardReaDate         --決標時間實際完成日期
                                 ,Organizer                                            --承辦單位
                                 ,OrganizerMan                                         --承辦人員
                             from ExpectedProject WHERE NGuid + CONVERT(varchar,ID) = @ID 
@@ -465,20 +506,25 @@ namespace WaterCaseTracking.Dao
             _sqlStr.Append(@"select 
                                 ID                                   --項次
                                 , ProjectName                                                   --工程名稱
-                                ,CONVERT(VARCHAR,CrProExpDate, 111) as 'CrProExpDate'           --成案預計完成日期 
-                                ,CONVERT(VARCHAR,CrProReaDate, 111) as 'CrProReaDate'           --成案實際完成日期
-                                ,CONVERT(VARCHAR,PlanExpDate, 111) as 'PlanExpDate'           --規劃預計完成日期
-                                ,CONVERT(VARCHAR,PlanReaDate, 111) as 'PlanReaDate'           --規劃實際完成日期
-                                ,CONVERT(VARCHAR,BasDesExpDate, 111) as 'BasDesExpDate'           --基本設計預計完成日期
-                                ,CONVERT(VARCHAR,BasDesReaDate, 111) as 'BasDesReaDate'           --基本設計實際完成日期
-                                ,CONVERT(VARCHAR,DetailDesExpDate, 111) as 'DetailDesExpDate'           --細部設計預計完成日期
-                                ,CONVERT(VARCHAR,DetailDesReaDate, 111) as 'DetailDesReaDate'           --細部設計實際完成日期
-                                ,CONVERT(VARCHAR,OnlineExpDate, 111) as 'OnlineExpDate'           --上網發包預計完成日期
-                                ,CONVERT(VARCHAR,OnlineReaDate, 111) as 'OnlineReaDate'           --上網發包實際完成日期
-                                ,CONVERT(VARCHAR,SelectionExpDate, 111) as 'SelectionExpDate'           --評選預計完成日期
-                                ,CONVERT(VARCHAR,SelectionReaDate, 111) as 'SelectionReaDate'           --評選實際完成日期
-                                ,CONVERT(VARCHAR,AwardExpDate, 111) as 'AwardExpDate'           --決標時間預計完成日期
-                                ,CONVERT(VARCHAR,AwardReaDate, 111) as 'AwardReaDate'           --決標時間實際完成日期
+                                , ChiefExecutiveDate                                                   --長官交辦日期
+                                , SentAllowExpDate                                                   --發包簽准預計日期
+                                , SentAllowRelDate                                                   --發包簽准實際日期
+                                , ContractDate                                                   --訂約日期
+                                , PreSituation                                                   --前次辦理情形
+                                , HandlingSituation                                                   --目前辦理情形
+                                ,CrProExpDate           --成案預計完成日期 
+                                ,CrProReaDate         --成案實際完成日期
+                                ,PlanExpDate         --規劃預計完成日期
+                                ,PlanReaDate           --規劃實際完成日期
+                                ,BasDesExpDate          --基本設計預計完成日期
+                                ,BasDesReaDate          --基本設計實際完成日期
+                                ,DetailDesExpDate           --細部設計預計完成日期
+                                ,DetailDesReaDate           --細部設計實際完成日期
+                                ,OnlineExpDate          --上網發包預計完成日期
+                                ,OnlineReaDate          --上網發包實際完成日期
+                                ,SelectionDate           --評選日期
+                                ,AwardExpDate           --決標時間預計完成日期
+                                ,AwardReaDate           --決標時間實際完成日期
                                 ,Organizer                                            --承辦單位
                                 ,OrganizerMan                                         --承辦人員
                             from ExpectedProject WHERE NGuid + CONVERT(varchar,ID) = @ID 
@@ -524,6 +570,12 @@ namespace WaterCaseTracking.Dao
             StringBuilder _sqlStr = new StringBuilder();
             _sqlStr.Append(@"UPDATE ExpectedProject SET                            
                              ProjectName       = @ProjectName                 --工程名稱
+                           , ChiefExecutiveDate      = @ChiefExecutiveDate                --長官交辦日期 
+                           , SentAllowExpDate      = @SentAllowExpDate                --發包簽准預計日期 
+                           , SentAllowRelDate      = @SentAllowRelDate                --發包簽准實際日期 
+                           , ContractDate      = @ContractDate                --訂約日期 
+                           , PreSituation      = @PreSituation                --前次辦理情形 
+                           , HandlingSituation      = @HandlingSituation                --目前辦理情形 
                            , CrProExpDate      = @CrProExpDate                --成案預計完成日期 
                            , CrProReaDate      = @CrProReaDate                --成案實際完成日期
                            , PlanExpDate       = @PlanExpDate                 --規劃預計完成日期
@@ -534,8 +586,7 @@ namespace WaterCaseTracking.Dao
                            , DetailDesReaDate  = @DetailDesReaDate            --細部設計實際完成日期
                            , OnlineExpDate     = @OnlineExpDate               --上網發包預計完成日期
                            , OnlineReaDate     = @OnlineReaDate               --上網發包實際完成日期
-                           , SelectionExpDate  = @SelectionExpDate            --評選預計完成日期
-                           , SelectionReaDate  = @SelectionReaDate            --評選實際完成日期
+                           , SelectionDate  = @SelectionDate            --評選預計完成日期
                            , AwardExpDate      = @AwardExpDate                --決標時間預計完成日期
                            , AwardReaDate      = @AwardReaDate                --決標時間實際完成日期
                            , Organizer         = @Organizer                   --科室
@@ -548,6 +599,12 @@ namespace WaterCaseTracking.Dao
             _sqlParams = new Dapper.DynamicParameters();
             _sqlParams.Add("ID", model.ID);
             _sqlParams.Add("ProjectName", model.ProjectName);
+            _sqlParams.Add("ChiefExecutiveDate", model.ChiefExecutiveDate);
+            _sqlParams.Add("SentAllowExpDate", model.SentAllowExpDate);
+            _sqlParams.Add("SentAllowRelDate", model.SentAllowRelDate);
+            _sqlParams.Add("ContractDate", model.ContractDate);
+            _sqlParams.Add("PreSituation", model.PreSituation);
+            _sqlParams.Add("HandlingSituation", model.HandlingSituation);
             _sqlParams.Add("CrProExpDate", model.CrProExpDate);
             _sqlParams.Add("CrProReaDate", model.CrProReaDate);
             _sqlParams.Add("PlanExpDate", model.PlanExpDate);
@@ -558,8 +615,7 @@ namespace WaterCaseTracking.Dao
             _sqlParams.Add("DetailDesReaDate", model.DetailDesReaDate);
             _sqlParams.Add("OnlineExpDate", model.OnlineExpDate);
             _sqlParams.Add("OnlineReaDate", model.OnlineReaDate);
-            _sqlParams.Add("SelectionExpDate", model.SelectionExpDate);
-            _sqlParams.Add("SelectionReaDate", model.SelectionReaDate);
+            _sqlParams.Add("SelectionDate", model.SelectionDate);
             _sqlParams.Add("AwardExpDate", model.AwardExpDate);
             _sqlParams.Add("AwardReaDate", model.AwardReaDate);
             _sqlParams.Add("Organizer", model.Organizer);
@@ -586,6 +642,12 @@ namespace WaterCaseTracking.Dao
             _sqlStr.Append(@"Insert Into ExpectedProject ( 
                                  NGuid
                                 , ProjectName
+                                , ChiefExecutiveDate
+                                , SentAllowExpDate
+                                , SentAllowRelDate
+                                , ContractDate
+                                , PreSituation
+                                , HandlingSituation
                                 , CrProExpDate
                                 , CrProReaDate
                                 , PlanExpDate
@@ -596,8 +658,7 @@ namespace WaterCaseTracking.Dao
                                 , DetailDesReaDate
                                 , OnlineExpDate
                                 , OnlineReaDate
-                                , SelectionExpDate
-                                , SelectionReaDate
+                                , SelectionDate
                                 , AwardExpDate
                                 , AwardReaDate
                                 , Organizer
@@ -610,6 +671,12 @@ namespace WaterCaseTracking.Dao
                             Values(
                                  NEWID()
                                 , @ProjectName
+                                , @ChiefExecutiveDate
+                                , @SentAllowExpDate
+                                , @SentAllowRelDate
+                                , @ContractDate
+                                , @PreSituation
+                                , @HandlingSituation
                                 , @CrProExpDate
                                 , @CrProReaDate  
                                 , @PlanExpDate
@@ -620,8 +687,7 @@ namespace WaterCaseTracking.Dao
                                 , @DetailDesReaDate
                                 , @OnlineExpDate
                                 , @OnlineReaDate
-                                , @SelectionExpDate
-                                , @SelectionReaDate
+                                , @SelectionDate
                                 , @AwardExpDate
                                 , @AwardReaDate
                                 , @Organizer
@@ -635,6 +701,12 @@ namespace WaterCaseTracking.Dao
             _sqlParamsList = new List<DynamicParameters>();
             _sqlParams = new Dapper.DynamicParameters();
             _sqlParams.Add("ProjectName", model.ProjectName);
+            _sqlParams.Add("ChiefExecutiveDate", model.ChiefExecutiveDate);
+            _sqlParams.Add("SentAllowExpDate", model.SentAllowExpDate);
+            _sqlParams.Add("SentAllowRelDate", model.SentAllowRelDate);
+            _sqlParams.Add("ContractDate", model.ContractDate);
+            _sqlParams.Add("PreSituation", model.PreSituation);
+            _sqlParams.Add("HandlingSituation", model.HandlingSituation);
             _sqlParams.Add("CrProExpDate", model.CrProExpDate);
             _sqlParams.Add("CrProReaDate", model.CrProReaDate);
             _sqlParams.Add("PlanExpDate", model.PlanExpDate);
@@ -645,8 +717,7 @@ namespace WaterCaseTracking.Dao
             _sqlParams.Add("DetailDesReaDate", model.DetailDesReaDate);
             _sqlParams.Add("OnlineExpDate", model.OnlineExpDate);
             _sqlParams.Add("OnlineReaDate", model.OnlineReaDate);
-            _sqlParams.Add("SelectionExpDate", model.SelectionExpDate);
-            _sqlParams.Add("SelectionReaDate", model.SelectionReaDate);
+            _sqlParams.Add("SelectionDate", model.SelectionDate);
             _sqlParams.Add("AwardExpDate", model.AwardExpDate);
             _sqlParams.Add("AwardReaDate", model.AwardReaDate);
             _sqlParams.Add("Organizer", model.Organizer);

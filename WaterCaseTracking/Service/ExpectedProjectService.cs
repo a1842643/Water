@@ -176,22 +176,27 @@ namespace WaterCaseTracking.Service
                     {
                         expectedProjectModel = new ExpectedProjectModel();
                         expectedProjectModel.ID = orgDt.Rows[i][0].ToString().Replace("\n","").Trim();                     //項次
-                        expectedProjectModel.ProjectName = orgDt.Rows[i][1].ToString().Replace("\n","").Trim() == "" ? null : orgDt.Rows[i][1].ToString().Replace("\n", "").Trim();            //工程名稱
-                        expectedProjectModel.CrProExpDate = orgDt.Rows[i][2].ToString().Replace("\n","").Trim() == "" ? null : orgDt.Rows[i][2].ToString().Replace("\n","").Trim();           //成案預計完成日期 
-                        expectedProjectModel.CrProReaDate = orgDt.Rows[i][3].ToString().Replace("\n","").Trim() == "" ? null : orgDt.Rows[i][3].ToString().Replace("\n", "").Trim();           //成案實際完成日期
-                        expectedProjectModel.PlanExpDate = orgDt.Rows[i][4].ToString().Replace("\n","").Trim() == "" ? null : orgDt.Rows[i][4].ToString().Replace("\n", "").Trim();            //規劃預計完成日期
-                        expectedProjectModel.PlanReaDate = orgDt.Rows[i][5].ToString().Replace("\n","").Trim() == "" ? null : orgDt.Rows[i][5].ToString().Replace("\n", "").Trim();            //規劃實際完成日期
-                        expectedProjectModel.BasDesExpDate = orgDt.Rows[i][6].ToString().Replace("\n","").Trim() == "" ? null : orgDt.Rows[i][6].ToString().Replace("\n", "").Trim();          //基本設計預計完成日期
-                        expectedProjectModel.BasDesReaDate = orgDt.Rows[i][7].ToString().Replace("\n","").Trim() == "" ? null : orgDt.Rows[i][7].ToString().Replace("\n", "").Trim();          //基本設計實際完成日期
-                        expectedProjectModel.DetailDesExpDate = orgDt.Rows[i][8].ToString().Replace("\n","").Trim() == "" ? null : orgDt.Rows[i][8].ToString().Replace("\n", "").Trim();       //細部設計預計完成日期
-                        expectedProjectModel.DetailDesReaDate = orgDt.Rows[i][9].ToString().Replace("\n","").Trim() == "" ? null : orgDt.Rows[i][9].ToString().Replace("\n", "").Trim();       //細部設計實際完成日期
-                        expectedProjectModel.OnlineExpDate = orgDt.Rows[i][10].ToString().Replace("\n","").Trim() == "" ? null : orgDt.Rows[i][10].ToString().Replace("\n", "").Trim();         //上網發包預計完成日期
-                        expectedProjectModel.OnlineReaDate = orgDt.Rows[i][11].ToString().Replace("\n","").Trim() == "" ? null : orgDt.Rows[i][11].ToString().Replace("\n", "").Trim();         //上網發包實際完成日期
-                        expectedProjectModel.SelectionExpDate = orgDt.Rows[i][12].ToString().Replace("\n","").Trim() == "" ? null : orgDt.Rows[i][12].ToString().Replace("\n", "").Trim();      //評選預計完成日期
-                        expectedProjectModel.SelectionReaDate = orgDt.Rows[i][13].ToString().Replace("\n","").Trim() == "" ? null : orgDt.Rows[i][13].ToString().Replace("\n", "").Trim();      //評選實際完成日期
-                        expectedProjectModel.AwardExpDate = orgDt.Rows[i][14].ToString().Replace("\n","").Trim() == "" ? null : orgDt.Rows[i][14].ToString().Replace("\n", "").Trim();          //決標時間預計完成日期
-                        expectedProjectModel.AwardReaDate = orgDt.Rows[i][15].ToString().Replace("\n","").Trim() == "" ? null : orgDt.Rows[i][15].ToString().Replace("\n", "").Trim();          //決標時間實際完成日期
-                        expectedProjectModel.Organizer = orgDt.Rows[i][16].ToString().Replace("\n","").Trim();             //科室
+                        expectedProjectModel.ProjectName = orgDt.Rows[i][1].ToString().Replace("\n", "").Trim() == "" ? null : orgDt.Rows[i][1].ToString().Replace("\n", "").Trim();            //工程名稱
+                        expectedProjectModel.ChiefExecutiveDate = orgDt.Rows[i][2].ToString().Replace("\n", "").Trim() == "" ? null : orgDt.Rows[i][2].ToString().Replace("\n", "").Trim();            //長官交辦日期
+                        expectedProjectModel.CrProExpDate = orgDt.Rows[i][3].ToString().Replace("\n","").Trim() == "" ? null : orgDt.Rows[i][3].ToString().Replace("\n","").Trim();           //成案預計完成日期 
+                        expectedProjectModel.CrProReaDate = orgDt.Rows[i][4].ToString().Replace("\n","").Trim() == "" ? null : orgDt.Rows[i][4].ToString().Replace("\n", "").Trim();           //成案實際完成日期
+                        expectedProjectModel.PlanExpDate = orgDt.Rows[i][5].ToString().Replace("\n","").Trim() == "" ? null : orgDt.Rows[i][5].ToString().Replace("\n", "").Trim();            //規劃預計完成日期
+                        expectedProjectModel.PlanReaDate = orgDt.Rows[i][6].ToString().Replace("\n","").Trim() == "" ? null : orgDt.Rows[i][6].ToString().Replace("\n", "").Trim();            //規劃實際完成日期
+                        expectedProjectModel.BasDesExpDate = orgDt.Rows[i][7].ToString().Replace("\n","").Trim() == "" ? null : orgDt.Rows[i][7].ToString().Replace("\n", "").Trim();          //基本設計預計完成日期
+                        expectedProjectModel.BasDesReaDate = orgDt.Rows[i][8].ToString().Replace("\n","").Trim() == "" ? null : orgDt.Rows[i][8].ToString().Replace("\n", "").Trim();          //基本設計實際完成日期
+                        expectedProjectModel.DetailDesExpDate = orgDt.Rows[i][9].ToString().Replace("\n","").Trim() == "" ? null : orgDt.Rows[i][9].ToString().Replace("\n", "").Trim();       //細部設計預計完成日期
+                        expectedProjectModel.DetailDesReaDate = orgDt.Rows[i][10].ToString().Replace("\n","").Trim() == "" ? null : orgDt.Rows[i][10].ToString().Replace("\n", "").Trim();       //細部設計實際完成日期
+                        expectedProjectModel.SentAllowExpDate = orgDt.Rows[i][11].ToString().Replace("\n", "").Trim() == "" ? null : orgDt.Rows[i][11].ToString().Replace("\n", "").Trim();            //發包簽准預計日期
+                        expectedProjectModel.SentAllowRelDate = orgDt.Rows[i][12].ToString().Replace("\n", "").Trim() == "" ? null : orgDt.Rows[i][12].ToString().Replace("\n", "").Trim();            //發包簽准實際日期
+                        expectedProjectModel.OnlineExpDate = orgDt.Rows[i][13].ToString().Replace("\n","").Trim() == "" ? null : orgDt.Rows[i][13].ToString().Replace("\n", "").Trim();         //上網發包預計完成日期
+                        expectedProjectModel.OnlineReaDate = orgDt.Rows[i][14].ToString().Replace("\n","").Trim() == "" ? null : orgDt.Rows[i][14].ToString().Replace("\n", "").Trim();         //上網發包實際完成日期
+                        expectedProjectModel.SelectionDate = orgDt.Rows[i][15].ToString().Replace("\n","").Trim() == "" ? null : orgDt.Rows[i][15].ToString().Replace("\n", "").Trim();      //評選預計完成日期
+                        expectedProjectModel.AwardExpDate = orgDt.Rows[i][16].ToString().Replace("\n","").Trim() == "" ? null : orgDt.Rows[i][16].ToString().Replace("\n", "").Trim();          //決標時間預計完成日期
+                        expectedProjectModel.AwardReaDate = orgDt.Rows[i][17].ToString().Replace("\n","").Trim() == "" ? null : orgDt.Rows[i][17].ToString().Replace("\n", "").Trim();          //決標時間實際完成日期
+                        expectedProjectModel.ContractDate = orgDt.Rows[i][18].ToString().Replace("\n", "").Trim() == "" ? null : orgDt.Rows[i][18].ToString().Replace("\n", "").Trim();            //訂約日期
+                        expectedProjectModel.PreSituation = orgDt.Rows[i][19].ToString().Replace("\n", "").Trim() == "" ? null : orgDt.Rows[i][19].ToString().Replace("\n", "").Trim();            //前次辦理情形
+                        expectedProjectModel.HandlingSituation = orgDt.Rows[i][20].ToString().Replace("\n", "").Trim() == "" ? null : orgDt.Rows[i][20].ToString().Replace("\n", "").Trim();            //目前辦理情形
+                        expectedProjectModel.Organizer = orgDt.Rows[i][21].ToString().Replace("\n","").Trim();             //科室
                         //如果是資料維護者或是一般使用者只能是自己的科室
                         if (roleName == "maintain" || roleName == "user")
                         {
@@ -199,14 +204,14 @@ namespace WaterCaseTracking.Service
                         }
                         else
                         {
-                            expectedProjectModel.Organizer = orgDt.Rows[i][16].ToString().Replace("\n","").Trim();             //科室
+                            expectedProjectModel.Organizer = orgDt.Rows[i][21].ToString().Replace("\n","").Trim();             //科室
                             //判斷科室有無正確
                             if (!sysCodeDao.CheckSysCode(expectedProjectModel.Organizer))
                             {
                                 throw new Exception("查無此科室");
                             }
                         }
-                        expectedProjectModel.OrganizerMan = orgDt.Rows[i][17].ToString().Replace("\n","").Trim();          //承辦人
+                        expectedProjectModel.OrganizerMan = orgDt.Rows[i][22].ToString().Replace("\n","").Trim();          //承辦人
 
                         //判斷無ID則新增，有ID正確就修改
                         if (!string.IsNullOrEmpty(expectedProjectModel.ID))

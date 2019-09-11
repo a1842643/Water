@@ -32,12 +32,33 @@ namespace WaterCaseTracking.Dao
             _sqlCountStr.Append("select count(1) from ProjectControll WHERE 1 = 1 ");
             _sqlStr.Append(@"SELECT
                                 '' as 'nothing'                                        --checkbox排序用
-                                ,ROW_NUMBER() OVER(ORDER BY ID DESC) as 'ID'            --編碼
+                                ,ROW_NUMBER() OVER(ORDER BY ID) as 'ID'            --編碼
                                 ,NGuid + CONVERT(varchar,ID) as 'HID'                  --項次
                                 ,ProjectName                                                 --工程名稱
+                                ,AwardDate                                                 --決標日
+                                ,ContractDate                                                 --訂約日
+                                ,ConstructionDate                                                 --進場施工時間
+                                ,Duration                                                 --原工期
+                                ,Company                                                 -- 承商 
+                                ,ConstructionGap                                                 --施工落差％
+                                ,BehindReason                                                 --施工落後原因
+                                ,Countermeasures                                                 --因應對策及預訂期程
+                                ,ExtensionTimes                                                 --展期工期次數(累計)
+                                ,ExtensionDays                                                 --展期工期天數(累計)
+                                ,Changes                                                 --變更設計
+                                ,ChangeAmount                                                 --變更設計變更增減金額(千元）
+                                ,CompletedExpDate                                                 --完工預定日期
+                                ,CompletedRelDate                                                 --完工實際日期
+                                ,CorrectionAmount                                                 --修正契約總價(千元)
+                                ,CumulativeValuation                                                 --累計估驗計價(千元)
+                                ,EstimateRate                                                 --估驗款執行率
+                                ,EstimateBehind                                                 --估驗款落後%
+                                ,EstimateBehindReason                                                 --估驗款進度延遲因素分析 
+                                ,EstimateDate                                                 -- 估驗提報日期
+                                ,HandlingSituation                                                 --目前辦理情形
                                 ,ContractAmount                                                 --契約金額
-                                ,CONVERT(VARCHAR,BeginDate, 111) as 'BeginDate'           --開工日期 
-                                ,CONVERT(VARCHAR,PlanFinishDate, 111) as 'PlanFinishDate'           --預訂完工日期
+                                ,BeginDate           --開工日期 
+                                ,PlanFinishDate           --預訂完工日期
                                 ,PlanScheduleExpDate            --預定進度
                                 ,PlanScheduleReaDate            --實際進度
                                 ,Organizer                                            --承辦單位
@@ -123,14 +144,35 @@ namespace WaterCaseTracking.Dao
                 _sqlStr.Append(@" NGuid + CONVERT(varchar,ID)                           as '項次(不可修改)' ");
             }
             _sqlStr.Append(@" ,ProjectName                                                 as '工程名稱'
+                                ,AwardDate                                                 as '決標日'
+                                ,ContractDate                                                 as '訂約日'
+                                ,BeginDate          as '開工日期 '
+                                ,ConstructionDate                                                 as '進場施工時間'
+                                ,Duration                                                 as '原工期'
+                                ,Company                                                 as ' 承商 '
+                                ,PlanFinishDate           as '原預訂完工日期'
                                 ,ContractAmount                                                 as '契約金額'
-                                ,CONVERT(VARCHAR,BeginDate, 111)          as '開工日期 '
-                                ,CONVERT(VARCHAR,PlanFinishDate, 111)           as '預訂完工日期'
                                 ,PlanScheduleExpDate            as '預定進度'
                                 ,PlanScheduleReaDate           as '實際進度'
+                                ,ConstructionGap                                                 as '施工落差％'
+                                ,BehindReason                                                 as '施工落後原因'
+                                ,Countermeasures                                                 as '因應對策及預訂期程'
+                                ,ExtensionTimes                                                 as '展期工期次數(累計)'
+                                ,ExtensionDays                                                 as '展期工期天數(累計)'
+                                ,Changes                                                 as '變更設計'
+                                ,ChangeAmount                                                 as '變更設計變更增減金額(千元）'
+                                ,CompletedExpDate                                                 as '完工預定日期'
+                                ,CompletedRelDate                                                 as '完工實際日期'
+                                ,CorrectionAmount                                                 as '修正契約總價(千元)'
+                                ,CumulativeValuation                                                 as '累計估驗計價(千元)'
+                                ,EstimateRate                                                 as '估驗款執行率'
+                                ,EstimateBehind                                                 as '估驗款落後%'
+                                ,EstimateBehindReason                                                 as '估驗款進度延遲因素分析 '
+                                ,EstimateDate                                                 as ' 估驗提報日期'
+                                ,HandlingSituation                                                 as '目前辦理情形'
+                                ,Remark                                               as '備註'
                                 ,Organizer                                            as '承辦單位(若角色是一般使用者或資料維護者，科室預設自己的科室)'
                                 ,OrganizerMan                                         as '承辦人員'
-                                ,Remark                                               as '備註'
                                   FROM ProjectControll                                            
                             WHERE 1 = 1 ");
 
@@ -217,6 +259,27 @@ namespace WaterCaseTracking.Dao
             _sqlStr.Append(@"Insert Into ProjectControll ( 
                                  NGuid
                                 , ProjectName
+                                , AwardDate
+                                , ContractDate
+                                , ConstructionDate
+                                , Duration
+                                , Company
+                                , ConstructionGap
+                                , BehindReason
+                                , Countermeasures
+                                , ExtensionTimes
+                                , ExtensionDays
+                                , Changes
+                                , ChangeAmount
+                                , CompletedExpDate
+                                , CompletedRelDate
+                                , CorrectionAmount
+                                , CumulativeValuation
+                                , EstimateRate
+                                , EstimateBehind
+                                , EstimateBehindReason
+                                , EstimateDate
+                                , HandlingSituation
                                 , ContractAmount
                                 , BeginDate
                                 , PlanFinishDate
@@ -233,6 +296,27 @@ namespace WaterCaseTracking.Dao
                             Values(
                                  NEWID()
                                 , @ProjectName
+                                , @AwardDate
+                                , @ContractDate
+                                , @ConstructionDate
+                                , @Duration
+                                , @Company
+                                , @ConstructionGap
+                                , @BehindReason
+                                , @Countermeasures
+                                , @ExtensionTimes
+                                , @ExtensionDays
+                                , @Changes
+                                , @ChangeAmount
+                                , @CompletedExpDate
+                                , @CompletedRelDate
+                                , @CorrectionAmount
+                                , @CumulativeValuation
+                                , @EstimateRate
+                                , @EstimateBehind
+                                , @EstimateBehindReason
+                                , @EstimateDate
+                                , @HandlingSituation
                                 , @ContractAmount
                                 , @BeginDate
                                 , @PlanFinishDate
@@ -250,6 +334,27 @@ namespace WaterCaseTracking.Dao
             _sqlParamsList = new List<DynamicParameters>();
             _sqlParams = new Dapper.DynamicParameters();
             _sqlParams.Add("ProjectName", model.ProjectName);
+            _sqlParams.Add("AwardDate", model.AwardDate);
+            _sqlParams.Add("ContractDate", model.ContractDate);
+            _sqlParams.Add("ConstructionDate", model.ConstructionDate);
+            _sqlParams.Add("Duration", model.Duration);
+            _sqlParams.Add("Company", model.Company);
+            _sqlParams.Add("ConstructionGap", model.ConstructionGap);
+            _sqlParams.Add("BehindReason", model.BehindReason);
+            _sqlParams.Add("Countermeasures", model.Countermeasures);
+            _sqlParams.Add("ExtensionTimes", model.ExtensionTimes);
+            _sqlParams.Add("ExtensionDays", model.ExtensionDays);
+            _sqlParams.Add("Changes", model.Changes);
+            _sqlParams.Add("ChangeAmount", model.ChangeAmount);
+            _sqlParams.Add("CompletedExpDate", model.CompletedExpDate);
+            _sqlParams.Add("CompletedRelDate", model.CompletedRelDate);
+            _sqlParams.Add("CorrectionAmount", model.CorrectionAmount);
+            _sqlParams.Add("CumulativeValuation", model.CumulativeValuation);
+            _sqlParams.Add("EstimateRate", model.EstimateRate);
+            _sqlParams.Add("EstimateBehind", model.EstimateBehind);
+            _sqlParams.Add("EstimateBehindReason", model.EstimateBehindReason);
+            _sqlParams.Add("EstimateDate", model.EstimateDate);
+            _sqlParams.Add("HandlingSituation", model.HandlingSituation);
             _sqlParams.Add("ContractAmount", model.ContractAmount);
             _sqlParams.Add("BeginDate", model.BeginDate);
             _sqlParams.Add("PlanFinishDate", model.PlanFinishDate);
@@ -282,6 +387,27 @@ namespace WaterCaseTracking.Dao
             StringBuilder _sqlStr = new StringBuilder();
             _sqlStr.Append(@"UPDATE ProjectControll SET                            
                             ProjectName       = @ProjectName                 --工程名稱
+                           , AwardDate         = @AwardDate        --決標日
+                           , ContractDate         = @ContractDate        --訂約日
+                           , ConstructionDate         = @ConstructionDate        --進場施工時間
+                           , Duration         = @Duration        --原工期
+                           , Company         = @Company        -- 承商 
+                           , ConstructionGap         = @ConstructionGap        --施工落差％
+                           , BehindReason         = @BehindReason        --施工落後原因
+                           , Countermeasures         = @Countermeasures        --因應對策及預訂期程
+                           , ExtensionTimes         = @ExtensionTimes        --展期工期次數(累計)
+                           , ExtensionDays         = @ExtensionDays        --展期工期天數(累計)
+                           , Changes         = @Changes        --變更設計
+                           , ChangeAmount         = @ChangeAmount        --變更設計變更增減金額(千元）
+                           , CompletedExpDate         = @CompletedExpDate        --完工預定日期
+                           , CompletedRelDate         = @CompletedRelDate        --完工實際日期
+                           , CorrectionAmount         = @CorrectionAmount        --修正契約總價(千元)
+                           , CumulativeValuation         = @CumulativeValuation        --累計估驗計價(千元)
+                           , EstimateRate         = @EstimateRate        --估驗款執行率
+                           , EstimateBehind         = @EstimateBehind        --估驗款落後%
+                           , EstimateBehindReason         = @EstimateBehindReason        --估驗款進度延遲因素分析 
+                           , EstimateDate         = @EstimateDate        -- 估驗提報日期
+                           , HandlingSituation         = @HandlingSituation        --目前辦理情形
                            , ContractAmount         = @ContractAmount        --契約金額
                            , BeginDate              = @BeginDate             --開工日期
                            , PlanFinishDate         = @PlanFinishDate        --預訂完工日期
@@ -298,6 +424,27 @@ namespace WaterCaseTracking.Dao
             _sqlParams = new Dapper.DynamicParameters();
             _sqlParams.Add("ID", model.ID);
             _sqlParams.Add("ProjectName", model.ProjectName);
+            _sqlParams.Add("AwardDate", model.AwardDate);
+            _sqlParams.Add("ContractDate", model.ContractDate);
+            _sqlParams.Add("ConstructionDate", model.ConstructionDate);
+            _sqlParams.Add("Duration", model.Duration);
+            _sqlParams.Add("Company", model.Company);
+            _sqlParams.Add("ConstructionGap", model.ConstructionGap);
+            _sqlParams.Add("BehindReason", model.BehindReason);
+            _sqlParams.Add("Countermeasures", model.Countermeasures);
+            _sqlParams.Add("ExtensionTimes", model.ExtensionTimes);
+            _sqlParams.Add("ExtensionDays", model.ExtensionDays);
+            _sqlParams.Add("Changes", model.Changes);
+            _sqlParams.Add("ChangeAmount", model.ChangeAmount);
+            _sqlParams.Add("CompletedExpDate", model.CompletedExpDate);
+            _sqlParams.Add("CompletedRelDate", model.CompletedRelDate);
+            _sqlParams.Add("CorrectionAmount", model.CorrectionAmount);
+            _sqlParams.Add("CumulativeValuation", model.CumulativeValuation);
+            _sqlParams.Add("EstimateRate", model.EstimateRate);
+            _sqlParams.Add("EstimateBehind", model.EstimateBehind);
+            _sqlParams.Add("EstimateBehindReason", model.EstimateBehindReason);
+            _sqlParams.Add("EstimateDate", model.EstimateDate);
+            _sqlParams.Add("HandlingSituation", model.HandlingSituation);
             _sqlParams.Add("ContractAmount", model.ContractAmount);
             _sqlParams.Add("BeginDate", model.BeginDate);
             _sqlParams.Add("PlanFinishDate", model.PlanFinishDate);
@@ -365,10 +512,31 @@ namespace WaterCaseTracking.Dao
             _sqlStr.Append(@"select 
                                 ID                                   --項次
                                 ,ProjectName                                                 --工程名稱
+                                ,AwardDate                                                 --決標日
+                                ,ContractDate                                                 --訂約日
+                                ,ConstructionDate                                                 --進場施工時間
+                                ,Duration                                                 --原工期
+                                ,Company                                                 -- 承商 
+                                ,ConstructionGap                                                 --施工落差％
+                                ,BehindReason                                                 --施工落後原因
+                                ,Countermeasures                                                 --因應對策及預訂期程
+                                ,ExtensionTimes                                                 --展期工期次數(累計)
+                                ,ExtensionDays                                                 --展期工期天數(累計)
+                                ,Changes                                                 --變更設計
+                                ,ChangeAmount                                                 --變更設計變更增減金額(千元）
+                                ,CompletedExpDate                                                 --完工預定日期
+                                ,CompletedRelDate                                                 --完工實際日期
+                                ,CorrectionAmount                                                 --修正契約總價(千元)
+                                ,CumulativeValuation                                                 --累計估驗計價(千元)
+                                ,EstimateRate                                                 --估驗款執行率
+                                ,EstimateBehind                                                 --估驗款落後%
+                                ,EstimateBehindReason                                                 --估驗款進度延遲因素分析 
+                                ,EstimateDate                                                 -- 估驗提報日期
+                                ,HandlingSituation                                                 --目前辦理情形
                                 ,ContractAmount                                                 --契約金額
                                 ,ContractAmount as 'SContractAmount'                                                --契約金額
-                                ,CONVERT(VARCHAR,BeginDate, 111) as 'BeginDate'           --開工日期 
-                                ,CONVERT(VARCHAR,PlanFinishDate, 111) as 'PlanFinishDate'           --預訂完工日期
+                                ,BeginDate           --開工日期 
+                                ,PlanFinishDate          --預訂完工日期
                                 ,PlanScheduleExpDate           --預定進度
                                 ,PlanScheduleReaDate           --實際進度
                                 ,Organizer                                            --承辦單位
@@ -411,10 +579,31 @@ namespace WaterCaseTracking.Dao
             _sqlStr.Append(@"select 
                                 ID                                   --項次
                                 ,ProjectName                                                 --工程名稱
+                                ,AwardDate                                                 --決標日
+                                ,ContractDate                                                 --訂約日
+                                ,ConstructionDate                                                 --進場施工時間
+                                ,Duration                                                 --原工期
+                                ,Company                                                 -- 承商 
+                                ,ConstructionGap                                                 --施工落差％
+                                ,BehindReason                                                 --施工落後原因
+                                ,Countermeasures                                                 --因應對策及預訂期程
+                                ,ExtensionTimes                                                 --展期工期次數(累計)
+                                ,ExtensionDays                                                 --展期工期天數(累計)
+                                ,Changes                                                 --變更設計
+                                ,ChangeAmount                                                 --變更設計變更增減金額(千元）
+                                ,CompletedExpDate                                                 --完工預定日期
+                                ,CompletedRelDate                                                 --完工實際日期
+                                ,CorrectionAmount                                                 --修正契約總價(千元)
+                                ,CumulativeValuation                                                 --累計估驗計價(千元)
+                                ,EstimateRate                                                 --估驗款執行率
+                                ,EstimateBehind                                                 --估驗款落後%
+                                ,EstimateBehindReason                                                 --估驗款進度延遲因素分析 
+                                ,EstimateDate                                                 -- 估驗提報日期
+                                ,HandlingSituation                                                 --目前辦理情形
                                 ,ContractAmount                                                 --契約金額
                                 ,ContractAmount as 'SContractAmount'                                                --契約金額
-                                ,CONVERT(VARCHAR,BeginDate, 111) as 'BeginDate'           --開工日期 
-                                ,CONVERT(VARCHAR,PlanFinishDate, 111) as 'PlanFinishDate'           --預訂完工日期
+                                ,BeginDate           --開工日期 
+                                ,PlanFinishDate           --預訂完工日期
                                 ,PlanScheduleExpDate           --預定進度
                                 ,PlanScheduleReaDate           --實際進度
                                 ,Organizer                                            --承辦單位
@@ -462,6 +651,27 @@ namespace WaterCaseTracking.Dao
             StringBuilder _sqlStr = new StringBuilder();
             _sqlStr.Append(@"UPDATE ProjectControll SET                            
                             ProjectName       = @ProjectName                 --工程名稱
+                           , AwardDate         = @AwardDate        --決標日
+                           , ContractDate         = @ContractDate        --訂約日
+                           , ConstructionDate         = @ConstructionDate        --進場施工時間
+                           , Duration         = @Duration        --原工期
+                           , Company         = @Company        -- 承商 
+                           , ConstructionGap         = @ConstructionGap        --施工落差％
+                           , BehindReason         = @BehindReason        --施工落後原因
+                           , Countermeasures         = @Countermeasures        --因應對策及預訂期程
+                           , ExtensionTimes         = @ExtensionTimes        --展期工期次數(累計)
+                           , ExtensionDays         = @ExtensionDays        --展期工期天數(累計)
+                           , Changes         = @Changes        --變更設計
+                           , ChangeAmount         = @ChangeAmount        --變更設計變更增減金額(千元）
+                           , CompletedExpDate         = @CompletedExpDate        --完工預定日期
+                           , CompletedRelDate         = @CompletedRelDate        --完工實際日期
+                           , CorrectionAmount         = @CorrectionAmount        --修正契約總價(千元)
+                           , CumulativeValuation         = @CumulativeValuation        --累計估驗計價(千元)
+                           , EstimateRate         = @EstimateRate        --估驗款執行率
+                           , EstimateBehind         = @EstimateBehind        --估驗款落後%
+                           , EstimateBehindReason         = @EstimateBehindReason        --估驗款進度延遲因素分析 
+                           , EstimateDate         = @EstimateDate        -- 估驗提報日期
+                           , HandlingSituation         = @HandlingSituation        --目前辦理情形
                            , ContractAmount         = @ContractAmount        --契約金額
                            , BeginDate              = @BeginDate             --開工日期
                            , PlanFinishDate         = @PlanFinishDate        --預訂完工日期
@@ -478,6 +688,27 @@ namespace WaterCaseTracking.Dao
             _sqlParams = new Dapper.DynamicParameters();
             _sqlParams.Add("ID", model.ID);
             _sqlParams.Add("ProjectName", model.ProjectName);
+            _sqlParams.Add("AwardDate", model.AwardDate);
+            _sqlParams.Add("ContractDate", model.ContractDate);
+            _sqlParams.Add("ConstructionDate", model.ConstructionDate);
+            _sqlParams.Add("Duration", model.Duration);
+            _sqlParams.Add("Company", model.Company);
+            _sqlParams.Add("ConstructionGap", model.ConstructionGap);
+            _sqlParams.Add("BehindReason", model.BehindReason);
+            _sqlParams.Add("Countermeasures", model.Countermeasures);
+            _sqlParams.Add("ExtensionTimes", model.ExtensionTimes);
+            _sqlParams.Add("ExtensionDays", model.ExtensionDays);
+            _sqlParams.Add("Changes", model.Changes);
+            _sqlParams.Add("ChangeAmount", model.ChangeAmount);
+            _sqlParams.Add("CompletedExpDate", model.CompletedExpDate);
+            _sqlParams.Add("CompletedRelDate", model.CompletedRelDate);
+            _sqlParams.Add("CorrectionAmount", model.CorrectionAmount);
+            _sqlParams.Add("CumulativeValuation", model.CumulativeValuation);
+            _sqlParams.Add("EstimateRate", model.EstimateRate);
+            _sqlParams.Add("EstimateBehind", model.EstimateBehind);
+            _sqlParams.Add("EstimateBehindReason", model.EstimateBehindReason);
+            _sqlParams.Add("EstimateDate", model.EstimateDate);
+            _sqlParams.Add("HandlingSituation", model.HandlingSituation);
             _sqlParams.Add("ContractAmount", model.ContractAmount);
             _sqlParams.Add("BeginDate", model.BeginDate);
             _sqlParams.Add("PlanFinishDate", model.PlanFinishDate);
@@ -508,6 +739,27 @@ namespace WaterCaseTracking.Dao
             _sqlStr.Append(@"Insert Into ProjectControll ( 
                                  NGuid
                                 , ProjectName
+                                , AwardDate
+                                , ContractDate
+                                , ConstructionDate
+                                , Duration
+                                , Company
+                                , ConstructionGap
+                                , BehindReason
+                                , Countermeasures
+                                , ExtensionTimes
+                                , ExtensionDays
+                                , Changes
+                                , ChangeAmount
+                                , CompletedExpDate
+                                , CompletedRelDate
+                                , CorrectionAmount
+                                , CumulativeValuation
+                                , EstimateRate
+                                , EstimateBehind
+                                , EstimateBehindReason
+                                , EstimateDate
+                                , HandlingSituation
                                 , ContractAmount
                                 , BeginDate
                                 , PlanFinishDate
@@ -524,6 +776,27 @@ namespace WaterCaseTracking.Dao
                             Values(
                                  NEWID()
                                 , @ProjectName
+                                , @AwardDate
+                                , @ContractDate
+                                , @ConstructionDate
+                                , @Duration
+                                , @Company
+                                , @ConstructionGap
+                                , @BehindReason
+                                , @Countermeasures
+                                , @ExtensionTimes
+                                , @ExtensionDays
+                                , @Changes
+                                , @ChangeAmount
+                                , @CompletedExpDate
+                                , @CompletedRelDate
+                                , @CorrectionAmount
+                                , @CumulativeValuation
+                                , @EstimateRate
+                                , @EstimateBehind
+                                , @EstimateBehindReason
+                                , @EstimateDate
+                                , @HandlingSituation
                                 , @ContractAmount
                                 , @BeginDate
                                 , @PlanFinishDate
@@ -541,6 +814,27 @@ namespace WaterCaseTracking.Dao
             _sqlParamsList = new List<DynamicParameters>();
             _sqlParams = new Dapper.DynamicParameters();
             _sqlParams.Add("ProjectName", model.ProjectName);
+            _sqlParams.Add("AwardDate", model.AwardDate);
+            _sqlParams.Add("ContractDate", model.ContractDate);
+            _sqlParams.Add("ConstructionDate", model.ConstructionDate);
+            _sqlParams.Add("Duration", model.Duration);
+            _sqlParams.Add("Company", model.Company);
+            _sqlParams.Add("ConstructionGap", model.ConstructionGap);
+            _sqlParams.Add("BehindReason", model.BehindReason);
+            _sqlParams.Add("Countermeasures", model.Countermeasures);
+            _sqlParams.Add("ExtensionTimes", model.ExtensionTimes);
+            _sqlParams.Add("ExtensionDays", model.ExtensionDays);
+            _sqlParams.Add("Changes", model.Changes);
+            _sqlParams.Add("ChangeAmount", model.ChangeAmount);
+            _sqlParams.Add("CompletedExpDate", model.CompletedExpDate);
+            _sqlParams.Add("CompletedRelDate", model.CompletedRelDate);
+            _sqlParams.Add("CorrectionAmount", model.CorrectionAmount);
+            _sqlParams.Add("CumulativeValuation", model.CumulativeValuation);
+            _sqlParams.Add("EstimateRate", model.EstimateRate);
+            _sqlParams.Add("EstimateBehind", model.EstimateBehind);
+            _sqlParams.Add("EstimateBehindReason", model.EstimateBehindReason);
+            _sqlParams.Add("EstimateDate", model.EstimateDate);
+            _sqlParams.Add("HandlingSituation", model.HandlingSituation);
             _sqlParams.Add("ContractAmount", model.ContractAmount);
             _sqlParams.Add("BeginDate", model.BeginDate);
             _sqlParams.Add("PlanFinishDate", model.PlanFinishDate);

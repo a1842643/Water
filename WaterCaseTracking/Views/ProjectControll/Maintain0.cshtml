@@ -59,7 +59,7 @@
         oTable.ajax.reload(null, false);
         //判斷是否可以新增跟修改跟刪除
         if ('@(Session["roleName"] as string)' == 'supervisor') {
-            oTable.columns([0, 15]).visible(false);
+            oTable.columns([0,3,4,6,7,8,9,13,14,15,16,17,18,19,22,23,24,25,26,27,29,30,31,32,33,34,35,36]).visible(false);
         }
         if ('@(Session["roleName"] as string)' == 'user') {
             oTable.columns([0]).visible(false);
@@ -230,14 +230,35 @@
                 },
                 { "title": "項次", "data": "ID" },
                 { "title": "工程名稱", "data": "ProjectName" },
-                { "title": "契約金額", "data": "ContractAmount" },
+                { "title": "決標日", "data": "AwardDate" },
+                { "title": "訂約日", "data": "ContractDate" },
                 { "title": "開工日期", "data": "BeginDate" },
-                { "title": "預訂完工日期", "data": "PlanFinishDate" },
+                { "title": "進場施工時間", "data": "ConstructionDate" },
+                { "title": "原工期", "data": "Duration" },
+                { "title": "承商 ", "data": "Company" },
+                { "title": "原預訂完工日期", "data": "PlanFinishDate" },
+                { "title": "契約金額", "data": "ContractAmount" },
                 { "title": "預定進度", "data": "PlanScheduleExpDate" },
                 { "title": "實際進度", "data": "PlanScheduleReaDate" },
+                { "title": "施工落差％", "data": "ConstructionGap" },
+                { "title": "施工落後原因", "data": "BehindReason" },
+                { "title": "因應對策及預訂期程", "data": "Countermeasures" },
+                { "title": "展期工期次數(累計)", "data": "ExtensionTimes" },
+                { "title": "展期工期天數(累計)", "data": "ExtensionDays" },
+                { "title": "變更設計", "data": "Changes" },
+                { "title": "變更設計變更增減金額(千元）", "data": "ChangeAmount" },
+                { "title": "完工預定日期", "data": "CompletedExpDate" },
+                { "title": "完工實際日期", "data": "CompletedRelDate" },
+                { "title": "修正契約總價(千元)", "data": "CorrectionAmount" },
+                { "title": "累計估驗計價(千元)", "data": "CumulativeValuation" },
+                { "title": "估驗款執行率", "data": "EstimateRate" },
+                { "title": "估驗款落後%", "data": "EstimateBehind" },
+                { "title": "估驗款進度延遲因素分析 ", "data": "EstimateBehindReason" },
+                { "title": "估驗提報日期", "data": "EstimateDate" },
+                { "title": "目前辦理情形", "data": "HandlingSituation" },
+                { "title": "備註", "data": "Remark" },
                 { "title": "科室", "data": "Organizer" },
                 { "title": "承辦人", "data": "OrganizerMan" },
-                { "title": "備註", "data": "Remark" },
                 { "title": "新增人員", "data": "CreateUserName" },
                 { "title": "新增時間", "data": "CreateDate" },
                 { "title": "修改人員", "data": "UpdateUserName" },

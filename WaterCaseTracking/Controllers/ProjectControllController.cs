@@ -81,7 +81,6 @@ namespace WaterCaseTracking.Controllers
                     }
                 }
 
-
                 //送參數進入Service層做商業邏輯
                 searchList = projectControllService.QuerySearchList(searchInfo, UserName, roleName, Organizer);
             }
@@ -249,7 +248,7 @@ namespace WaterCaseTracking.Controllers
             if (string.IsNullOrEmpty(fail))
             {
                 TempData["message"] = "修改成功";
-                return RedirectToAction("Maintain0", new { IsEdit = "1" });
+                return RedirectToAction("Maintain0", "ProjectControll");
             }
             else
             {

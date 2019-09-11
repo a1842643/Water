@@ -169,20 +169,42 @@ namespace WaterCaseTracking.Service
                     {
                         projectControllModel = new ProjectControllModel();
                         projectControllModel.ID = orgDt.Rows[i][0].ToString().Replace("\n","").Trim();                     //項次
-                        projectControllModel.ProjectName = orgDt.Rows[i][1].ToString().Replace("\n","").Trim();            //工程名稱
-                        if (orgDt.Rows[i][2].ToString() == "")
+                        projectControllModel.ProjectName = orgDt.Rows[i][1].ToString().Replace("\n", "").Trim();            //工程名稱
+                        projectControllModel.AwardDate = orgDt.Rows[i][2].ToString().Replace("\n", "").Trim();            //決標日
+                        projectControllModel.ContractDate = orgDt.Rows[i][3].ToString().Replace("\n", "").Trim();            //訂約日
+                        projectControllModel.BeginDate = orgDt.Rows[i][4].ToString().Replace("\n", "").Trim() == "" ? null : orgDt.Rows[i][4].ToString().Replace("\n", "").Trim();              //開工日期
+                        projectControllModel.ContractDate = orgDt.Rows[i][5].ToString().Replace("\n", "").Trim();            //進場施工時間
+                        projectControllModel.ContractDate = orgDt.Rows[i][6].ToString().Replace("\n", "").Trim();            //原工期
+                        projectControllModel.ContractDate = orgDt.Rows[i][7].ToString().Replace("\n", "").Trim();            // 承商 
+                        projectControllModel.PlanFinishDate = orgDt.Rows[i][8].ToString().Replace("\n","").Trim() == "" ? null : orgDt.Rows[i][8].ToString().Replace("\n", "").Trim();         //原預訂完工日期   
+                        if (orgDt.Rows[i][9].ToString() == "")
                         {
                             projectControllModel.ContractAmount = null; //契約金額
                         }
                         else
                         {
-                            projectControllModel.ContractAmount = Convert.ToDecimal(orgDt.Rows[i][2]); //契約金額
+                            projectControllModel.ContractAmount = Convert.ToDecimal(orgDt.Rows[i][9]); //契約金額
                         }
-                        projectControllModel.BeginDate = orgDt.Rows[i][3].ToString().Replace("\n", "").Trim() == "" ? null : orgDt.Rows[i][3].ToString().Replace("\n", "").Trim();              //開工日期
-                        projectControllModel.PlanFinishDate = orgDt.Rows[i][4].ToString().Replace("\n","").Trim() == "" ? null : orgDt.Rows[i][4].ToString().Replace("\n", "").Trim();         //預訂完工日期   
-                        projectControllModel.PlanScheduleExpDate = orgDt.Rows[i][5].ToString().Replace("\n","").Trim() == "" ? null : orgDt.Rows[i][5].ToString().Replace("\n", "").Trim();    //預定進度        
-                        projectControllModel.PlanScheduleReaDate = orgDt.Rows[i][6].ToString().Replace("\n","").Trim() == "" ? null : orgDt.Rows[i][6].ToString().Replace("\n", "").Trim();    //實際進度        
+                        projectControllModel.PlanScheduleExpDate = orgDt.Rows[i][10].ToString().Replace("\n","").Trim() == "" ? null : orgDt.Rows[i][10].ToString().Replace("\n", "").Trim();    //預定進度        
+                        projectControllModel.PlanScheduleReaDate = orgDt.Rows[i][11].ToString().Replace("\n","").Trim() == "" ? null : orgDt.Rows[i][11].ToString().Replace("\n", "").Trim();    //實際進度        
+                        projectControllModel.ConstructionGap = orgDt.Rows[i][12].ToString().Replace("\n", "").Trim();            //施工落差％
+                        projectControllModel.BehindReason = orgDt.Rows[i][13].ToString().Replace("\n", "").Trim();            //施工落後原因
+                        projectControllModel.Countermeasures = orgDt.Rows[i][14].ToString().Replace("\n", "").Trim();            //因應對策及預訂期程
+                        projectControllModel.ExtensionTimes = orgDt.Rows[i][15].ToString().Replace("\n", "").Trim();            //展期工期次數(累計)
+                        projectControllModel.ExtensionDays = orgDt.Rows[i][16].ToString().Replace("\n", "").Trim();            //展期工期天數(累計)
+                        projectControllModel.Changes = orgDt.Rows[i][17].ToString().Replace("\n", "").Trim();            //變更設計
+                        projectControllModel.ChangeAmount = orgDt.Rows[i][18].ToString().Replace("\n", "").Trim();            //變更設計變更增減金額(千元）
+                        projectControllModel.CompletedExpDate = orgDt.Rows[i][19].ToString().Replace("\n", "").Trim();            //完工預定日期
+                        projectControllModel.CompletedRelDate = orgDt.Rows[i][20].ToString().Replace("\n", "").Trim();            //完工實際日期
+                        projectControllModel.CorrectionAmount = orgDt.Rows[i][21].ToString().Replace("\n", "").Trim();            //修正契約總價(千元)
+                        projectControllModel.CumulativeValuation = orgDt.Rows[i][22].ToString().Replace("\n", "").Trim();            //累計估驗計價(千元)
+                        projectControllModel.EstimateRate = orgDt.Rows[i][23].ToString().Replace("\n", "").Trim();            //估驗款執行率
+                        projectControllModel.EstimateBehind = orgDt.Rows[i][24].ToString().Replace("\n", "").Trim();            //估驗款落後%
+                        projectControllModel.EstimateBehindReason = orgDt.Rows[i][25].ToString().Replace("\n", "").Trim();            //估驗款進度延遲因素分析 
+                        projectControllModel.EstimateDate = orgDt.Rows[i][26].ToString().Replace("\n", "").Trim();            //估驗提報日期
+                        projectControllModel.HandlingSituation = orgDt.Rows[i][27].ToString().Replace("\n", "").Trim();            //目前辦理情形
 
+                        projectControllModel.Remark = orgDt.Rows[i][28].ToString();                 //備註
                         //如果是資料維護者或是一般使用者只能是自己的科室
                         if (roleName == "maintain" || roleName == "user")
                         {
@@ -190,15 +212,14 @@ namespace WaterCaseTracking.Service
                         }
                         else
                         {
-                            projectControllModel.Organizer = orgDt.Rows[i][7].ToString().Replace("\n","").Trim();              //科室
+                            projectControllModel.Organizer = orgDt.Rows[i][29].ToString().Replace("\n","").Trim();              //科室
                             //判斷科室有無正確
                             if (!sysCodeDao.CheckSysCode(projectControllModel.Organizer))
                             {
                                 throw new Exception("查無此科室");
                             }
                         }
-                        projectControllModel.OrganizerMan = orgDt.Rows[i][8].ToString().Replace("\n","").Trim();           //承辦人 
-                        projectControllModel.Remark = orgDt.Rows[i][9].ToString();                 //備註
+                        projectControllModel.OrganizerMan = orgDt.Rows[i][30].ToString().Replace("\n","").Trim();           //承辦人 
 
                         //判斷無ID則新增，有ID正確就修改
                         if (!string.IsNullOrEmpty(projectControllModel.ID))
