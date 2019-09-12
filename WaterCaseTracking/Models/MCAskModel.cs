@@ -32,6 +32,9 @@ namespace WaterCaseTracking.Models
         [AllowHtml]
         [DisplayName("辦理情形")]
         public string HandlingSituation { get; set; }
+        [DataType(DataType.MultilineText)]
+        [DisplayName("詳細辦理情形")]
+        public string DetailHandlingSituation { get; set; }
         [Required]
         [StringLength(20)]
         [DisplayName("承辦單位")]

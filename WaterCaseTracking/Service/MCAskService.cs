@@ -174,6 +174,7 @@ namespace WaterCaseTracking.Service
                         mcaskModel.MemberName = orgDt.Rows[i][3].ToString().Replace("\n", "").Trim();
                         mcaskModel.Inquiry = orgDt.Rows[i][4].ToString().Replace("\n", "").Trim();
                         mcaskModel.HandlingSituation = orgDt.Rows[i][5].ToString();
+                        mcaskModel.DetailHandlingSituation = orgDt.Rows[i][6].ToString();
                         //如果是資料維護者或是一般使用者只能是自己的科室
                         if (roleName == "maintain" || roleName == "user")
                         {
@@ -181,15 +182,15 @@ namespace WaterCaseTracking.Service
                         }
                         else
                         {
-                            mcaskModel.Organizer = orgDt.Rows[i][6].ToString().Replace("\n", "").Trim();
+                            mcaskModel.Organizer = orgDt.Rows[i][7].ToString().Replace("\n", "").Trim();
                             //判斷科室有無正確
                             if (!sysCodeDao.CheckSysCode(mcaskModel.Organizer))
                             {
                                 throw new Exception("查無此科室");
                             }
                         }
-                        mcaskModel.OrganizerMan = orgDt.Rows[i][7].ToString().Replace("\n", "").Trim();
-                        mcaskModel.sStatus = orgDt.Rows[i][8].ToString().Replace("\n", "").Trim();
+                        mcaskModel.OrganizerMan = orgDt.Rows[i][8].ToString().Replace("\n", "").Trim();
+                        mcaskModel.sStatus = orgDt.Rows[i][9].ToString().Replace("\n", "").Trim();
                         mcaskModel.Types = Types;
                         //listModel.Add(mcaskModel);
                         //判斷無ID則新增，有ID正確就修改

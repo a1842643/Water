@@ -39,6 +39,7 @@ namespace WaterCaseTracking.Dao
                                 ,MemberName                                           --議員姓名
                                 ,Inquiry                                              --詢問事項
                                 ,HandlingSituation                                    --辦理情形
+                                ,DetailHandlingSituation                                    --辦理情形
                                 ,Organizer                                            --承辦單位
                                 ,OrganizerMan                                         --承辦人員
                                 ,sStatus                                              --狀態
@@ -153,6 +154,7 @@ namespace WaterCaseTracking.Dao
                                 ,MemberName                                           as '議員姓名'
                                 ,Inquiry                                              as '詢問事項'
                                 ,HandlingSituation                                    as '辦理情形'
+                                ,DetailHandlingSituation                                    as '詳細辦理情形'
                                 ,Organizer                                            as '承辦單位(若角色是一般使用者或資料維護者，科室預設自己的科室)'
                                 ,OrganizerMan                                         as '承辦人員'
                                 ,sStatus                                              as '狀態'
@@ -254,6 +256,7 @@ namespace WaterCaseTracking.Dao
                                 , Area
                                 , Inquiry
                                 , HandlingSituation
+                                , DetailHandlingSituation
                                 , Organizer
                                 , OrganizerMan
                                 , sStatus
@@ -270,6 +273,7 @@ namespace WaterCaseTracking.Dao
                                 , @Area
                                 , @Inquiry            
                                 , @HandlingSituation
+                                , @DetailHandlingSituation
                                 , @Organizer
                                 , @OrganizerMan
                                 , @sStatus
@@ -287,6 +291,7 @@ namespace WaterCaseTracking.Dao
             _sqlParams.Add("Area", model.Area);
             _sqlParams.Add("Inquiry", model.Inquiry);
             _sqlParams.Add("HandlingSituation", model.HandlingSituation);
+            _sqlParams.Add("DetailHandlingSituation", model.DetailHandlingSituation);
             _sqlParams.Add("Organizer", model.Organizer);
             _sqlParams.Add("OrganizerMan", model.OrganizerMan);
             _sqlParams.Add("sStatus", model.sStatus);
@@ -319,6 +324,7 @@ namespace WaterCaseTracking.Dao
                             , Area =@Area                                --議員姓名
                             , Inquiry =@Inquiry                          --詢問事項
                             , HandlingSituation =@HandlingSituation      --辦理情形
+                            , DetailHandlingSituation =@DetailHandlingSituation      --詳細辦理情形
                             , Organizer =@Organizer                      --承辦單位
                             , OrganizerMan =@OrganizerMan                --承辦人員
                             , sStatus =@sStatus                          --狀態
@@ -334,6 +340,7 @@ namespace WaterCaseTracking.Dao
             _sqlParams.Add("Area", model.Area);
             _sqlParams.Add("Inquiry", model.Inquiry);
             _sqlParams.Add("HandlingSituation", model.HandlingSituation);
+            _sqlParams.Add("DetailHandlingSituation", model.DetailHandlingSituation);
             _sqlParams.Add("Organizer", model.Organizer);
             _sqlParams.Add("OrganizerMan", model.OrganizerMan);
             _sqlParams.Add("sStatus", model.sStatus);
@@ -400,6 +407,7 @@ namespace WaterCaseTracking.Dao
                                 , Area                               --議員姓名
                                 , Inquiry                            --詢問事項
                                 , HandlingSituation                  --辦理情形
+                                , DetailHandlingSituation                  --詳細辦理情形
                                 , Organizer                          --承辦單位
                                 , OrganizerMan                       --承辦人員
                                 , sStatus                            --狀態
@@ -440,6 +448,7 @@ namespace WaterCaseTracking.Dao
                                 , Area                               --議員姓名
                                 , Inquiry                            --詢問事項
                                 , HandlingSituation                  --辦理情形
+                                , DetailHandlingSituation                  --詳細辦理情形
                                 , Organizer                          --承辦單位
                                 , OrganizerMan                       --承辦人員
                                 , sStatus                            --狀態
@@ -601,6 +610,7 @@ namespace WaterCaseTracking.Dao
                             , Area =@Area                                --議員姓名
                             , Inquiry =@Inquiry                          --詢問事項
                             , HandlingSituation =@HandlingSituation      --辦理情形
+                            , DetailHandlingSituation =@DetailHandlingSituation      --詳細辦理情形
                             , Organizer =@Organizer                      --承辦單位
                             , OrganizerMan =@OrganizerMan                --承辦人員
                             , sStatus =@sStatus                          --狀態
@@ -616,6 +626,7 @@ namespace WaterCaseTracking.Dao
             _sqlParams.Add("Area", model.Area);
             _sqlParams.Add("Inquiry", model.Inquiry);
             _sqlParams.Add("HandlingSituation", model.HandlingSituation);
+            _sqlParams.Add("DetailHandlingSituation", model.DetailHandlingSituation);
             _sqlParams.Add("Organizer", model.Organizer);
             _sqlParams.Add("OrganizerMan", model.OrganizerMan);
             _sqlParams.Add("sStatus", model.sStatus);
@@ -646,6 +657,7 @@ namespace WaterCaseTracking.Dao
                                 , Area
                                 , Inquiry
                                 , HandlingSituation
+                                , DetailHandlingSituation
                                 , Organizer
                                 , OrganizerMan
                                 , sStatus
@@ -662,6 +674,7 @@ namespace WaterCaseTracking.Dao
                                 , @Area
                                 , @Inquiry            
                                 , @HandlingSituation
+                                , @DetailHandlingSituation
                                 , @Organizer
                                 , @OrganizerMan
                                 , @sStatus
@@ -679,6 +692,7 @@ namespace WaterCaseTracking.Dao
             _sqlParams.Add("Area", model.Area);
             _sqlParams.Add("Inquiry", model.Inquiry);
             _sqlParams.Add("HandlingSituation", model.HandlingSituation);
+            _sqlParams.Add("DetailHandlingSituation", model.DetailHandlingSituation);
             _sqlParams.Add("Organizer", model.Organizer);
             _sqlParams.Add("OrganizerMan", model.OrganizerMan);
             _sqlParams.Add("sStatus", model.sStatus);

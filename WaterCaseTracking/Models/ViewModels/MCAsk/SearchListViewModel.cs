@@ -24,6 +24,7 @@ namespace WaterCaseTracking.Models.ViewModels.MCAsk
         public string Inquiry { get; set; }
         string _HandlingSituation;
         public string HandlingSituation { get { return _HandlingSituation; } set { _HandlingSituation = Regex.Replace(value, "<.*?>", string.Empty); } }
+        public string DetailHandlingSituation { get; set; }
         public string Organizer { get; set; }
         public string OrganizerMan { get; set; }
         public string sStatus { get; set; }
