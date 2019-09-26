@@ -15,22 +15,20 @@ namespace WaterCaseTracking.Models
         [StringLength(100)]
         [DisplayName("工程名稱")]
         public string ProjectName { get; set; }
-        [StringLength(50)]
+        [StringLength(200)]
         [DisplayName("長官交辦日期")]
         public string ChiefExecutiveDate { get; set; }
-        [StringLength(50)]
+        [StringLength(200)]
         [DisplayName("發包簽准預計日期")]
         public string SentAllowExpDate { get; set; }
-        [StringLength(50)]
+        [StringLength(200)]
         [DisplayName("發包簽准實際日期")]
         public string SentAllowRelDate { get; set; }
-        [StringLength(50)]
+        [StringLength(200)]
         [DisplayName("訂約日期")]
         public string ContractDate { get; set; }
-        [StringLength(65536)]
         [DisplayName("前次辦理情形")]
         public string PreSituation { get; set; }
-        [StringLength(65536)]
         [DisplayName("目前辦理情形")]
         public string HandlingSituation { get; set; }
 

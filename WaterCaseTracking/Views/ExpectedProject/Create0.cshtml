@@ -237,7 +237,7 @@
 
                         <div class="form-group">
                             <div class="col-md-offset-2 col-md-10">
-                                <input type="submit" value="新增" class="btn btn-default" />
+                                <input type="submit" onclick="this.disabled = true; this.form.submit();" value="新增" class="btn btn-default" />
                                 @Html.ActionLink("返回", "Maintain0", null, new { @class = "btn btn-default" })
                             </div>
                         </div>

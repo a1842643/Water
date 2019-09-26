@@ -77,6 +77,7 @@ namespace WaterCaseTracking
             oStyle.BorderLeft = NPOI.SS.UserModel.BorderStyle.Thin;
             oStyle.BorderRight = NPOI.SS.UserModel.BorderStyle.Thin;
             oStyle.BorderTop = NPOI.SS.UserModel.BorderStyle.Thin;
+            oStyle.DataFormat = NPOI.HSSF.UserModel.HSSFDataFormat.GetBuiltinFormat("@");
             oStyle.WrapText = true;
 
             //DataTable轉

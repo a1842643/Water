@@ -173,18 +173,19 @@ namespace WaterCaseTracking.Service
                         projectControllModel.AwardDate = orgDt.Rows[i][2].ToString().Replace("\n", "").Trim();            //決標日
                         projectControllModel.ContractDate = orgDt.Rows[i][3].ToString().Replace("\n", "").Trim();            //訂約日
                         projectControllModel.BeginDate = orgDt.Rows[i][4].ToString().Replace("\n", "").Trim() == "" ? null : orgDt.Rows[i][4].ToString().Replace("\n", "").Trim();              //開工日期
-                        projectControllModel.ContractDate = orgDt.Rows[i][5].ToString().Replace("\n", "").Trim();            //進場施工時間
-                        projectControllModel.ContractDate = orgDt.Rows[i][6].ToString().Replace("\n", "").Trim();            //原工期
-                        projectControllModel.ContractDate = orgDt.Rows[i][7].ToString().Replace("\n", "").Trim();            // 承商 
+                        projectControllModel.ConstructionDate = orgDt.Rows[i][5].ToString().Replace("\n", "").Trim();            //進場施工時間
+                        projectControllModel.Duration = orgDt.Rows[i][6].ToString().Replace("\n", "").Trim();            //原工期
+                        projectControllModel.Company = orgDt.Rows[i][7].ToString().Replace("\n", "").Trim();            // 承商 
                         projectControllModel.PlanFinishDate = orgDt.Rows[i][8].ToString().Replace("\n","").Trim() == "" ? null : orgDt.Rows[i][8].ToString().Replace("\n", "").Trim();         //原預訂完工日期   
-                        if (orgDt.Rows[i][9].ToString() == "")
-                        {
-                            projectControllModel.ContractAmount = null; //契約金額
-                        }
-                        else
-                        {
-                            projectControllModel.ContractAmount = Convert.ToDecimal(orgDt.Rows[i][9]); //契約金額
-                        }
+                        //if (orgDt.Rows[i][9].ToString() == "")
+                        //{
+                        //    projectControllModel.ContractAmount = null; //契約金額
+                        //}
+                        //else
+                        //{
+                        //    projectControllModel.ContractAmount = Convert.ToDecimal(orgDt.Rows[i][9]); //契約金額
+                        //}
+                        projectControllModel.ContractAmount = orgDt.Rows[i][9].ToString().Replace("\n", "").Trim();            // 承商 
                         projectControllModel.PlanScheduleExpDate = orgDt.Rows[i][10].ToString().Replace("\n","").Trim() == "" ? null : orgDt.Rows[i][10].ToString().Replace("\n", "").Trim();    //預定進度        
                         projectControllModel.PlanScheduleReaDate = orgDt.Rows[i][11].ToString().Replace("\n","").Trim() == "" ? null : orgDt.Rows[i][11].ToString().Replace("\n", "").Trim();    //實際進度        
                         projectControllModel.ConstructionGap = orgDt.Rows[i][12].ToString().Replace("\n", "").Trim();            //施工落差％

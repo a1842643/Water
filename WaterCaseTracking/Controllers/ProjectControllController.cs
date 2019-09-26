@@ -151,7 +151,7 @@ namespace WaterCaseTracking.Controllers
             }
             else
             {
-                projectControllModel.ContractAmount = Convert.ToDecimal(projectControllModel.SContractAmount);
+                projectControllModel.ContractAmount = projectControllModel.SContractAmount;
             }
             #endregion
             #region 參數宣告
@@ -225,7 +225,7 @@ namespace WaterCaseTracking.Controllers
             }
             else
             {
-                projectControllModel.ContractAmount = Convert.ToDecimal(projectControllModel.SContractAmount);
+                projectControllModel.ContractAmount = projectControllModel.SContractAmount;
             }
             #endregion
             #region 參數宣告
