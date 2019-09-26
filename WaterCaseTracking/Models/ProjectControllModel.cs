@@ -90,10 +90,10 @@ namespace WaterCaseTracking.Models
         [DisplayName("原預訂完工日期")]
         public string PlanFinishDate { get; set; }
         [StringLength(65536)]
-        [DisplayName("預定進度")]
+        [DisplayName("預定進度％")]
         public string PlanScheduleExpDate { get; set; }
         [StringLength(65536)]
-        [DisplayName("實際進度")]
+        [DisplayName("實際進度％")]
         public string PlanScheduleReaDate { get; set; }
         [Required]
         [StringLength(20)]
