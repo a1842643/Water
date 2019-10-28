@@ -10,7 +10,7 @@ using WaterCaseTracking.Service;
 
 namespace WaterCaseTracking.Controllers
 {
-    [Authorize]
+    //[Authorize]
     public class ProjectControllController : BaseController
     {
         string FuncName0 = "工程列管";
@@ -56,6 +56,7 @@ namespace WaterCaseTracking.Controllers
         #endregion 初始化-迄
 
         #region 取得表單oTable資料-起
+        [ValidateAntiForgeryToken]
         public ActionResult GetoTable(SearchInfoViewModel searchInfo, string hidIsEdit)
         {
             logging(FuncName0, "取得表單資料");
@@ -69,7 +70,7 @@ namespace WaterCaseTracking.Controllers
 
             try
             {
-                if (hidIsEdit == "0")
+                if (hidIsEdit == "")
                 {
                     Session["ProjectControllQueryParam"] = searchInfo;
                 }
@@ -248,7 +249,7 @@ namespace WaterCaseTracking.Controllers
             if (string.IsNullOrEmpty(fail))
             {
                 TempData["message"] = "修改成功";
-                return RedirectToAction("Maintain0", "ProjectControll");
+                return RedirectToAction("Maintain0", new { IsEdit = "1" });
             }
             else
             {

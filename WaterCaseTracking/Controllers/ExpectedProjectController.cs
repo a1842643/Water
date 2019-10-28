@@ -10,7 +10,7 @@ using WaterCaseTracking.Service;
 
 namespace WaterCaseTracking.Controllers
 {
-    [Authorize]
+    //[Authorize]
     public class ExpectedProjectController : BaseController
     {
         string FuncName0 = "預計發包案件";
@@ -71,7 +71,7 @@ namespace WaterCaseTracking.Controllers
 
             try
             {
-                if (hidIsEdit == "0")
+                if (hidIsEdit == "")
                 {
                     Session["ExpectedProjectQueryParam"] = searchInfo;
                 }

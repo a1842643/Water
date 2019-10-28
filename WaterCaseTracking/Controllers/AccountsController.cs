@@ -11,7 +11,7 @@ using Newtonsoft.Json;
 
 namespace WaterCaseTracking.Controllers
 {
-    //[Authorize]
+    ////[Authorize]
     public class AccountsController : BaseController
     {
         string FuncName = "帳號管理";

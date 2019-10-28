@@ -10,7 +10,7 @@ using WaterCaseTracking.Service;
 
 namespace WaterCaseTracking.Controllers
 {
-    [Authorize]
+    //[Authorize]
     public class MCAskController : BaseController
     {
         string FuncName0 = "議會模擬問答事項";
@@ -84,7 +84,7 @@ namespace WaterCaseTracking.Controllers
 
             try
             {
-                if (hidIsEdit == "0")
+                if (hidIsEdit == "")
                 {
                     Session["MCAsk" + searchInfo.Types + "QueryParam"] = searchInfo;
                 }

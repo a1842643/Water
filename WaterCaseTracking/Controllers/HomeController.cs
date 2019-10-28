@@ -19,7 +19,7 @@ using System.Data;
 
 namespace WaterCaseTracking.Controllers
 {
-    [Authorize]
+    //[Authorize]
     public class HomeController : BaseController
     {
         private string strBasicPath;//限定SERVER檔管路徑
@@ -65,7 +65,7 @@ namespace WaterCaseTracking.Controllers
         {
             //清除Sission
             Session.Clear();
-
+            Request.Cookies.Clear();
             //var ALL_HTTP = Request.ServerVariables["ALL_HTTP"];
             //ViewData["ALL_HTTP"] = ALL_HTTP;
             //var HTTP_LOGUID = Request.ServerVariables["HTTP_LOGUID"];
@@ -184,30 +184,39 @@ namespace WaterCaseTracking.Controllers
             Session["roleName"] = accountsModel.Role;
             //角色代碼清單
             Session["roleId"] = "admin,user,application,signing,review";//請傳入字串 格式如 : admin,user,application,signing,review
-            UserInfoModel UserInfo = new UserInfoModel()
-            {
-                Account = txtAccount,
-                UserName = UserName,
-                Power = roleId,
-                SessinID = Session.SessionID,
-                LoginTime = DateTime.Now
-            };
+            //UserInfoModel UserInfo = new UserInfoModel()
+            //{
+            //    Account = txtAccount,
+            //    UserName = UserName,
+            //    Power = roleId,
+            //    SessinID = Session.SessionID,
+            //    LoginTime = DateTime.Now
+            //};
 
-            ViewBag.UserInfo = UserInfo;
-            string user = Environment.UserName;
-            var ticket = new FormsAuthenticationTicket(
-                         version: 1,
-                         name: UserInfo.Account,
-                         issueDate: DateTime.Now,
-                         expiration: DateTime.Now.AddHours(360),
-                         isPersistent: true,
-                         userData: JsonConvert.SerializeObject(UserInfo),
-                         cookiePath: FormsAuthentication.FormsCookiePath);
+            //ViewBag.UserInfo = UserInfo;
+            //string user = Environment.UserName;
+            //var ticket = new FormsAuthenticationTicket(
+            //             version: 1,
+            //             name: UserInfo.Account,
+            //             issueDate: DateTime.Now,
+            //             expiration: DateTime.Now.AddHours(360),
+            //             isPersistent: true,
+            //             userData: JsonConvert.SerializeObject(UserInfo),
+            //             cookiePath: FormsAuthentication.FormsCookiePath);
 
-            string encryptedTicket = FormsAuthentication.Encrypt(ticket);
-            //Response.Cookies.Clear();
-            Response.Cookies[FormsAuthentication.FormsCookieName].Value = encryptedTicket;
+            //string encryptedTicket = FormsAuthentication.Encrypt(ticket);
+            Response.Cookies.Clear();
+            //Response.Cookies[FormsAuthentication.FormsCookieName].Value = encryptedTicket;
             //Session.RemoveAll();
+
+
+            //var ALL_HTTP = Request.ServerVariables["ALL_HTTP"];
+            //ViewData["ALL_HTTP"] = ALL_HTTP;
+            //var HTTP_LOGUID = Request.ServerVariables["HTTP_LOGUID"];
+            //ViewData["HTTP_LOGUID"] = HTTP_LOGUID;
+
+
+            FormsAuthentication.SignOut();
 
             //string account = new AccountService().GetValue();
 

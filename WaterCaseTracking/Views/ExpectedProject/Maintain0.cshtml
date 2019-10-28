@@ -34,6 +34,15 @@
                 });
                 $('#ddlOrganizer').html(ddlOrganizer);
                 $('#hidIsEdit').val('@(Request.QueryString["IsEdit"] as String)');
+                if ($('#hidIsEdit').val() == "1") {
+
+                    @{
+                        WaterCaseTracking.Models.ViewModels.ExpectedProject.SearchInfoViewModel searchInfoViewModel = (WaterCaseTracking.Models.ViewModels.ExpectedProject.SearchInfoViewModel)Session["ExpectedProjectQueryParam"] == null ? new WaterCaseTracking.Models.ViewModels.ExpectedProject.SearchInfoViewModel(): (WaterCaseTracking.Models.ViewModels.ExpectedProject.SearchInfoViewModel)Session["ExpectedProjectQueryParam"];
+                     }
+                    $('#txtProjectName').val('@searchInfoViewModel.txtProjectName');
+                    $('#ddlOrganizer').val('@searchInfoViewModel.ddlOrganizer');
+
+                }
                 QueryTable();
 
             }, fail: function () {
@@ -280,8 +289,12 @@
                     "success":
                         function (msg) {
                             fnCallback(msg);
-
-                            $('#hidIsEdit').val('0');
+                            if(@(Convert.ToInt32(searchInfoViewModel.iDisplayStart)/10) != oTable.page() && $('#hidIsEdit').val() == "1")
+                            {
+                                console.log(@(Convert.ToInt32(searchInfoViewModel.iDisplayStart)/10));
+                                oTable.page(@(Convert.ToInt32(searchInfoViewModel.iDisplayStart)/10)).draw('page');
+                            }
+                            $('#hidIsEdit').val('');
                         }
                 });
             }
@@ -345,7 +358,7 @@
                 </div>
                 <!-- /.box-body -->
             </div>
-            <input  type="hidden" id="hidIsEdit" value="0" />
+            <input  type="hidden" id="hidIsEdit" value="" />
         </div>
         <!-- /.col -->
     </div>

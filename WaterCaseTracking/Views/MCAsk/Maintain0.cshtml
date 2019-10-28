@@ -40,6 +40,20 @@
                 });
                 $('#ddlOrganizer').html(ddlOrganizer);
                 $('#hidIsEdit').val('@(Request.QueryString["IsEdit"] as String)');
+                @*@{ string datetime = DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss"); }*@
+                @*console.log('@datetime');*@
+                if ($('#hidIsEdit').val() == "1") {
+
+                    @{
+                        WaterCaseTracking.Models.ViewModels.MCAsk.SearchInfoViewModel searchInfoViewModel = (WaterCaseTracking.Models.ViewModels.MCAsk.SearchInfoViewModel)Session["MCAsk0QueryParam"] == null ? new WaterCaseTracking.Models.ViewModels.MCAsk.SearchInfoViewModel(): (WaterCaseTracking.Models.ViewModels.MCAsk.SearchInfoViewModel)Session["MCAsk0QueryParam"];
+                     }
+                    $('#txtInquiry').val('@searchInfoViewModel.txtInquiry');
+                    $('#txtHandlingSituation').val('@searchInfoViewModel.txtHandlingSituation');
+                    $('#txtMemberName').val('@searchInfoViewModel.txtMemberName');
+                    $('#ddlArea').val('@searchInfoViewModel.ddlArea');
+                    $('#ddlOrganizer').val('@searchInfoViewModel.ddlOrganizer');
+
+                }
                 QueryTable();
             }, fail: function () {
                 alert('系統錯誤!!');
@@ -138,8 +152,7 @@
                     //var detail = { idx: value.value };
                     list.push(value.value);
                 });
-                if (list.length == 0)
-                {
+                if (list.length == 0) {
                     alert("請勾選要刪除項目");
                     return;
                 }
@@ -281,9 +294,14 @@
                     "data": aoData,
                     "success":
                         function (msg) {
+                            //setTimeout(function(){alert($('#test').val());},2000);
                             fnCallback(msg);
-                            $('#hidIsEdit').val('0');
-
+                            if(@(Convert.ToInt32(searchInfoViewModel.iDisplayStart)/10) != oTable.page() && $('#hidIsEdit').val() == "1")
+                            {
+                                console.log(@(Convert.ToInt32(searchInfoViewModel.iDisplayStart)/10));
+                                oTable.page(@(Convert.ToInt32(searchInfoViewModel.iDisplayStart)/10)).draw('page');
+                            }
+                            $('#hidIsEdit').val('');
                         }
                 });
             }
@@ -322,10 +340,12 @@
                             詢問事項:
                             <input type="text" id="txtInquiry" />
                         </div>
-                        <div class="col-xs-auto" style="display: inline-block;width:250px">辦理情形:
+                        <div class="col-xs-auto" style="display: inline-block;width:250px">
+                            辦理情形:
                             <input type="text" id="txtHandlingSituation" />
                         </div>
-                        <div class="col-xs-auto" style="display: inline-block;width:250px">議員姓名:
+                        <div class="col-xs-auto" style="display: inline-block;width:250px">
+                            議員姓名:
                             <input type="text" id="txtMemberName" />
                         </div>
                     </div>
@@ -348,7 +368,7 @@
                         @if ((Session["roleName"] as string) != "supervisor" && (Session["roleName"] as string) != "user")
                         {
                             <div class="col-xs-auto"><button type="button" class="btn btn-primary btn-space" onclick="DoAction('Create', null);">新增</button></div>
-                            <div class="col-xs-auto"><button name="btnDtl" type="button" class="btn btn-primary btn-space btnDtl" onclick="DoAction('Delete',null)" >刪除</button></div>
+                            <div class="col-xs-auto"><button name="btnDtl" type="button" class="btn btn-primary btn-space btnDtl" onclick="DoAction('Delete',null)">刪除</button></div>
                         }
 
                     </div>
@@ -362,7 +382,7 @@
                 </div>
                 <!-- /.box-body -->
             </div>
-            <input type="hidden" id="hidIsEdit" value="0" />
+            <input type="hidden" id="hidIsEdit" value="" />
 
         </div>
         <!-- /.col -->
